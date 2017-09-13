@@ -1,0 +1,13 @@
+[2017-09-13 17:37:54] LOG.ERROR: swoole_mysql_exception: a in /var/www/yf2/app/Application.php:153
+Stack trace:
+#0 /var/www/yf2/vendor/illuminate/container/Container.php(1195): App\Application->make('api.exception')
+#1 /var/www/yf2/vendor/dingo/api/src/Provider/ApiServiceProvider.php(196): Illuminate\Container\Container->offsetGet('Dingo\\Api\\Contr...')
+#2 /var/www/yf2/vendor/illuminate/container/Container.php(749): Dingo\Api\Provider\ApiServiceProvider->Dingo\Api\Provider\{closure}(Object(App\Application), Array)
+#3 /var/www/yf2/vendor/illuminate/container/Container.php(631): Illuminate\Container\Container->build(Object(Closure))
+#4 /var/www/yf2/vendor/illuminate/container/Container.php(586): Illuminate\Container\Container->resolve('api.router', Array)
+#5 /var/www/yf2/app/Application.php(168): Illuminate\Container\Container->make('api.router', Array)
+#6 /var/www/yf2/app/Application.php(275): App\Application->make('api.router')
+#7 /var/www/yf2/app/Application.php(126): App\Application->loadComponent('app', 'Library\\Dingo\\D...', 'api.router')
+#8 /var/www/yf2/app/Application.php(101): App\Application->bootstrapRouter()
+#9 /var/www/yf2/index.php(11): App\Application->__construct()
+#10 {main}  

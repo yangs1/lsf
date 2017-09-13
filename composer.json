@@ -1,0 +1,29 @@
+{
+    "name": "YsF",
+    "description": "Just a easy Framework.",
+    "keywords": ["framework", "php"],
+    "license": "MIT",
+    "type": "project",
+    "require": {
+        "illuminate/database": "5.5.*",
+        "illuminate/http": "5.5.*",
+        "illuminate/events": "5.5.*",
+        "illuminate/validation": "5.5.*",
+        "symfony/http-kernel": "^3.3",
+        "monolog/monolog": "^1.23",
+        "dingo/api": "1.0.x@dev",
+        "nikic/fast-route": "^1.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/",
+            "Library\\": "library/"
+        },
+        "files": [
+            "library/helpers.php"
+        ]
+    },
+    "require-dev": {
+        "eaglewu/swoole-ide-helper": "dev-master"
+    }
+}

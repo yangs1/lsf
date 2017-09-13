@@ -1,0 +1,453 @@
+[2017-09-12 21:57:06] LOG.ERROR: Symfony\Component\Debug\Exception\FatalThrowableError: Class 'B' not found in /var/www/yf2/index.php:12
+Stack trace:
+#0 {main}  
+[2017-09-12 22:06:26] LOG.ERROR: Symfony\Component\Debug\Exception\FatalThrowableError: Class 'B' not found in /var/www/yf2/index.php:12
+Stack trace:
+#0 {main}  
+[2017-09-12 22:06:47] LOG.ERROR: Symfony\Component\Debug\Exception\FatalThrowableError: Class 'B' not found in /var/www/yf2/index.php:12
+Stack trace:
+#0 {main}  
+[2017-09-12 22:07:08] LOG.ERROR: Symfony\Component\Debug\Exception\FatalThrowableError: Class 'B' not found in /var/www/yf2/index.php:12
+Stack trace:
+#0 {main}  
+[2017-09-12 22:07:20] LOG.ERROR: Symfony\Component\Debug\Exception\FatalThrowableError: Class 'B' not found in /var/www/yf2/index.php:12
+Stack trace:
+#0 {main}  
+[2017-09-12 22:07:48] LOG.ERROR: Symfony\Component\Debug\Exception\FatalThrowableError: Class 'B' not found in /var/www/yf2/index.php:12
+Stack trace:
+#0 {main}  
+[2017-09-12 22:07:48] LOG.ERROR: Symfony\Component\Debug\Exception\FatalErrorException: Uncaught UnexpectedValueException: The Response content must be a string or object implementing __toString(), "object" given. in /var/www/yf2/vendor/symfony/http-foundation/Response.php:409
+Stack trace:
+#0 /var/www/yf2/vendor/illuminate/http/Response.php(42): Symfony\Component\HttpFoundation\Response->setContent(Object(Symfony\Component\Debug\Exception\FlattenException))
+#1 /var/www/yf2/vendor/symfony/http-foundation/Response.php(201): Illuminate\Http\Response->setContent(Object(Symfony\Component\Debug\Exception\FlattenException))
+#2 /var/www/yf2/app/Exceptions/Handler.php(103): Symfony\Component\HttpFoundation\Response->__construct(Object(Symfony\Component\Debug\Exception\FlattenException), 500, Array)
+#3 /var/www/yf2/library/Concerns/RegistersExceptionHandlers.php(125): App\Exceptions\Handler->renderForConsole(Object(Illuminate\Http\Request), Object(Symfony\Component\Debug\Exception\FatalThrowableError))
+#4 /var/www/yf2/library/Concerns/RegistersExceptionHandlers.php(51): App\Application->handleUncaughtExce in /var/www/yf2/vendor/symfony/http-foundation/Response.php:409
+Stack trace:
+#0 /var/www/yf2/library/Concerns/RegistersExceptionHandlers.php(55): App\Application->handleShutdown()
+#1 [internal function]: App\Application->Library\Concerns\{closure}()
+#2 {main}  
+[2017-09-12 22:10:50] LOG.ERROR: Symfony\Component\Debug\Exception\FatalThrowableError: Class 'Library\Concerns\Pipeline' not found in /var/www/yf2/library/Concerns/RoutesRequests.php:407
+Stack trace:
+#0 /var/www/yf2/library/Concerns/RoutesRequests.php(166): App\Application->sendThroughPipeline(Array, Object(Closure))
+#1 /var/www/yf2/library/Concerns/RoutesRequests.php(107): App\Application->dispatch(NULL)
+#2 /var/www/yf2/index.php(13): App\Application->run()
+#3 {main}  
+[2017-09-12 22:11:17] LOG.ERROR: Symfony\Component\Debug\Exception\FatalThrowableError: Class 'Library\Concerns\Pipeline' not found in /var/www/yf2/library/Concerns/RoutesRequests.php:407
+Stack trace:
+#0 /var/www/yf2/library/Concerns/RoutesRequests.php(166): App\Application->sendThroughPipeline(Array, Object(Closure))
+#1 /var/www/yf2/library/Concerns/RoutesRequests.php(107): App\Application->dispatch(NULL)
+#2 /var/www/yf2/index.php(13): App\Application->run()
+#3 {main}  
+[2017-09-12 22:11:20] LOG.ERROR: Symfony\Component\Debug\Exception\FatalThrowableError: Class 'Library\Concerns\Pipeline' not found in /var/www/yf2/library/Concerns/RoutesRequests.php:407
+Stack trace:
+#0 /var/www/yf2/library/Concerns/RoutesRequests.php(166): App\Application->sendThroughPipeline(Array, Object(Closure))
+#1 /var/www/yf2/library/Concerns/RoutesRequests.php(107): App\Application->dispatch(NULL)
+#2 /var/www/yf2/index.php(13): App\Application->run()
+#3 {main}  
+[2017-09-12 22:14:04] LOG.ERROR: Symfony\Component\Debug\Exception\FatalThrowableError: Class 'Library\Concerns\Pipeline' not found in /var/www/yf2/library/Concerns/RoutesRequests.php:407
+Stack trace:
+#0 /var/www/yf2/library/Concerns/RoutesRequests.php(166): App\Application->sendThroughPipeline(Array, Object(Closure))
+#1 /var/www/yf2/library/Concerns/RoutesRequests.php(107): App\Application->dispatch(NULL)
+#2 /var/www/yf2/index.php(13): App\Application->run()
+#3 {main}  
+[2017-09-12 22:17:59] LOG.ERROR: Symfony\Component\Debug\Exception\FatalThrowableError: Class 'Library\Concerns\Pipeline' not found in /var/www/yf2/library/Concerns/RoutesRequests.php:407
+Stack trace:
+#0 /var/www/yf2/library/Concerns/RoutesRequests.php(166): App\Application->sendThroughPipeline(Array, Object(Closure))
+#1 /var/www/yf2/library/Concerns/RoutesRequests.php(107): App\Application->dispatch(NULL)
+#2 /var/www/yf2/index.php(13): App\Application->run()
+#3 {main}  
+[2017-09-12 22:18:00] LOG.ERROR: Symfony\Component\Debug\Exception\FatalThrowableError: Class 'Library\Concerns\Pipeline' not found in /var/www/yf2/library/Concerns/RoutesRequests.php:407
+Stack trace:
+#0 /var/www/yf2/library/Concerns/RoutesRequests.php(166): App\Application->sendThroughPipeline(Array, Object(Closure))
+#1 /var/www/yf2/library/Concerns/RoutesRequests.php(107): App\Application->dispatch(NULL)
+#2 /var/www/yf2/index.php(13): App\Application->run()
+#3 {main}  
+[2017-09-12 22:18:00] LOG.ERROR: Symfony\Component\Debug\Exception\FatalThrowableError: Class 'Library\Concerns\Pipeline' not found in /var/www/yf2/library/Concerns/RoutesRequests.php:407
+Stack trace:
+#0 /var/www/yf2/library/Concerns/RoutesRequests.php(166): App\Application->sendThroughPipeline(Array, Object(Closure))
+#1 /var/www/yf2/library/Concerns/RoutesRequests.php(107): App\Application->dispatch(NULL)
+#2 /var/www/yf2/index.php(13): App\Application->run()
+#3 {main}  
+[2017-09-12 22:18:01] LOG.ERROR: Symfony\Component\Debug\Exception\FatalThrowableError: Class 'Library\Concerns\Pipeline' not found in /var/www/yf2/library/Concerns/RoutesRequests.php:407
+Stack trace:
+#0 /var/www/yf2/library/Concerns/RoutesRequests.php(166): App\Application->sendThroughPipeline(Array, Object(Closure))
+#1 /var/www/yf2/library/Concerns/RoutesRequests.php(107): App\Application->dispatch(NULL)
+#2 /var/www/yf2/index.php(13): App\Application->run()
+#3 {main}  
+[2017-09-12 22:18:01] LOG.ERROR: Symfony\Component\Debug\Exception\FatalThrowableError: Class 'Library\Concerns\Pipeline' not found in /var/www/yf2/library/Concerns/RoutesRequests.php:407
+Stack trace:
+#0 /var/www/yf2/library/Concerns/RoutesRequests.php(166): App\Application->sendThroughPipeline(Array, Object(Closure))
+#1 /var/www/yf2/library/Concerns/RoutesRequests.php(107): App\Application->dispatch(NULL)
+#2 /var/www/yf2/index.php(13): App\Application->run()
+#3 {main}  
+[2017-09-12 22:18:01] LOG.ERROR: Symfony\Component\Debug\Exception\FatalThrowableError: Class 'Library\Concerns\Pipeline' not found in /var/www/yf2/library/Concerns/RoutesRequests.php:407
+Stack trace:
+#0 /var/www/yf2/library/Concerns/RoutesRequests.php(166): App\Application->sendThroughPipeline(Array, Object(Closure))
+#1 /var/www/yf2/library/Concerns/RoutesRequests.php(107): App\Application->dispatch(NULL)
+#2 /var/www/yf2/index.php(13): App\Application->run()
+#3 {main}  
+[2017-09-12 22:18:01] LOG.ERROR: Symfony\Component\Debug\Exception\FatalThrowableError: Class 'Library\Concerns\Pipeline' not found in /var/www/yf2/library/Concerns/RoutesRequests.php:407
+Stack trace:
+#0 /var/www/yf2/library/Concerns/RoutesRequests.php(166): App\Application->sendThroughPipeline(Array, Object(Closure))
+#1 /var/www/yf2/library/Concerns/RoutesRequests.php(107): App\Application->dispatch(NULL)
+#2 /var/www/yf2/index.php(13): App\Application->run()
+#3 {main}  
+[2017-09-12 22:18:01] LOG.ERROR: Symfony\Component\Debug\Exception\FatalThrowableError: Class 'Library\Concerns\Pipeline' not found in /var/www/yf2/library/Concerns/RoutesRequests.php:407
+Stack trace:
+#0 /var/www/yf2/library/Concerns/RoutesRequests.php(166): App\Application->sendThroughPipeline(Array, Object(Closure))
+#1 /var/www/yf2/library/Concerns/RoutesRequests.php(107): App\Application->dispatch(NULL)
+#2 /var/www/yf2/index.php(13): App\Application->run()
+#3 {main}  
+[2017-09-12 22:18:02] LOG.ERROR: Symfony\Component\Debug\Exception\FatalThrowableError: Class 'Library\Concerns\Pipeline' not found in /var/www/yf2/library/Concerns/RoutesRequests.php:407
+Stack trace:
+#0 /var/www/yf2/library/Concerns/RoutesRequests.php(166): App\Application->sendThroughPipeline(Array, Object(Closure))
+#1 /var/www/yf2/library/Concerns/RoutesRequests.php(107): App\Application->dispatch(NULL)
+#2 /var/www/yf2/index.php(13): App\Application->run()
+#3 {main}  
+[2017-09-12 22:20:16] LOG.ERROR: Symfony\Component\Debug\Exception\FatalThrowableError: Call to undefined method App\Application::version() in /var/www/yf2/index.php:13
+Stack trace:
+#0 {main}  
+[2017-09-12 22:20:42] LOG.ERROR: Symfony\Component\Debug\Exception\FatalThrowableError: Cannot use object of type Dingo\Api\Routing\RouteCollection as array in /var/www/yf2/library/Concerns/RoutesRequests.php:200
+Stack trace:
+#0 /var/www/yf2/vendor/nikic/fast-route/src/functions.php(24): App\Application->Library\Concerns\{closure}(Object(FastRoute\RouteCollector))
+#1 /var/www/yf2/library/Concerns/RoutesRequests.php(202): FastRoute\simpleDispatcher(Object(Closure))
+#2 /var/www/yf2/library/Concerns/RoutesRequests.php(164): App\Application->createDispatcher()
+#3 [internal function]: App\Application->Library\Concerns\{closure}(Object(Illuminate\Http\Request))
+#4 /var/www/yf2/library/Routing/Pipeline.php(52): call_user_func(Object(Closure), Object(Illuminate\Http\Request))
+#5 /var/www/yf2/vendor/dingo/api/src/Http/Middleware/Request.php(97): Library\Routing\Pipeline->Library\Routing\{closure}(Object(Illuminate\Http\Request))
+#6 /var/www/yf2/vendor/illuminate/pipeline/Pipeline.php(149): Dingo\Api\Http\Middleware\Request->handle(Object(Illuminate\Http\Request), Object(Closure))
+#7 [internal function]: Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#8 /var/www/yf2/library/Routing/Pipeline.php(32): call_user_func(Object(Closure), Object(Illuminate\Http\Request))
+#9 /var/www/yf2/vendor/illuminate/pipeline/Pipeline.php(102): Library\Routing\Pipeline->Library\Routing\{closure}(Object(Illuminate\Http\Request))
+#10 /var/www/yf2/library/Concerns/RoutesRequests.php(410): Illuminate\Pipeline\Pipeline->then(Object(Closure))
+#11 /var/www/yf2/library/Concerns/RoutesRequests.php(166): App\Application->sendThroughPipeline(Array, Object(Closure))
+#12 /var/www/yf2/library/Concerns/RoutesRequests.php(107): App\Application->dispatch(NULL)
+#13 /var/www/yf2/index.php(24): App\Application->run()
+#14 {main}  
+[2017-09-12 22:26:21] LOG.ERROR: ErrorException: Undefined variable: api in /var/www/yf2/index.php:13
+Stack trace:
+#0 /var/www/yf2/index.php(13): App\Application->Library\Concerns\{closure}(8, 'Undefined varia...', '/var/www/yf2/in...', 13, Array)
+#1 {main}  
+[2017-09-12 22:27:07] LOG.ERROR: Exception: aaa in /var/www/yf2/index.php:15
+Stack trace:
+#0 [internal function]: Closure->{closure}(Object(Dingo\Api\Http\Request))
+#1 /var/www/yf2/vendor/illuminate/container/BoundMethod.php(29): call_user_func_array(Object(Closure), Array)
+#2 /var/www/yf2/vendor/illuminate/container/BoundMethod.php(75): Illuminate\Container\BoundMethod::Illuminate\Container\{closure}()
+#3 /var/www/yf2/vendor/illuminate/container/BoundMethod.php(31): Illuminate\Container\BoundMethod::callBoundMethod(Object(App\Application), Object(Closure), Object(Closure))
+#4 /var/www/yf2/vendor/illuminate/container/Container.php(549): Illuminate\Container\BoundMethod::call(Object(App\Application), Object(Closure), Array, NULL)
+#5 /var/www/yf2/library/Concerns/RoutesRequests.php(286): Illuminate\Container\Container->call(Object(Closure), Array)
+#6 /var/www/yf2/library/Concerns/RoutesRequests.php(260): App\Application->callActionOnArrayBasedRoute(Array)
+#7 /var/www/yf2/library/Concerns/RoutesRequests.php(160): App\Application->handleFoundRoute(Array)
+#8 /var/www/yf2/library/Concerns/RoutesRequests.php(413): App\Application->Library\Concerns\{closure}()
+#9 /var/www/yf2/library/Concerns/RoutesRequests.php(166): App\Application->sendThroughPipeline(Array, Object(Closure))
+#10 /var/www/yf2/library/Concerns/RoutesRequests.php(107): App\Application->dispatch(NULL)
+#11 /var/www/yf2/index.php(18): App\Application->run()
+#12 {main}  
+[2017-09-12 22:29:44] LOG.ERROR: RuntimeException: A version is required for an API group definition. in /var/www/yf2/vendor/dingo/api/src/Routing/Router.php:158
+Stack trace:
+#0 /var/www/yf2/index.php(20): Dingo\Api\Routing\Router->group(Array, Object(Closure))
+#1 {main}  
+[2017-09-12 22:30:03] LOG.ERROR: RuntimeException: A version is required for an API group definition. in /var/www/yf2/vendor/dingo/api/src/Routing/Router.php:158
+Stack trace:
+#0 /var/www/yf2/index.php(20): Dingo\Api\Routing\Router->group(Array, Object(Closure))
+#1 {main}  
+[2017-09-12 22:30:04] LOG.ERROR: RuntimeException: A version is required for an API group definition. in /var/www/yf2/vendor/dingo/api/src/Routing/Router.php:158
+Stack trace:
+#0 /var/www/yf2/index.php(20): Dingo\Api\Routing\Router->group(Array, Object(Closure))
+#1 {main}  
+[2017-09-12 22:30:38] LOG.ERROR: Symfony\Component\Debug\Exception\FatalThrowableError: Call to a member function group() on null in /var/www/yf2/index.php:18
+Stack trace:
+#0 {main}  
+[2017-09-12 22:32:55] LOG.ERROR: Exception: aa in /var/www/yf2/routes/web.php:18
+Stack trace:
+#0 [internal function]: Closure->{closure}(Object(Dingo\Api\Http\Request))
+#1 /var/www/yf2/vendor/illuminate/container/BoundMethod.php(29): call_user_func_array(Object(Closure), Array)
+#2 /var/www/yf2/vendor/illuminate/container/BoundMethod.php(75): Illuminate\Container\BoundMethod::Illuminate\Container\{closure}()
+#3 /var/www/yf2/vendor/illuminate/container/BoundMethod.php(31): Illuminate\Container\BoundMethod::callBoundMethod(Object(App\Application), Object(Closure), Object(Closure))
+#4 /var/www/yf2/vendor/illuminate/container/Container.php(549): Illuminate\Container\BoundMethod::call(Object(App\Application), Object(Closure), Array, NULL)
+#5 /var/www/yf2/library/Concerns/RoutesRequests.php(286): Illuminate\Container\Container->call(Object(Closure), Array)
+#6 /var/www/yf2/library/Concerns/RoutesRequests.php(255): App\Application->callActionOnArrayBasedRoute(Array)
+#7 /var/www/yf2/library/Concerns/RoutesRequests.php(413): App\Application->Library\Concerns\{closure}()
+#8 /var/www/yf2/library/Concerns/RoutesRequests.php(256): App\Application->sendThroughPipeline(Array, Object(Closure))
+#9 /var/www/yf2/library/Concerns/RoutesRequests.php(230): App\Application->handleFoundRoute(Array)
+#10 /var/www/yf2/library/Concerns/RoutesRequests.php(164): App\Application->handleDispatcherResponse(Array)
+#11 /var/www/yf2/library/Concerns/RoutesRequests.php(413): App\Application->Library\Concerns\{closure}()
+#12 /var/www/yf2/library/Concerns/RoutesRequests.php(166): App\Application->sendThroughPipeline(Array, Object(Closure))
+#13 /var/www/yf2/library/Dingo/DingoAdapter.php(109): App\Application->dispatch(Object(Dingo\Api\Http\Request))
+#14 /var/www/yf2/vendor/dingo/api/src/Routing/Router.php(559): Library\Dingo\DingoAdapter->dispatch(Object(Dingo\Api\Http\Request), 'v1')
+#15 /var/www/yf2/vendor/dingo/api/src/Http/Middleware/Request.php(112): Dingo\Api\Routing\Router->dispatch(Object(Dingo\Api\Http\Request))
+#16 /var/www/yf2/vendor/illuminate/pipeline/Pipeline.php(114): Dingo\Api\Http\Middleware\Request->Dingo\Api\Http\Middleware\{closure}(Object(Dingo\Api\Http\Request))
+#17 /var/www/yf2/vendor/illuminate/pipeline/Pipeline.php(102): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Dingo\Api\Http\Request))
+#18 /var/www/yf2/vendor/dingo/api/src/Http/Middleware/Request.php(113): Illuminate\Pipeline\Pipeline->then(Object(Closure))
+#19 /var/www/yf2/vendor/dingo/api/src/Http/Middleware/Request.php(89): Dingo\Api\Http\Middleware\Request->sendRequestThroughRouter(Object(Dingo\Api\Http\Request))
+#20 /var/www/yf2/vendor/illuminate/pipeline/Pipeline.php(149): Dingo\Api\Http\Middleware\Request->handle(Object(Dingo\Api\Http\Request), Object(Closure))
+#21 [internal function]: Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#22 /var/www/yf2/library/Routing/Pipeline.php(32): call_user_func(Object(Closure), Object(Illuminate\Http\Request))
+#23 /var/www/yf2/vendor/illuminate/pipeline/Pipeline.php(102): Library\Routing\Pipeline->Library\Routing\{closure}(Object(Illuminate\Http\Request))
+#24 /var/www/yf2/library/Concerns/RoutesRequests.php(410): Illuminate\Pipeline\Pipeline->then(Object(Closure))
+#25 /var/www/yf2/library/Concerns/RoutesRequests.php(166): App\Application->sendThroughPipeline(Array, Object(Closure))
+#26 /var/www/yf2/library/Concerns/RoutesRequests.php(107): App\Application->dispatch(NULL)
+#27 /var/www/yf2/index.php(21): App\Application->run()
+#28 {main}  
+[2017-09-12 22:40:44] LOG.ERROR: Exception: aa in /var/www/yf2/routes/web.php:18
+Stack trace:
+#0 [internal function]: Closure->{closure}(Object(Dingo\Api\Http\Request))
+#1 /var/www/yf2/vendor/illuminate/container/BoundMethod.php(29): call_user_func_array(Object(Closure), Array)
+#2 /var/www/yf2/vendor/illuminate/container/BoundMethod.php(75): Illuminate\Container\BoundMethod::Illuminate\Container\{closure}()
+#3 /var/www/yf2/vendor/illuminate/container/BoundMethod.php(31): Illuminate\Container\BoundMethod::callBoundMethod(Object(App\Application), Object(Closure), Object(Closure))
+#4 /var/www/yf2/vendor/illuminate/container/Container.php(549): Illuminate\Container\BoundMethod::call(Object(App\Application), Object(Closure), Array, NULL)
+#5 /var/www/yf2/library/Concerns/RoutesRequests.php(286): Illuminate\Container\Container->call(Object(Closure), Array)
+#6 /var/www/yf2/library/Concerns/RoutesRequests.php(255): App\Application->callActionOnArrayBasedRoute(Array)
+#7 /var/www/yf2/library/Concerns/RoutesRequests.php(413): App\Application->Library\Concerns\{closure}()
+#8 /var/www/yf2/library/Concerns/RoutesRequests.php(256): App\Application->sendThroughPipeline(Array, Object(Closure))
+#9 /var/www/yf2/library/Concerns/RoutesRequests.php(230): App\Application->handleFoundRoute(Array)
+#10 /var/www/yf2/library/Concerns/RoutesRequests.php(164): App\Application->handleDispatcherResponse(Array)
+#11 /var/www/yf2/library/Concerns/RoutesRequests.php(413): App\Application->Library\Concerns\{closure}()
+#12 /var/www/yf2/library/Concerns/RoutesRequests.php(166): App\Application->sendThroughPipeline(Array, Object(Closure))
+#13 /var/www/yf2/library/Dingo/DingoAdapter.php(109): App\Application->dispatch(Object(Dingo\Api\Http\Request))
+#14 /var/www/yf2/vendor/dingo/api/src/Routing/Router.php(559): Library\Dingo\DingoAdapter->dispatch(Object(Dingo\Api\Http\Request), 'v1')
+#15 /var/www/yf2/vendor/dingo/api/src/Http/Middleware/Request.php(112): Dingo\Api\Routing\Router->dispatch(Object(Dingo\Api\Http\Request))
+#16 /var/www/yf2/vendor/illuminate/pipeline/Pipeline.php(114): Dingo\Api\Http\Middleware\Request->Dingo\Api\Http\Middleware\{closure}(Object(Dingo\Api\Http\Request))
+#17 /var/www/yf2/vendor/illuminate/pipeline/Pipeline.php(102): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Dingo\Api\Http\Request))
+#18 /var/www/yf2/vendor/dingo/api/src/Http/Middleware/Request.php(113): Illuminate\Pipeline\Pipeline->then(Object(Closure))
+#19 /var/www/yf2/vendor/dingo/api/src/Http/Middleware/Request.php(89): Dingo\Api\Http\Middleware\Request->sendRequestThroughRouter(Object(Dingo\Api\Http\Request))
+#20 /var/www/yf2/vendor/illuminate/pipeline/Pipeline.php(149): Dingo\Api\Http\Middleware\Request->handle(Object(Dingo\Api\Http\Request), Object(Closure))
+#21 [internal function]: Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#22 /var/www/yf2/library/Routing/Pipeline.php(32): call_user_func(Object(Closure), Object(Illuminate\Http\Request))
+#23 /var/www/yf2/vendor/illuminate/pipeline/Pipeline.php(102): Library\Routing\Pipeline->Library\Routing\{closure}(Object(Illuminate\Http\Request))
+#24 /var/www/yf2/library/Concerns/RoutesRequests.php(410): Illuminate\Pipeline\Pipeline->then(Object(Closure))
+#25 /var/www/yf2/library/Concerns/RoutesRequests.php(166): App\Application->sendThroughPipeline(Array, Object(Closure))
+#26 /var/www/yf2/library/Concerns/RoutesRequests.php(107): App\Application->dispatch(NULL)
+#27 /var/www/yf2/index.php(21): App\Application->run()
+#28 {main}  
+[2017-09-12 22:40:59] LOG.ERROR: Exception: aa in /var/www/yf2/routes/web.php:18
+Stack trace:
+#0 [internal function]: Closure->{closure}(Object(Dingo\Api\Http\Request))
+#1 /var/www/yf2/vendor/illuminate/container/BoundMethod.php(29): call_user_func_array(Object(Closure), Array)
+#2 /var/www/yf2/vendor/illuminate/container/BoundMethod.php(75): Illuminate\Container\BoundMethod::Illuminate\Container\{closure}()
+#3 /var/www/yf2/vendor/illuminate/container/BoundMethod.php(31): Illuminate\Container\BoundMethod::callBoundMethod(Object(App\Application), Object(Closure), Object(Closure))
+#4 /var/www/yf2/vendor/illuminate/container/Container.php(549): Illuminate\Container\BoundMethod::call(Object(App\Application), Object(Closure), Array, NULL)
+#5 /var/www/yf2/library/Concerns/RoutesRequests.php(286): Illuminate\Container\Container->call(Object(Closure), Array)
+#6 /var/www/yf2/library/Concerns/RoutesRequests.php(255): App\Application->callActionOnArrayBasedRoute(Array)
+#7 /var/www/yf2/library/Concerns/RoutesRequests.php(413): App\Application->Library\Concerns\{closure}()
+#8 /var/www/yf2/library/Concerns/RoutesRequests.php(256): App\Application->sendThroughPipeline(Array, Object(Closure))
+#9 /var/www/yf2/library/Concerns/RoutesRequests.php(230): App\Application->handleFoundRoute(Array)
+#10 /var/www/yf2/library/Concerns/RoutesRequests.php(164): App\Application->handleDispatcherResponse(Array)
+#11 /var/www/yf2/library/Concerns/RoutesRequests.php(413): App\Application->Library\Concerns\{closure}()
+#12 /var/www/yf2/library/Concerns/RoutesRequests.php(166): App\Application->sendThroughPipeline(Array, Object(Closure))
+#13 /var/www/yf2/library/Dingo/DingoAdapter.php(109): App\Application->dispatch(Object(Dingo\Api\Http\Request))
+#14 /var/www/yf2/vendor/dingo/api/src/Routing/Router.php(559): Library\Dingo\DingoAdapter->dispatch(Object(Dingo\Api\Http\Request), 'v1')
+#15 /var/www/yf2/vendor/dingo/api/src/Http/Middleware/Request.php(112): Dingo\Api\Routing\Router->dispatch(Object(Dingo\Api\Http\Request))
+#16 /var/www/yf2/vendor/illuminate/pipeline/Pipeline.php(114): Dingo\Api\Http\Middleware\Request->Dingo\Api\Http\Middleware\{closure}(Object(Dingo\Api\Http\Request))
+#17 /var/www/yf2/vendor/illuminate/pipeline/Pipeline.php(102): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Dingo\Api\Http\Request))
+#18 /var/www/yf2/vendor/dingo/api/src/Http/Middleware/Request.php(113): Illuminate\Pipeline\Pipeline->then(Object(Closure))
+#19 /var/www/yf2/vendor/dingo/api/src/Http/Middleware/Request.php(89): Dingo\Api\Http\Middleware\Request->sendRequestThroughRouter(Object(Dingo\Api\Http\Request))
+#20 /var/www/yf2/vendor/illuminate/pipeline/Pipeline.php(149): Dingo\Api\Http\Middleware\Request->handle(Object(Dingo\Api\Http\Request), Object(Closure))
+#21 [internal function]: Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#22 /var/www/yf2/library/Routing/Pipeline.php(32): call_user_func(Object(Closure), Object(Illuminate\Http\Request))
+#23 /var/www/yf2/vendor/illuminate/pipeline/Pipeline.php(102): Library\Routing\Pipeline->Library\Routing\{closure}(Object(Illuminate\Http\Request))
+#24 /var/www/yf2/library/Concerns/RoutesRequests.php(410): Illuminate\Pipeline\Pipeline->then(Object(Closure))
+#25 /var/www/yf2/library/Concerns/RoutesRequests.php(166): App\Application->sendThroughPipeline(Array, Object(Closure))
+#26 /var/www/yf2/library/Concerns/RoutesRequests.php(107): App\Application->dispatch(NULL)
+#27 /var/www/yf2/index.php(21): App\Application->run()
+#28 {main}  
+[2017-09-12 22:41:42] LOG.ERROR: Exception: aa in /var/www/yf2/routes/web.php:18
+Stack trace:
+#0 [internal function]: Closure->{closure}(Object(Dingo\Api\Http\Request))
+#1 /var/www/yf2/vendor/illuminate/container/BoundMethod.php(29): call_user_func_array(Object(Closure), Array)
+#2 /var/www/yf2/vendor/illuminate/container/BoundMethod.php(75): Illuminate\Container\BoundMethod::Illuminate\Container\{closure}()
+#3 /var/www/yf2/vendor/illuminate/container/BoundMethod.php(31): Illuminate\Container\BoundMethod::callBoundMethod(Object(App\Application), Object(Closure), Object(Closure))
+#4 /var/www/yf2/vendor/illuminate/container/Container.php(549): Illuminate\Container\BoundMethod::call(Object(App\Application), Object(Closure), Array, NULL)
+#5 /var/www/yf2/library/Concerns/RoutesRequests.php(286): Illuminate\Container\Container->call(Object(Closure), Array)
+#6 /var/www/yf2/library/Concerns/RoutesRequests.php(255): App\Application->callActionOnArrayBasedRoute(Array)
+#7 /var/www/yf2/library/Concerns/RoutesRequests.php(413): App\Application->Library\Concerns\{closure}()
+#8 /var/www/yf2/library/Concerns/RoutesRequests.php(256): App\Application->sendThroughPipeline(Array, Object(Closure))
+#9 /var/www/yf2/library/Concerns/RoutesRequests.php(230): App\Application->handleFoundRoute(Array)
+#10 /var/www/yf2/library/Concerns/RoutesRequests.php(164): App\Application->handleDispatcherResponse(Array)
+#11 /var/www/yf2/library/Concerns/RoutesRequests.php(413): App\Application->Library\Concerns\{closure}()
+#12 /var/www/yf2/library/Concerns/RoutesRequests.php(166): App\Application->sendThroughPipeline(Array, Object(Closure))
+#13 /var/www/yf2/library/Dingo/DingoAdapter.php(109): App\Application->dispatch(Object(Dingo\Api\Http\Request))
+#14 /var/www/yf2/vendor/dingo/api/src/Routing/Router.php(559): Library\Dingo\DingoAdapter->dispatch(Object(Dingo\Api\Http\Request), 'v1')
+#15 /var/www/yf2/vendor/dingo/api/src/Http/Middleware/Request.php(112): Dingo\Api\Routing\Router->dispatch(Object(Dingo\Api\Http\Request))
+#16 /var/www/yf2/vendor/illuminate/pipeline/Pipeline.php(114): Dingo\Api\Http\Middleware\Request->Dingo\Api\Http\Middleware\{closure}(Object(Dingo\Api\Http\Request))
+#17 /var/www/yf2/vendor/illuminate/pipeline/Pipeline.php(102): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Dingo\Api\Http\Request))
+#18 /var/www/yf2/vendor/dingo/api/src/Http/Middleware/Request.php(113): Illuminate\Pipeline\Pipeline->then(Object(Closure))
+#19 /var/www/yf2/vendor/dingo/api/src/Http/Middleware/Request.php(89): Dingo\Api\Http\Middleware\Request->sendRequestThroughRouter(Object(Dingo\Api\Http\Request))
+#20 /var/www/yf2/vendor/illuminate/pipeline/Pipeline.php(149): Dingo\Api\Http\Middleware\Request->handle(Object(Dingo\Api\Http\Request), Object(Closure))
+#21 [internal function]: Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#22 /var/www/yf2/library/Routing/Pipeline.php(32): call_user_func(Object(Closure), Object(Illuminate\Http\Request))
+#23 /var/www/yf2/vendor/illuminate/pipeline/Pipeline.php(102): Library\Routing\Pipeline->Library\Routing\{closure}(Object(Illuminate\Http\Request))
+#24 /var/www/yf2/library/Concerns/RoutesRequests.php(410): Illuminate\Pipeline\Pipeline->then(Object(Closure))
+#25 /var/www/yf2/library/Concerns/RoutesRequests.php(166): App\Application->sendThroughPipeline(Array, Object(Closure))
+#26 /var/www/yf2/library/Concerns/RoutesRequests.php(107): App\Application->dispatch(NULL)
+#27 /var/www/yf2/index.php(21): App\Application->run()
+#28 {main}  
+[2017-09-12 22:52:23] LOG.ERROR: Exception: aa in /var/www/yf2/routes/web.php:18
+Stack trace:
+#0 [internal function]: Closure->{closure}(Object(Dingo\Api\Http\Request))
+#1 /var/www/yf2/vendor/illuminate/container/BoundMethod.php(29): call_user_func_array(Object(Closure), Array)
+#2 /var/www/yf2/vendor/illuminate/container/BoundMethod.php(75): Illuminate\Container\BoundMethod::Illuminate\Container\{closure}()
+#3 /var/www/yf2/vendor/illuminate/container/BoundMethod.php(31): Illuminate\Container\BoundMethod::callBoundMethod(Object(App\Application), Object(Closure), Object(Closure))
+#4 /var/www/yf2/vendor/illuminate/container/Container.php(549): Illuminate\Container\BoundMethod::call(Object(App\Application), Object(Closure), Array, NULL)
+#5 /var/www/yf2/library/Concerns/RoutesRequests.php(286): Illuminate\Container\Container->call(Object(Closure), Array)
+#6 /var/www/yf2/library/Concerns/RoutesRequests.php(255): App\Application->callActionOnArrayBasedRoute(Array)
+#7 /var/www/yf2/library/Concerns/RoutesRequests.php(413): App\Application->Library\Concerns\{closure}()
+#8 /var/www/yf2/library/Concerns/RoutesRequests.php(256): App\Application->sendThroughPipeline(Array, Object(Closure))
+#9 /var/www/yf2/library/Concerns/RoutesRequests.php(230): App\Application->handleFoundRoute(Array)
+#10 /var/www/yf2/library/Concerns/RoutesRequests.php(164): App\Application->handleDispatcherResponse(Array)
+#11 /var/www/yf2/library/Concerns/RoutesRequests.php(413): App\Application->Library\Concerns\{closure}()
+#12 /var/www/yf2/library/Concerns/RoutesRequests.php(166): App\Application->sendThroughPipeline(Array, Object(Closure))
+#13 /var/www/yf2/library/Dingo/DingoAdapter.php(109): App\Application->dispatch(Object(Dingo\Api\Http\Request))
+#14 /var/www/yf2/vendor/dingo/api/src/Routing/Router.php(559): Library\Dingo\DingoAdapter->dispatch(Object(Dingo\Api\Http\Request), 'v1')
+#15 /var/www/yf2/vendor/dingo/api/src/Http/Middleware/Request.php(112): Dingo\Api\Routing\Router->dispatch(Object(Dingo\Api\Http\Request))
+#16 /var/www/yf2/vendor/illuminate/pipeline/Pipeline.php(114): Dingo\Api\Http\Middleware\Request->Dingo\Api\Http\Middleware\{closure}(Object(Dingo\Api\Http\Request))
+#17 /var/www/yf2/vendor/illuminate/pipeline/Pipeline.php(102): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Dingo\Api\Http\Request))
+#18 /var/www/yf2/vendor/dingo/api/src/Http/Middleware/Request.php(113): Illuminate\Pipeline\Pipeline->then(Object(Closure))
+#19 /var/www/yf2/vendor/dingo/api/src/Http/Middleware/Request.php(89): Dingo\Api\Http\Middleware\Request->sendRequestThroughRouter(Object(Dingo\Api\Http\Request))
+#20 /var/www/yf2/vendor/illuminate/pipeline/Pipeline.php(149): Dingo\Api\Http\Middleware\Request->handle(Object(Dingo\Api\Http\Request), Object(Closure))
+#21 [internal function]: Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#22 /var/www/yf2/library/Routing/Pipeline.php(32): call_user_func(Object(Closure), Object(Illuminate\Http\Request))
+#23 /var/www/yf2/vendor/illuminate/pipeline/Pipeline.php(102): Library\Routing\Pipeline->Library\Routing\{closure}(Object(Illuminate\Http\Request))
+#24 /var/www/yf2/library/Concerns/RoutesRequests.php(410): Illuminate\Pipeline\Pipeline->then(Object(Closure))
+#25 /var/www/yf2/library/Concerns/RoutesRequests.php(166): App\Application->sendThroughPipeline(Array, Object(Closure))
+#26 /var/www/yf2/library/Concerns/RoutesRequests.php(107): App\Application->dispatch(NULL)
+#27 /var/www/yf2/index.php(21): App\Application->run()
+#28 {main}  
+[2017-09-12 23:02:36] LOG.ERROR: Exception: aa in /var/www/yf2/routes/web.php:18
+Stack trace:
+#0 [internal function]: Closure->{closure}(Object(Dingo\Api\Http\Request))
+#1 /var/www/yf2/vendor/illuminate/container/BoundMethod.php(29): call_user_func_array(Object(Closure), Array)
+#2 /var/www/yf2/vendor/illuminate/container/BoundMethod.php(75): Illuminate\Container\BoundMethod::Illuminate\Container\{closure}()
+#3 /var/www/yf2/vendor/illuminate/container/BoundMethod.php(31): Illuminate\Container\BoundMethod::callBoundMethod(Object(App\Application), Object(Closure), Object(Closure))
+#4 /var/www/yf2/vendor/illuminate/container/Container.php(549): Illuminate\Container\BoundMethod::call(Object(App\Application), Object(Closure), Array, NULL)
+#5 /var/www/yf2/library/Concerns/RoutesRequests.php(286): Illuminate\Container\Container->call(Object(Closure), Array)
+#6 /var/www/yf2/library/Concerns/RoutesRequests.php(255): App\Application->callActionOnArrayBasedRoute(Array)
+#7 /var/www/yf2/library/Concerns/RoutesRequests.php(413): App\Application->Library\Concerns\{closure}()
+#8 /var/www/yf2/library/Concerns/RoutesRequests.php(256): App\Application->sendThroughPipeline(Array, Object(Closure))
+#9 /var/www/yf2/library/Concerns/RoutesRequests.php(230): App\Application->handleFoundRoute(Array)
+#10 /var/www/yf2/library/Concerns/RoutesRequests.php(164): App\Application->handleDispatcherResponse(Array)
+#11 /var/www/yf2/library/Concerns/RoutesRequests.php(413): App\Application->Library\Concerns\{closure}()
+#12 /var/www/yf2/library/Concerns/RoutesRequests.php(166): App\Application->sendThroughPipeline(Array, Object(Closure))
+#13 /var/www/yf2/library/Dingo/DingoAdapter.php(109): App\Application->dispatch(Object(Dingo\Api\Http\Request))
+#14 /var/www/yf2/vendor/dingo/api/src/Routing/Router.php(559): Library\Dingo\DingoAdapter->dispatch(Object(Dingo\Api\Http\Request), 'v1')
+#15 /var/www/yf2/vendor/dingo/api/src/Http/Middleware/Request.php(112): Dingo\Api\Routing\Router->dispatch(Object(Dingo\Api\Http\Request))
+#16 /var/www/yf2/vendor/illuminate/pipeline/Pipeline.php(114): Dingo\Api\Http\Middleware\Request->Dingo\Api\Http\Middleware\{closure}(Object(Dingo\Api\Http\Request))
+#17 /var/www/yf2/vendor/illuminate/pipeline/Pipeline.php(102): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Dingo\Api\Http\Request))
+#18 /var/www/yf2/vendor/dingo/api/src/Http/Middleware/Request.php(113): Illuminate\Pipeline\Pipeline->then(Object(Closure))
+#19 /var/www/yf2/vendor/dingo/api/src/Http/Middleware/Request.php(89): Dingo\Api\Http\Middleware\Request->sendRequestThroughRouter(Object(Dingo\Api\Http\Request))
+#20 /var/www/yf2/vendor/illuminate/pipeline/Pipeline.php(149): Dingo\Api\Http\Middleware\Request->handle(Object(Dingo\Api\Http\Request), Object(Closure))
+#21 [internal function]: Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#22 /var/www/yf2/library/Routing/Pipeline.php(32): call_user_func(Object(Closure), Object(Illuminate\Http\Request))
+#23 /var/www/yf2/vendor/illuminate/pipeline/Pipeline.php(102): Library\Routing\Pipeline->Library\Routing\{closure}(Object(Illuminate\Http\Request))
+#24 /var/www/yf2/library/Concerns/RoutesRequests.php(410): Illuminate\Pipeline\Pipeline->then(Object(Closure))
+#25 /var/www/yf2/library/Concerns/RoutesRequests.php(166): App\Application->sendThroughPipeline(Array, Object(Closure))
+#26 /var/www/yf2/library/Concerns/RoutesRequests.php(107): App\Application->dispatch(NULL)
+#27 /var/www/yf2/index.php(21): App\Application->run()
+#28 {main}  
+[2017-09-12 23:03:14] LOG.ERROR: Exception: aa in /var/www/yf2/routes/web.php:18
+Stack trace:
+#0 [internal function]: Closure->{closure}(Object(Dingo\Api\Http\Request))
+#1 /var/www/yf2/vendor/illuminate/container/BoundMethod.php(29): call_user_func_array(Object(Closure), Array)
+#2 /var/www/yf2/vendor/illuminate/container/BoundMethod.php(75): Illuminate\Container\BoundMethod::Illuminate\Container\{closure}()
+#3 /var/www/yf2/vendor/illuminate/container/BoundMethod.php(31): Illuminate\Container\BoundMethod::callBoundMethod(Object(App\Application), Object(Closure), Object(Closure))
+#4 /var/www/yf2/vendor/illuminate/container/Container.php(549): Illuminate\Container\BoundMethod::call(Object(App\Application), Object(Closure), Array, NULL)
+#5 /var/www/yf2/library/Concerns/RoutesRequests.php(286): Illuminate\Container\Container->call(Object(Closure), Array)
+#6 /var/www/yf2/library/Concerns/RoutesRequests.php(255): App\Application->callActionOnArrayBasedRoute(Array)
+#7 /var/www/yf2/library/Concerns/RoutesRequests.php(413): App\Application->Library\Concerns\{closure}()
+#8 /var/www/yf2/library/Concerns/RoutesRequests.php(256): App\Application->sendThroughPipeline(Array, Object(Closure))
+#9 /var/www/yf2/library/Concerns/RoutesRequests.php(230): App\Application->handleFoundRoute(Array)
+#10 /var/www/yf2/library/Concerns/RoutesRequests.php(164): App\Application->handleDispatcherResponse(Array)
+#11 /var/www/yf2/library/Concerns/RoutesRequests.php(413): App\Application->Library\Concerns\{closure}()
+#12 /var/www/yf2/library/Concerns/RoutesRequests.php(166): App\Application->sendThroughPipeline(Array, Object(Closure))
+#13 /var/www/yf2/library/Dingo/DingoAdapter.php(109): App\Application->dispatch(Object(Dingo\Api\Http\Request))
+#14 /var/www/yf2/vendor/dingo/api/src/Routing/Router.php(559): Library\Dingo\DingoAdapter->dispatch(Object(Dingo\Api\Http\Request), 'v1')
+#15 /var/www/yf2/vendor/dingo/api/src/Http/Middleware/Request.php(112): Dingo\Api\Routing\Router->dispatch(Object(Dingo\Api\Http\Request))
+#16 /var/www/yf2/vendor/illuminate/pipeline/Pipeline.php(114): Dingo\Api\Http\Middleware\Request->Dingo\Api\Http\Middleware\{closure}(Object(Dingo\Api\Http\Request))
+#17 /var/www/yf2/vendor/illuminate/pipeline/Pipeline.php(102): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Dingo\Api\Http\Request))
+#18 /var/www/yf2/vendor/dingo/api/src/Http/Middleware/Request.php(113): Illuminate\Pipeline\Pipeline->then(Object(Closure))
+#19 /var/www/yf2/vendor/dingo/api/src/Http/Middleware/Request.php(89): Dingo\Api\Http\Middleware\Request->sendRequestThroughRouter(Object(Dingo\Api\Http\Request))
+#20 /var/www/yf2/vendor/illuminate/pipeline/Pipeline.php(149): Dingo\Api\Http\Middleware\Request->handle(Object(Dingo\Api\Http\Request), Object(Closure))
+#21 [internal function]: Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#22 /var/www/yf2/library/Routing/Pipeline.php(32): call_user_func(Object(Closure), Object(Illuminate\Http\Request))
+#23 /var/www/yf2/vendor/illuminate/pipeline/Pipeline.php(102): Library\Routing\Pipeline->Library\Routing\{closure}(Object(Illuminate\Http\Request))
+#24 /var/www/yf2/library/Concerns/RoutesRequests.php(410): Illuminate\Pipeline\Pipeline->then(Object(Closure))
+#25 /var/www/yf2/library/Concerns/RoutesRequests.php(166): App\Application->sendThroughPipeline(Array, Object(Closure))
+#26 /var/www/yf2/library/Concerns/RoutesRequests.php(107): App\Application->dispatch(NULL)
+#27 /var/www/yf2/index.php(22): App\Application->run()
+#28 {main}  
+[2017-09-12 23:03:30] LOG.ERROR: Exception: aa in /var/www/yf2/routes/web.php:18
+Stack trace:
+#0 [internal function]: Closure->{closure}(Object(Dingo\Api\Http\Request))
+#1 /var/www/yf2/vendor/illuminate/container/BoundMethod.php(29): call_user_func_array(Object(Closure), Array)
+#2 /var/www/yf2/vendor/illuminate/container/BoundMethod.php(75): Illuminate\Container\BoundMethod::Illuminate\Container\{closure}()
+#3 /var/www/yf2/vendor/illuminate/container/BoundMethod.php(31): Illuminate\Container\BoundMethod::callBoundMethod(Object(App\Application), Object(Closure), Object(Closure))
+#4 /var/www/yf2/vendor/illuminate/container/Container.php(549): Illuminate\Container\BoundMethod::call(Object(App\Application), Object(Closure), Array, NULL)
+#5 /var/www/yf2/library/Concerns/RoutesRequests.php(286): Illuminate\Container\Container->call(Object(Closure), Array)
+#6 /var/www/yf2/library/Concerns/RoutesRequests.php(255): App\Application->callActionOnArrayBasedRoute(Array)
+#7 /var/www/yf2/library/Concerns/RoutesRequests.php(413): App\Application->Library\Concerns\{closure}()
+#8 /var/www/yf2/library/Concerns/RoutesRequests.php(256): App\Application->sendThroughPipeline(Array, Object(Closure))
+#9 /var/www/yf2/library/Concerns/RoutesRequests.php(230): App\Application->handleFoundRoute(Array)
+#10 /var/www/yf2/library/Concerns/RoutesRequests.php(164): App\Application->handleDispatcherResponse(Array)
+#11 /var/www/yf2/library/Concerns/RoutesRequests.php(413): App\Application->Library\Concerns\{closure}()
+#12 /var/www/yf2/library/Concerns/RoutesRequests.php(166): App\Application->sendThroughPipeline(Array, Object(Closure))
+#13 /var/www/yf2/library/Dingo/DingoAdapter.php(109): App\Application->dispatch(Object(Dingo\Api\Http\Request))
+#14 /var/www/yf2/vendor/dingo/api/src/Routing/Router.php(559): Library\Dingo\DingoAdapter->dispatch(Object(Dingo\Api\Http\Request), 'v1')
+#15 /var/www/yf2/vendor/dingo/api/src/Http/Middleware/Request.php(112): Dingo\Api\Routing\Router->dispatch(Object(Dingo\Api\Http\Request))
+#16 /var/www/yf2/vendor/illuminate/pipeline/Pipeline.php(114): Dingo\Api\Http\Middleware\Request->Dingo\Api\Http\Middleware\{closure}(Object(Dingo\Api\Http\Request))
+#17 /var/www/yf2/vendor/illuminate/pipeline/Pipeline.php(102): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Dingo\Api\Http\Request))
+#18 /var/www/yf2/vendor/dingo/api/src/Http/Middleware/Request.php(113): Illuminate\Pipeline\Pipeline->then(Object(Closure))
+#19 /var/www/yf2/vendor/dingo/api/src/Http/Middleware/Request.php(89): Dingo\Api\Http\Middleware\Request->sendRequestThroughRouter(Object(Dingo\Api\Http\Request))
+#20 /var/www/yf2/vendor/illuminate/pipeline/Pipeline.php(149): Dingo\Api\Http\Middleware\Request->handle(Object(Dingo\Api\Http\Request), Object(Closure))
+#21 [internal function]: Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#22 /var/www/yf2/library/Routing/Pipeline.php(32): call_user_func(Object(Closure), Object(Illuminate\Http\Request))
+#23 /var/www/yf2/vendor/illuminate/pipeline/Pipeline.php(102): Library\Routing\Pipeline->Library\Routing\{closure}(Object(Illuminate\Http\Request))
+#24 /var/www/yf2/library/Concerns/RoutesRequests.php(410): Illuminate\Pipeline\Pipeline->then(Object(Closure))
+#25 /var/www/yf2/library/Concerns/RoutesRequests.php(166): App\Application->sendThroughPipeline(Array, Object(Closure))
+#26 /var/www/yf2/library/Concerns/RoutesRequests.php(107): App\Application->dispatch(NULL)
+#27 /var/www/yf2/index.php(22): App\Application->run()
+#28 {main}  
+[2017-09-12 23:04:32] LOG.ERROR: Exception: aa in /var/www/yf2/routes/web.php:18
+Stack trace:
+#0 [internal function]: Closure->{closure}(Object(Dingo\Api\Http\Request))
+#1 /var/www/yf2/vendor/illuminate/container/BoundMethod.php(29): call_user_func_array(Object(Closure), Array)
+#2 /var/www/yf2/vendor/illuminate/container/BoundMethod.php(75): Illuminate\Container\BoundMethod::Illuminate\Container\{closure}()
+#3 /var/www/yf2/vendor/illuminate/container/BoundMethod.php(31): Illuminate\Container\BoundMethod::callBoundMethod(Object(App\Application), Object(Closure), Object(Closure))
+#4 /var/www/yf2/vendor/illuminate/container/Container.php(549): Illuminate\Container\BoundMethod::call(Object(App\Application), Object(Closure), Array, NULL)
+#5 /var/www/yf2/library/Concerns/RoutesRequests.php(286): Illuminate\Container\Container->call(Object(Closure), Array)
+#6 /var/www/yf2/library/Concerns/RoutesRequests.php(255): App\Application->callActionOnArrayBasedRoute(Array)
+#7 /var/www/yf2/library/Concerns/RoutesRequests.php(413): App\Application->Library\Concerns\{closure}()
+#8 /var/www/yf2/library/Concerns/RoutesRequests.php(256): App\Application->sendThroughPipeline(Array, Object(Closure))
+#9 /var/www/yf2/library/Concerns/RoutesRequests.php(230): App\Application->handleFoundRoute(Array)
+#10 /var/www/yf2/library/Concerns/RoutesRequests.php(164): App\Application->handleDispatcherResponse(Array)
+#11 /var/www/yf2/library/Concerns/RoutesRequests.php(413): App\Application->Library\Concerns\{closure}()
+#12 /var/www/yf2/library/Concerns/RoutesRequests.php(166): App\Application->sendThroughPipeline(Array, Object(Closure))
+#13 /var/www/yf2/library/Dingo/DingoAdapter.php(109): App\Application->dispatch(Object(Dingo\Api\Http\Request))
+#14 /var/www/yf2/vendor/dingo/api/src/Routing/Router.php(559): Library\Dingo\DingoAdapter->dispatch(Object(Dingo\Api\Http\Request), 'v1')
+#15 /var/www/yf2/vendor/dingo/api/src/Http/Middleware/Request.php(112): Dingo\Api\Routing\Router->dispatch(Object(Dingo\Api\Http\Request))
+#16 /var/www/yf2/vendor/illuminate/pipeline/Pipeline.php(114): Dingo\Api\Http\Middleware\Request->Dingo\Api\Http\Middleware\{closure}(Object(Dingo\Api\Http\Request))
+#17 /var/www/yf2/vendor/illuminate/pipeline/Pipeline.php(102): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Dingo\Api\Http\Request))
+#18 /var/www/yf2/vendor/dingo/api/src/Http/Middleware/Request.php(113): Illuminate\Pipeline\Pipeline->then(Object(Closure))
+#19 /var/www/yf2/vendor/dingo/api/src/Http/Middleware/Request.php(89): Dingo\Api\Http\Middleware\Request->sendRequestThroughRouter(Object(Dingo\Api\Http\Request))
+#20 /var/www/yf2/vendor/illuminate/pipeline/Pipeline.php(149): Dingo\Api\Http\Middleware\Request->handle(Object(Dingo\Api\Http\Request), Object(Closure))
+#21 [internal function]: Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#22 /var/www/yf2/library/Routing/Pipeline.php(32): call_user_func(Object(Closure), Object(Illuminate\Http\Request))
+#23 /var/www/yf2/vendor/illuminate/pipeline/Pipeline.php(102): Library\Routing\Pipeline->Library\Routing\{closure}(Object(Illuminate\Http\Request))
+#24 /var/www/yf2/library/Concerns/RoutesRequests.php(410): Illuminate\Pipeline\Pipeline->then(Object(Closure))
+#25 /var/www/yf2/library/Concerns/RoutesRequests.php(166): App\Application->sendThroughPipeline(Array, Object(Closure))
+#26 /var/www/yf2/library/Concerns/RoutesRequests.php(107): App\Application->dispatch(NULL)
+#27 /var/www/yf2/index.php(22): App\Application->run()
+#28 {main}  
+[2017-09-12 23:30:32] LOG.ERROR: Symfony\Component\Debug\Exception\FatalThrowableError: Class 'swoole_http_server' not found in /var/www/yf2/library/Swoole/SwooleHttpServer.php:53
+Stack trace:
+#0 /var/www/yf2/library/Swoole/SwooleHttpServer.php(36): Library\Swoole\SwooleHttpServer->bootstrapSwoole()
+#1 /var/www/yf2/app/Providers/SwooleServiceProvider.php(25): Library\Swoole\SwooleHttpServer->__construct(Object(App\Application), Array)
+#2 /var/www/yf2/vendor/illuminate/container/Container.php(749): App\Providers\SwooleServiceProvider->App\Providers\{closure}(Object(App\Application), Array)
+#3 /var/www/yf2/vendor/illuminate/container/Container.php(631): Illuminate\Container\Container->build(Object(Closure))
+#4 /var/www/yf2/vendor/illuminate/container/Container.php(586): Illuminate\Container\Container->resolve('swoole', Array)
+#5 /var/www/yf2/app/Application.php(153): Illuminate\Container\Container->make('swoole', Array)
+#6 /var/www/yf2/app/Application.php(260): App\Application->make('swoole')
+#7 /var/www/yf2/app/Application.php(218): App\Application->loadComponent('swoole', 'App\\Providers\\S...', 'swoole')
+#8 /var/www/yf2/app/Application.php(101): App\Application->registerSwooleBindings()
+#9 /var/www/yf2/index.php(11): App\Application->__construct()
+#10 {main}  
