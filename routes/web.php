@@ -12,13 +12,15 @@
 */
 $api = app('api.router');
 $api->version('v1', function ($api){
-    $api->get('/', function (\Dingo\Api\Http\Request $request) {
+    $api->get('/', function (\Illuminate\Http\Request $request) {
+       // var_dump($request->fd);
        //var_dump(debug_backtrace());
-        return "aaa";
+       //var_dump($request->getOrigin());
         //throw new Exception("aaa");
     });
     $api->get('/c', function (\Dingo\Api\Http\Request $request) {
         //var_dump(debug_backtrace());
+       //var_dump(get_class(app("swoole")));
         return "ccc";
     });
 });

@@ -227,7 +227,9 @@ class Application extends Container{
      */
     protected function registerSwooleBindings()
     {
-        $this->swoole = $this->loadComponent('swoole',SwooleServiceProvider::class ,'swoole');
+        $this->configure('swoole');
+        $this->swoole = new SwooleHttpServer($this, $this->make('config')->get("swoole"));
+        //$this->swoole = $this->loadComponent('swoole',SwooleServiceProvider::class ,'swoole');
     }
 
     /**

@@ -76,3 +76,15 @@ if (! function_exists('response')) {
         return $factory->make($content, $status, $headers);
     }*/
 }
+
+if (! function_exists('taskBean')) {
+    /**
+     * @param $provider
+     * @param array $params
+     * @return array
+     */
+    function taskBean($provider, $params = [])
+     {
+       return ['provider'=>$provider, 'params'=>$params];
+     }
+}

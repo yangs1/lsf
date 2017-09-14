@@ -15,9 +15,15 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        "AAA" => [
-            "App\\Events\\Listener@A",
-        ],
+        "swoole.beforeStart" => "App\\Events\\SwooleEvents@beforeStart",
+        "swoole.start" => "App\\Events\\SwooleEvents@onStart",
+        "swoole.shutdown" => "App\\Events\\SwooleEvents@onShutdown",
+        "swoole.workerStart" => "App\\Events\\SwooleEvents@onWorkerStart",
+        "swoole.workerStop" => "App\\Events\\SwooleEvents@onWorkerStop",
+        "swoole.workererror" => "App\\Events\\SwooleEvents@onWorkerError",
+        //"swoole.request" => "App\\Events\\SwooleEvents@onRequest",
+        "swoole.task" => "App\\Events\\SwooleEvents@onTask",
+        "swoole.finish" => "App\\Events\\SwooleEvents@onFinish",
     ];
 
     /**
@@ -37,7 +43,7 @@ class EventServiceProvider extends ServiceProvider
         $events = app('events');
 
         foreach ($this->listen as $event => $listeners) {
-            foreach ($listeners as $listener) {
+            foreach ((array)$listeners as $listener) {
                 $events->listen($event, $listener);
             }
         }

@@ -34,4 +34,12 @@ class Request extends DingoRequest implements RequestInterface
 
         parent::__construct($get, $post, [], $cookies, $files, $server);
     }
+
+    public function getFd(){
+        return $this->fd;
+    }
+
+    public function getOrigin(){
+        return $this->swooleRequest;
+    }
 }

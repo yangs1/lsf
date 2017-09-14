@@ -11,6 +11,7 @@ namespace Library\Swoole;
 
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Http\Request;
+use Library\Swoole\Contracts\TaskHandler;
 use Symfony\Component\HttpFoundation\HeaderBag;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Library\Swoole\Http\Request as SwooleRequest;
@@ -28,6 +29,9 @@ class SwooleHttpServer
 
     protected $config;
 
+    /**
+     * @var \swoole_server
+     */
     protected $swooleServer;
 
     /**
@@ -60,6 +64,7 @@ class SwooleHttpServer
         }else{
             $this->swooleServer = new \swoole_http_server($this->config['listen'], $this->config['port']);
         }
+        $this->app->instance('swoole',$this->swooleServer);
     }
 
     public function start()
@@ -68,35 +73,40 @@ class SwooleHttpServer
             throw new \Exception('swoole server init fail.');
         }
         $this->swooleServer->set($this->config['settings']);
- //       $this->registerEvents('beforeStart', [$this->swooleServer], false);
-//        $this->registerEvents('start');
-//        $this->registerEvents('shutdown');
-//        $this->registerEvents('workererror');
-        $this->registerEvents('task'); //TODO REQUEST
-        $this->registerEvents('finish');//TODO REQUEST
-//        $this->registerEvents('workerStart');
-//        $this->registerEvents('workerStop');
+        $this->registerEvents('beforeStart', [$this->app], false);
+        $this->registerEvents('start');
+        $this->registerEvents('shutdown');
+
+        $this->registerEvents('workerStart');
+        $this->registerEvents('workerStop');
+        $this->registerEvents('workererror');
+
+        $this->registerTaskEvent(); //TODO REQUEST
+        $this->registerFinishEvent();//TODO REQUEST
+
         $this->registerRequestEvent();
-        //var_dump($this->app->getA());
+
         $this->swooleServer->start();
         //TODO REQUEST
     }
 
     public function registerEvents($event, $params = [], $server=true){
         if ($server){
-            $this->getServer()->on($event, function (...$args) use($event){
-                //$this->registerEvents("swoole.{$event}", (array)$args);
+            $this->swooleServer->on($event, function (...$args) use($event){
                 $this->app->make('events')->dispatch("swoole.{$event}", (array)$args);
             });
         }else{
             $this->app->make('events')->dispatch("swoole.{$event}", $params);
         }
-
     }
 
     public function registerRequestEvent()
     {
-        $this->getServer()->on("request",
+        if ($this->app->make('events')->hasListeners("swoole.request")){
+            $this->registerEvents("request");
+            return ;
+        }
+        $this->swooleServer->on("request",
             function (\swoole_http_request $request,\swoole_http_response $response){
 
 
@@ -123,6 +133,46 @@ class SwooleHttpServer
                     $this->app->callTerminableMiddleware($SResponse);
                 }*/
             });
+    }
+
+    private function registerTaskEvent(){
+        if (empty($this->config['settings']['task_worker_num'])){
+            return ;
+        }
+        $this->swooleServer->on("task",function (\swoole_http_server $server, $taskId, $workerId, $abstract){
+            $taskReutrn = $this->app->make('events')->dispatch("swoole.task", [$server, $taskId, $workerId, $abstract]);
+
+            if (isset($taskReutrn)){
+                return $taskReutrn;
+            }
+            if ($abstract instanceof \Closure){
+                $taskReutrn = call_user_func($abstract);
+            }elseif (is_string($abstract) && class_exists($abstract)){
+                $abstract = $taskReutrn = new $abstract();
+            }
+            if ($abstract instanceof TaskHandler) {
+                $taskReutrn = $abstract->handler();
+            }
+
+            return $taskReutrn;
+
+        });
+    }
+
+    private function registerFinishEvent(){
+        if (empty($this->config['settings']['task_worker_num'])){
+            return ;
+        }
+        $this->swooleServer->on("finish",
+            function (\swoole_http_server $server, $taskId, $abstract){
+                //TODO 任务结束处理
+                $this->app->make('events')->dispatch("swoole.finish", [$server, $taskId, $abstract]);
+
+                if ($abstract instanceof TaskHandler) {
+                    $abstract->finishCallBack();
+                }
+            }
+        );
     }
 
 
