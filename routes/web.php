@@ -13,10 +13,20 @@
 $api = app('api.router');
 $api->version('v1', function ($api){
     $api->get('/', function (\Illuminate\Http\Request $request) {
-       // var_dump($request->fd);
-       //var_dump(debug_backtrace());
-       //var_dump($request->getOrigin());
-        //throw new Exception("aaa");
+        /*=============================*/
+       // var_dump($request->fd); //获取swoole
+       //var_dump(debug_backtrace());  //php 执行的对象栈
+       //var_dump($request->getOrigin()); //获取原始request
+
+        /*==========================*/
+        /*task(function (){  // swoole任务用法
+            echo "ok ok ok !!!";
+            return \App\Task\TestTask::class;
+        },["a"=>2]);*/
+
+        /*=============================*/
+//var_dump((new \Dingo\Api\Http\Response(["666"]))->getTransformer());
+        return new \Dingo\Api\Http\Response(["666"]);
     });
     $api->get('/c', function (\Dingo\Api\Http\Request $request) {
         //var_dump(debug_backtrace());

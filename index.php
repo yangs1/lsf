@@ -20,3 +20,13 @@ $app->router->group(['namespace' => 'App\Http\Controllers'], function ($app) {
 });
 
 $app->swoole->start();
+
+
+/*$s = new \SuperClosure\Serializer();
+$a = function ($name = "a"){
+    echo "666";
+};
+$b = $s->serialize($a);
+$c = $s->unserialize($b);
+$c();*/
+//var_dump($b);

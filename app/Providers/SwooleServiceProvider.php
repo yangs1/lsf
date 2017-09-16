@@ -15,18 +15,41 @@ class SwooleServiceProvider extends ServiceProvider
 {
 
     /**
+     * The event listener mappings for the application.
+     *
+     * @var array
+     */
+    protected $listen = [
+        "swoole.beforeStart" => "App\\Events\\SwooleEvents@beforeStart",
+        "swoole.start" => "App\\Events\\SwooleEvents@onStart",
+        "swoole.shutdown" => "App\\Events\\SwooleEvents@onShutdown",
+        "swoole.workerStart" => "App\\Events\\SwooleEvents@onWorkerStart",
+        "swoole.workerStop" => "App\\Events\\SwooleEvents@onWorkerStop",
+        "swoole.workererror" => "App\\Events\\SwooleEvents@onWorkerError",
+        //"swoole.request" => "App\\Events\\SwooleEvents@onRequest",
+        "swoole.task" => "App\\Events\\SwooleEvents@onTask",
+        "swoole.finish" => "App\\Events\\SwooleEvents@onFinish",
+    ];
+
+    /**
      * Register the service provider.
      *
      * @return void
      */
     public function register(){
-        $this->app->singleton("swoole", function (){
-            return new SwooleHttpServer($this->app, $this->app['config']->get("swoole"));
-        });
+        if (!$this->app->bound('events')){
+            $this->app->register('Illuminate\Events\EventServiceProvider');
+        }
     }
 
     public function boot(){
-
+        $events = app('events');
+        foreach ($this->listen as $event => $listeners) {
+            foreach ((array)$listeners as $listener) {
+                $events->listen($event, $listener);
+            }
+        }
+        return new SwooleHttpServer($this->app, app("config")->get("swoole"));
     }
 
 }

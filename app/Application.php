@@ -20,8 +20,6 @@ use Library\Log\LogServiceProvider;
 use Illuminate\Support\ServiceProvider;
 use Library\Concerns\RegistersExceptionHandlers;
 use Library\Routing\Router;
-use Library\Swoole\SwooleHttpServer;
-use Swoole\Mysql\Exception;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 
 class Application extends Container{
@@ -74,7 +72,6 @@ class Application extends Container{
      * @var callable|null
      */
     protected $monologConfigurator;
-   // protected $appMakeLog = [];
 
 
     public $availableBindings = [
@@ -136,10 +133,6 @@ class Application extends Container{
         return php_sapi_name() == 'cli';
     }
 
-    public function getA()
-    {
-        var_dump($this->appMakeLog);
-    }
     /**
      * Resolve the given type from the container.
      * @param string $abstract
@@ -149,12 +142,7 @@ class Application extends Container{
     public function make($abstract, array $parameters = [])
     {
         $abstract = $this->getAlias($abstract);
-   /*     if (isset($this->appMakeLog[$abstract])){
-            $this->appMakeLog[$abstract]++;
-        }else{
-            $this->appMakeLog[$abstract] = 1;
-        }*/
-       
+
         if (array_key_exists($abstract, $this->availableBindings) &&
             ! array_key_exists($this->availableBindings[$abstract], $this->ranServiceBinders)) {
             $this->{$method = $this->availableBindings[$abstract]}();
@@ -228,7 +216,7 @@ class Application extends Container{
     protected function registerSwooleBindings()
     {
         $this->configure('swoole');
-        $this->swoole = new SwooleHttpServer($this, $this->make('config')->get("swoole"));
+        $this->swoole = $this->register(SwooleServiceProvider::class);
         //$this->swoole = $this->loadComponent('swoole',SwooleServiceProvider::class ,'swoole');
     }
 

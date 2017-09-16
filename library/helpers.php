@@ -77,14 +77,40 @@ if (! function_exists('response')) {
     }*/
 }
 
-if (! function_exists('taskBean')) {
+if (! function_exists('dispatch')) {
     /**
-     * @param $provider
+     * @param $event
      * @param array $params
-     * @return array
      */
-    function taskBean($provider, $params = [])
-     {
-       return ['provider'=>$provider, 'params'=>$params];
-     }
+    function dispatch($event, $params=[]){
+        app('events')->dispatch($event, $params);
+    }
 }
+
+if (! function_exists('task')) {
+    /**
+     * @param $abstract
+     * @param $params
+     * @param int $workerId
+     */
+    function task($abstract, $params, $workerId = -1){
+        $task = new \Library\Swoole\Contracts\TaskClosure($abstract, $params);
+       // var_dump($task);
+        app("swoole")->task($task, $workerId);
+    }
+}
+if (! function_exists('syncTask')) {
+    /**
+     * @param $abstract
+     * @param $params
+     * @param float $timeout
+     * @param $workerId
+     */
+    function syncTask($abstract, $params,  $timeout = 0.5, $workerId = -1){
+        $task = new \Library\Swoole\Contracts\TaskClosure($abstract, $params);
+        // var_dump($task);
+        app("swoole")->taskwait($task, $timeout, $workerId);
+    }
+}
+
+

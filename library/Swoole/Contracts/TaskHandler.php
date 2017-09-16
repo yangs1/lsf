@@ -10,6 +10,6 @@ namespace Library\Swoole\Contracts;
 
 abstract class TaskHandler
 {
-    abstract function handler();
+    abstract function execute($server, $taskId, $workerId, $params);
     abstract function finishCallBack();
 }
