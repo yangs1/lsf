@@ -11,8 +11,9 @@ namespace App;
 use App\Exceptions\Handler;
 use App\Providers\EventServiceProvider;
 use App\Providers\SwooleServiceProvider;
-use Illuminate\Http\Request;
+
 use Illuminate\Container\Container;
+use Library\Concerns\RegistersConsole;
 use Library\Concerns\RoutesRequests;
 use Library\ConfigRepository;
 use Library\Dingo\DingoServiceProvider;
@@ -20,11 +21,12 @@ use Library\Log\LogServiceProvider;
 use Illuminate\Support\ServiceProvider;
 use Library\Concerns\RegistersExceptionHandlers;
 use Library\Routing\Router;
+use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 
 class Application extends Container{
 
-    use RegistersExceptionHandlers, RoutesRequests;
+    use RegistersExceptionHandlers, RoutesRequests, RegistersConsole;
    // use RegistersDingoTrait,RoutesRequests;
     /**
      * The base path of the application installation.
@@ -96,7 +98,7 @@ class Application extends Container{
         $this->bootstrapContainer();
         $this->registerErrorHandling();
         $this->bootstrapRouter();
-        $this->registerSwooleBindings();
+
     }
 
     /**
@@ -215,8 +217,8 @@ class Application extends Container{
      */
     protected function registerSwooleBindings()
     {
-        $this->configure('swoole');
-        $this->swoole = $this->register(SwooleServiceProvider::class);
+        //$this->configure('swoole');
+        //$this->swoole = $this->register(SwooleServiceProvider::class);
         //$this->swoole = $this->loadComponent('swoole',SwooleServiceProvider::class ,'swoole');
     }
 
@@ -341,26 +343,4 @@ class Application extends Container{
         return null;
     }
 
-
-
-    /**
-     * Prepare the given request instance for use with the application.
-     *
-     * @param  \Symfony\Component\HttpFoundation\Request $request
-     * @return \Illuminate\Http\Request
-     */
-    protected function prepareRequest(SymfonyRequest $request)
-    {
-        if (! $request instanceof Request) {
-            $request = Request::createFromBase($request);
-        }
-
-        $request->setUserResolver(function ($guard = null) {
-            return $this->make('auth')->guard($guard)->user();
-        })->setRouteResolver(function () {
-            return $this->currentRoute;
-        });
-
-        return $request;
-    }
 }

@@ -41,10 +41,10 @@ class SwooleHttpServer
      * @param  $app
      * @param  $config
      */
-    public function __construct($app, $config)
+    public function __construct($app)
     {
         $this->app = $app;
-        $this->config = $config;
+
 
         $this->bootstrapSwoole();
     }
@@ -57,13 +57,13 @@ class SwooleHttpServer
     }
 
     public function bootstrapSwoole(){
-        if (!isset($this->config)){
+        /*if (!isset($this->config)){
             throw new \Exception('the swoole server necessary config repository.');
-        }
-        if ($this->config['wss']){
-            $this->swooleServer = new \swoole_websocket_server($this->config['listen'], $this->config['port']);
+        }*/
+        if (config('swoole.wss')){
+            $this->swooleServer = new \swoole_websocket_server(config('swoole.listen'), config('swoole.port'));
         }else{
-            $this->swooleServer = new \swoole_http_server($this->config['listen'], $this->config['port']);
+            $this->swooleServer = new \swoole_http_server(config('swoole.listen'), config('swoole.port'));
         }
         $this->app->instance('swoole',$this->swooleServer);
     }
@@ -73,7 +73,7 @@ class SwooleHttpServer
         if (!$this->swooleServer instanceof \swoole_server){
             throw new \Exception('swoole server init fail.');
         }
-        $this->swooleServer->set($this->config['settings']);
+        $this->swooleServer->set(config('swoole.settings'));
         $this->registerEvents('beforeStart', [$this->app], false);
         $this->registerEvents('start');
         $this->registerEvents('shutdown');
@@ -110,6 +110,7 @@ class SwooleHttpServer
         $this->swooleServer->on("request",
             function (\swoole_http_request $request,\swoole_http_response $response){
 
+
                 $SRequest = new SwooleRequest($request);
 
                 if (0 === strpos($SRequest->headers->get('CONTENT_TYPE'), 'application/x-www-form-urlencoded')
@@ -136,7 +137,7 @@ class SwooleHttpServer
     }
 
     private function registerTaskEvent(){
-        if (empty($this->config['settings']['task_worker_num'])){
+        if (empty(config('swoole.settings.task_worker_num'))){
             return ;
         }
         /*if ( app('events')->hasListeners("swoole.task") ){
@@ -172,7 +173,7 @@ class SwooleHttpServer
     }
 
     private function registerFinishEvent(){
-        if (empty($this->config['settings']['task_worker_num'])){
+        if (empty(config('swoole.settings.task_worker_num'))){
             return ;
         }
         $this->swooleServer->on("finish",
@@ -214,6 +215,7 @@ class SwooleHttpServer
         if ($realResponse instanceof BinaryFileResponse) {
             $response->sendfile($realResponse->getFile()->getPathname());
         } else {
+            var_dump($realResponse->getContent());
             $response->end($realResponse->getContent());
         }
     }

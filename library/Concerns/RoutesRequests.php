@@ -15,7 +15,6 @@ use Library\Routing\Closure as RoutingClosure;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Library\Routing\Controller as LumenController;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
-
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -444,5 +443,26 @@ trait RoutesRequests
     protected function shouldSkipMiddleware()
     {
         return $this->bound('middleware.disable') && $this->make('middleware.disable') === true;
+    }
+
+    /**
+     * Prepare the given request instance for use with the application.
+     *
+     * @param  \Symfony\Component\HttpFoundation\Request $request
+     * @return \Illuminate\Http\Request
+     */
+    protected function prepareRequest(SymfonyRequest $request)
+    {
+        if (! $request instanceof Request) {
+            $request = Request::createFromBase($request);
+        }
+
+        $request->setUserResolver(function ($guard = null) {
+            return $this->make('auth')->guard($guard)->user();
+        })->setRouteResolver(function () {
+            return $this->currentRoute;
+        });
+
+        return $request;
     }
 }
