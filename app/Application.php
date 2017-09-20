@@ -11,8 +11,9 @@ namespace App;
 use App\Exceptions\Handler;
 use App\Providers\EventServiceProvider;
 use App\Providers\SwooleServiceProvider;
-
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Container\Container;
+use Illuminate\Filesystem\FilesystemManager;
 use Library\Concerns\RegistersConsole;
 use Library\Concerns\RoutesRequests;
 use Library\ConfigRepository;
@@ -80,7 +81,9 @@ class Application extends Container{
         'config'    =>  'registerConfigBindings',
         'db'        =>  'registerDatabaseBindings',
         'events'    =>  'registerEventBindings',
-        'log'    =>  'registerLogBindings'
+        'log'    =>  'registerLogBindings',
+        'files' => 'registerFilesBindings',
+        FilesystemManager::class =>"registerFilesSystemBindings"
     ];
 
     protected $aliases = [
@@ -98,7 +101,6 @@ class Application extends Container{
         $this->bootstrapContainer();
         $this->registerErrorHandling();
         $this->bootstrapRouter();
-
     }
 
     /**
@@ -181,6 +183,25 @@ class Application extends Container{
         });
     }
 
+    /**
+     * Register container bindings for the application.
+     *
+     * @return void
+     */
+    protected function registerFilesBindings()
+    {
+        $this->singleton('files', function () {
+            return new Filesystem;
+        });
+    }
+
+    public function registerFilesSystemBindings()
+    {
+        $this->configure('filesystems');
+        $this->singleton(FilesystemManager::class,function (){
+            return new FilesystemManager(app());
+        });
+    }
     /**
      * Register container bindings for the application.
      *

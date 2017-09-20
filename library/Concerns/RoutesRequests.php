@@ -88,6 +88,7 @@ trait RoutesRequests
         //$response = $this->dispatch($request);
 
         $response = $this->make('api.router')->dispatch($request);
+      //  var_dump($response->getContent());
         if (count($this->middleware) > 0) {
             $this->callTerminableMiddleware($response);
         }

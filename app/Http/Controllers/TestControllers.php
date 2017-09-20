@@ -19,10 +19,12 @@ class TestControllers
 {
     use Helpers;
     public function index(Request $request){
-        app("db");
-        $a = A::first();
+
+      /*  $a = false;
+        $request->file('photo')->store("");*/
+       /* app("db");
+        $a = A::first();*/
         //return $this->response()->item($a, new UserTransformer());
-        //return new Response($request->all());
-        return "ad";
+        return new Response(['a'=>1]);
     }
 }

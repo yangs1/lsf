@@ -13,7 +13,7 @@
 use Dingo\Api\Routing\Helpers;
 $api = app('api.router');
 $api->version('v1', function ($api){
-    $api->get('/', 'App\Http\Controllers\TestControllers@index');
+    $api->post('/', 'App\Http\Controllers\TestControllers@index');
     $api->get('/a', function (\Illuminate\Http\Request $request) {
         /*=============================*/
        // var_dump($request->fd); //获取swoole

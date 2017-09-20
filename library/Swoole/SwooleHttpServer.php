@@ -123,12 +123,17 @@ class SwooleHttpServer
                 $baseRequest = Request::createFromBase($SRequest);
 
                 $SResponse = $this->app->handle($baseRequest);
-
+               // xdebug_debug_zval('SResponse');
+               /* $response->write($SResponse->getContent());
+                var_dump($SResponse->getContent());*/
                 if ($SResponse instanceof SymfonyResponse) {
                     $this->formatResponse($response, $SResponse);
                 } else {
                     $response->end( (string)$SResponse );
                 }
+
+
+                //xdebug_debug_zval('baseRequest');
                 //var_dump($this->app['api.router']->getRoutesDispatched());
                 /*if (count($this->app->middleware) > 0) {
                     $this->app->callTerminableMiddleware($SResponse);
@@ -215,7 +220,6 @@ class SwooleHttpServer
         if ($realResponse instanceof BinaryFileResponse) {
             $response->sendfile($realResponse->getFile()->getPathname());
         } else {
-            var_dump($realResponse->getContent());
             $response->end($realResponse->getContent());
         }
     }
