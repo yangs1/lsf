@@ -10,7 +10,6 @@ namespace App;
 
 use App\Exceptions\Handler;
 use App\Providers\EventServiceProvider;
-use App\Providers\SwooleServiceProvider;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Container\Container;
 use Illuminate\Filesystem\FilesystemManager;
@@ -22,8 +21,6 @@ use Library\Log\LogServiceProvider;
 use Illuminate\Support\ServiceProvider;
 use Library\Concerns\RegistersExceptionHandlers;
 use Library\Routing\Router;
-use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 
 class Application extends Container{
 
@@ -75,8 +72,10 @@ class Application extends Container{
         'config'    =>  'registerConfigBindings',
         'db'        =>  'registerDatabaseBindings',
         'events'    =>  'registerEventBindings',
-        'log'    =>  'registerLogBindings',
-        'files' => 'registerFilesBindings',
+        'log'       =>  'registerLogBindings',
+        'files'     =>  'registerFilesBindings',
+        'validator'=>'registerValidatorBindings',
+        "translator"    =>"registerTranslationBindings",
         FilesystemManager::class =>"registerFilesSystemBindings"
     ];
 
@@ -97,6 +96,7 @@ class Application extends Container{
         $this->bootstrapRouter();
     }
 
+
     /**
      * Bootstrap the application container.
      *
@@ -105,7 +105,6 @@ class Application extends Container{
     protected function bootstrapContainer()
     {
         static::setInstance($this);
-
         $this->instance('app', $this);
         $this->instance('path', $this->path());
     }
@@ -117,8 +116,14 @@ class Application extends Container{
      */
     public function bootstrapRouter()
     {
-       // $this->router = new Router($this);
-        $this->router = $this->loadComponent("app",DingoServiceProvider::class, 'api.router');
+        if ($this->runningInModel() === "dingo"){
+            $this->router = $this->loadComponent("app",DingoServiceProvider::class, 'api.router');
+        }else if ($this->runningInModel() === "mix"){
+            $this->router = new Router($this);
+            $this->loadComponent("app",DingoServiceProvider::class);
+        }else{
+            $this->router = new Router($this);
+        }
     }
 
     /**
@@ -129,6 +134,12 @@ class Application extends Container{
     public function runningInConsole()
     {
         return php_sapi_name() == 'cli';
+    }
+
+    public function runningInModel()
+    {
+        $this->configure('app');
+        return config('app.app_model', 'default');
     }
 
     /**
@@ -243,7 +254,19 @@ class Application extends Container{
         return null;
     }
 
-
+    /**
+     * Get the path to the application's language files.
+     *
+     * @return string
+     */
+    protected function getLanguagePath()
+    {
+        if (is_dir($langPath = $this->basePath().'/resources/lang')) {
+            return $langPath;
+        } else {
+            return __DIR__.'/../resources/lang';
+        }
+    }
     /**
      * Register a service provider with the application.
      *
@@ -305,11 +328,7 @@ class Application extends Container{
 
     protected function registerEventBindings()
     {
-        $this->singleton('events', function () {
-            $this->register('Illuminate\Events\EventServiceProvider');
-            $this->register(EventServiceProvider::class);
-            return $this->make('events');
-        });
+       $this->loadComponent('events',['Illuminate\Events\EventServiceProvider',EventServiceProvider::class]);
     }
 
     protected function registerLogBindings()
@@ -323,4 +342,25 @@ class Application extends Container{
         });
     }
 
+    protected function registerValidatorBindings()
+    {
+        $this->singleton('validator', function () {
+            $this->register('Illuminate\Validation\ValidationServiceProvider');
+
+            return $this->make('validator');
+        });
+    }
+
+    protected function registerTranslationBindings()
+    {
+        $this->singleton('translator', function () {
+            $this->configure('app');
+
+            $this->instance('path.lang', $this->getLanguagePath());
+
+            $this->register('Illuminate\Translation\TranslationServiceProvider');
+
+            return $this->make('translator');
+        });
+    }
 }

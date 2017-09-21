@@ -26,7 +26,7 @@ trait RegistersConsole
         global $argv;
         $start_file = $argv[0];
         // 命令
-        $command = isset($argv[1]) ? trim($argv[1]) : 'start';
+        $command = isset($argv[1]) ? trim($argv[1]) : '';
         // 子命令, 目前只支持-d -force
         $operations = isset($argv[2]) ? $argv[2] : '';
         // 根据命令做相应处理

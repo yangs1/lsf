@@ -9,6 +9,7 @@
 namespace  App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use League\Flysystem\Exception;
 use Library\Swoole\SwooleHttpServer;
 
 class SwooleServiceProvider extends ServiceProvider
@@ -43,11 +44,12 @@ class SwooleServiceProvider extends ServiceProvider
     }
 
     public function boot(){
-        $events = app('events');
+        $events = $this->app['events'];
         foreach ($this->listen as $event => $listeners) {
             foreach ((array)$listeners as $listener) {
                 $events->listen($event, $listener);
             }
+
         }
         return new SwooleHttpServer($this->app, app("config")->get("swoole"));
     }

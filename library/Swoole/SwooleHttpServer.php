@@ -127,8 +127,8 @@ class SwooleHttpServer
 
                 $SResponse = $this->app->handle($SRequest);
 
-               /* $response->write($SResponse->getContent());
-                var_dump($SResponse->getContent());*/
+               /* $response->write($SResponse->getContent());*/
+              //  var_dump($SResponse->getContent());
 
                 if ($SResponse instanceof SymfonyResponse) {
                     $this->formatResponse($response, $SResponse);

@@ -85,10 +85,12 @@ trait RoutesRequests
      */
     public function handle(SymfonyRequest $request)
     {
-        //$response = $this->dispatch($request);
+        if ($this->runningInModel() === "default"){
+            $response = $this->dispatch($request);
+        }else{
+            $response = $this->make('api.router')->dispatch($request);
 
-        $response = $this->make('api.router')->dispatch($request);
-      //  var_dump($response->getContent());
+        }
         if (count($this->middleware) > 0) {
             $this->callTerminableMiddleware($response);
         }

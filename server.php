@@ -7,17 +7,19 @@
  */
 require 'vendor/autoload.php';
 
-/*======本版本主要速度限制在于 Request Response 的重新 =========*/
 $app = new \App\Application();
 
+$app->routeMiddleware([
+   "auth" =>\App\Http\Middleware\AuthMiddleware::class
+]);
 /*$app->router->get('/', function (\Illuminate\Http\Request $request) {
     //var_dump(debug_backtrace());
    // throw  new Exception("aaa");
     return new \Illuminate\Http\Response(["666"]);
 });*/
 
-/*$app->router->group(['namespace' => 'App\Http\Controllers'], function ($app) {
-
+/*$app->router->group(['namespace' => 'App\Http\Controllers','middleware'=>"auth"], function () use($app) {
+    $app->router->get('/', 'TestControllers@index');
 });*/
 
 require __DIR__.'/routes/web.php';
@@ -30,9 +32,6 @@ if(function_exists('opcache_reset')){
 }
 
 $app->parse_command();
-
-//$app->swoole->start();
-
 
 /*$s = new \SuperClosure\Serializer();
 $a = function ($name = "a"){
