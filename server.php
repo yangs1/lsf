@@ -16,9 +16,11 @@ $app = new \App\Application();
     return new \Illuminate\Http\Response(["666"]);
 });*/
 
-$app->router->group(['namespace' => 'App\Http\Controllers'], function ($app) {
-    require __DIR__.'/routes/web.php';
-});
+/*$app->router->group(['namespace' => 'App\Http\Controllers'], function ($app) {
+
+});*/
+
+require __DIR__.'/routes/web.php';
 
 if(function_exists('apc_clear_cache')){
     apc_clear_cache();

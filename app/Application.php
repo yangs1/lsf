@@ -28,7 +28,6 @@ use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 class Application extends Container{
 
     use RegistersExceptionHandlers, RoutesRequests, RegistersConsole;
-   // use RegistersDingoTrait,RoutesRequests;
     /**
      * The base path of the application installation.
      *
@@ -64,11 +63,6 @@ class Application extends Container{
      * @var array
      */
     protected $ranServiceBinders = [];
-    /**
-     * The available container bindings and their respective load methods.
-     *
-     * @var array
-     */
     /**
      * A custom callback used to configure Monolog.
      *
@@ -123,8 +117,8 @@ class Application extends Container{
      */
     public function bootstrapRouter()
     {
-        $this->router = new Router($this);
-        $this->loadComponent("app",DingoServiceProvider::class, 'api.router');
+       // $this->router = new Router($this);
+        $this->router = $this->loadComponent("app",DingoServiceProvider::class, 'api.router');
     }
 
     /**
@@ -155,92 +149,6 @@ class Application extends Container{
         }
 
         return parent::make($abstract, $parameters);
-    }
-
-
-    /**
-     * Register container bindings for the application.
-     *
-     * @return void
-     */
-    protected function registerConfigBindings()
-    {
-        $this->singleton('config', ConfigRepository::class);
-    }
-    /**
-     * Register container bindings for the application.
-     *
-     * @return void
-     */
-    protected function registerDatabaseBindings()
-    {
-        $this->singleton('db', function () {
-            return $this->loadComponent(
-                'database',
-                ['Illuminate\Database\DatabaseServiceProvider'],
-                'db'
-            );
-        });
-    }
-
-    /**
-     * Register container bindings for the application.
-     *
-     * @return void
-     */
-    protected function registerFilesBindings()
-    {
-        $this->singleton('files', function () {
-            return new Filesystem;
-        });
-    }
-
-    public function registerFilesSystemBindings()
-    {
-        $this->configure('filesystems');
-        $this->singleton(FilesystemManager::class,function (){
-            return new FilesystemManager(app());
-        });
-    }
-    /**
-     * Register container bindings for the application.
-     *
-     * @return void
-     */
-    protected function registerEventBindings()
-    {
-        $this->singleton('events', function () {
-            $this->register('Illuminate\Events\EventServiceProvider');
-            $this->register(EventServiceProvider::class);
-            return $this->make('events');
-        });
-    }
-
-    /**
-     * Register container bindings for the application.
-     *
-     * @return void
-     */
-    protected function registerLogBindings()
-    {
-        $this->singleton('log', function () {
-            return $this->loadComponent(
-                'app',
-                [LogServiceProvider::class],
-                'log'
-            );
-        });
-    }
-    /**
-     * Register container bindings for the application.
-     *
-     * @return void
-     */
-    protected function registerSwooleBindings()
-    {
-        //$this->configure('swoole');
-        //$this->swoole = $this->register(SwooleServiceProvider::class);
-        //$this->swoole = $this->loadComponent('swoole',SwooleServiceProvider::class ,'swoole');
     }
 
     /**
@@ -362,6 +270,57 @@ class Application extends Container{
             return $this->call([$provider, 'boot']);
         }
         return null;
+    }
+
+    protected function registerConfigBindings()
+    {
+        $this->singleton('config', ConfigRepository::class);
+    }
+
+    protected function registerDatabaseBindings()
+    {
+        $this->singleton('db', function () {
+            return $this->loadComponent(
+                'database',
+                ['Illuminate\Database\DatabaseServiceProvider'],
+                'db'
+            );
+        });
+    }
+
+    protected function registerFilesBindings()
+    {
+        $this->singleton('files', function () {
+            return new Filesystem;
+        });
+    }
+
+    protected function registerFilesSystemBindings()
+    {
+        $this->configure('filesystems');
+        $this->singleton(FilesystemManager::class,function (){
+            return new FilesystemManager(app());
+        });
+    }
+
+    protected function registerEventBindings()
+    {
+        $this->singleton('events', function () {
+            $this->register('Illuminate\Events\EventServiceProvider');
+            $this->register(EventServiceProvider::class);
+            return $this->make('events');
+        });
+    }
+
+    protected function registerLogBindings()
+    {
+        $this->singleton('log', function () {
+            return $this->loadComponent(
+                'app',
+                [LogServiceProvider::class],
+                'log'
+            );
+        });
     }
 
 }

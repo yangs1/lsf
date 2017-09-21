@@ -14,17 +14,20 @@ use App\Transformers\UserTransformer;
 use Dingo\Api\Http\Response;
 use Dingo\Api\Routing\Helpers;
 use Illuminate\Http\Request;
+use League\Flysystem\Exception;
 
 class TestControllers
 {
     use Helpers;
     public function index(Request $request){
 
+
       /*  $a = false;
         $request->file('photo')->store("");*/
        /* app("db");
         $a = A::first();*/
         //return $this->response()->item($a, new UserTransformer());
-        return new Response(['a'=>1]);
+        //throw new Exception("a");
+        return ["a"=>2];
     }
 }

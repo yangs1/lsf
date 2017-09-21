@@ -16,7 +16,7 @@ trait RegistersConsole
 
     /**
      * Parse command.
-     * php yourfile.php start | stop | status | kill
+     * php yourfile.php start | reload | stop | status
      *
      * @return void
      */
@@ -35,7 +35,6 @@ trait RegistersConsole
         {
             // 启动 phpspider
             case 'start':
-                $this->registerSwooleBindings();
                 if ($operations === '-d') {
                     config( [ "swoole.settings.daemonize" => true ] );
                 }
@@ -95,7 +94,7 @@ trait RegistersConsole
                     break;
                 }else{
                     if(time() - $time > 2){
-                        echo "server stop fail... \n";
+                        echo "server stop fail, please try again... \n";
                         break;
                     }
                 }

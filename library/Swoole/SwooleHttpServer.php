@@ -113,19 +113,23 @@ class SwooleHttpServer
 
                 $SRequest = new SwooleRequest($request);
 
-                if (0 === strpos($SRequest->headers->get('CONTENT_TYPE'), 'application/x-www-form-urlencoded')
-                    &&
-                    in_array(strtoupper($SRequest->server->get('REQUEST_METHOD', 'GET')), array('PUT', 'DELETE', 'PATCH'))
+                if ($SRequest->getContentType() === 'json' &&
+                    in_array(strtoupper($SRequest->server->get('REQUEST_METHOD', 'GET')), array('POST','PUT', 'DELETE', 'PATCH'))
                 ) {
-                    parse_str($SRequest->getContent(), $data);
-                    $SRequest->request = new ParameterBag($data);
-                }
-                $baseRequest = Request::createFromBase($SRequest);
 
-                $SResponse = $this->app->handle($baseRequest);
-               // xdebug_debug_zval('SResponse');
+                    //parse_str($SRequest->getContent(), $data);
+                    $SRequest->query = new ParameterBag(json_decode($request->rawContent(), true));
+                }
+
+               // var_dump($SRequest->request);
+                //$baseRequest = Request::createFromBase($SRequest);
+                //$baseRequest->headers = $SRequest->headers;
+
+                $SResponse = $this->app->handle($SRequest);
+
                /* $response->write($SResponse->getContent());
                 var_dump($SResponse->getContent());*/
+
                 if ($SResponse instanceof SymfonyResponse) {
                     $this->formatResponse($response, $SResponse);
                 } else {
