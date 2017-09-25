@@ -21,6 +21,9 @@ use Library\Log\LogServiceProvider;
 use Illuminate\Support\ServiceProvider;
 use Library\Concerns\RegistersExceptionHandlers;
 use Library\Routing\Router;
+use Illuminate\Support\Facades\Facade;
+use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 
 class Application extends Container{
 
@@ -66,7 +69,12 @@ class Application extends Container{
      * @var callable|null
      */
     protected $monologConfigurator;
-
+    /**
+     * Indicates if the class aliases have been registered.
+     *
+     * @var bool
+     */
+    protected static $aliasesRegistered = false;
 
     public $availableBindings = [
         'config'    =>  'registerConfigBindings',
@@ -363,4 +371,53 @@ class Application extends Container{
             return $this->make('translator');
         });
     }
+
+    /**
+     * Register the facades for the application.
+     *
+     * @param  bool  $aliases
+     * @param  array $userAliases
+     * @return void
+     */
+    public function withFacades($aliases = true, $userAliases = [])
+    {
+        Facade::setFacadeApplication($this);
+
+        if ($aliases) {
+            $this->withAliases($userAliases);
+        }
+    }
+
+    /**
+     * Register the aliases for the application.
+     *
+     * @param  array  $userAliases
+     * @return void
+     */
+    public function withAliases($userAliases = [])
+    {
+        $defaults = [
+            //'Illuminate\Support\Facades\Auth' => 'Auth',
+            //'Illuminate\Support\Facades\Cache' => 'Cache',
+            'Illuminate\Support\Facades\DB' => 'DB',
+            'Illuminate\Support\Facades\Event' => 'Event',
+            'Illuminate\Support\Facades\Gate' => 'Gate',
+            'Illuminate\Support\Facades\Log' => 'Log',
+            'Illuminate\Support\Facades\Queue' => 'Queue',
+            //'Illuminate\Support\Facades\Schema' => 'Schema',
+            //'Illuminate\Support\Facades\URL' => 'URL',
+            'Illuminate\Support\Facades\Validator' => 'Validator',
+        ];
+
+        if (! static::$aliasesRegistered) {
+            static::$aliasesRegistered = true;
+
+            $merged = array_merge($defaults, $userAliases);
+
+            foreach ($merged as $original => $alias) {
+                class_alias($original, $alias);
+            }
+        }
+    }
+
 }

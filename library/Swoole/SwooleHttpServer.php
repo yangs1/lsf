@@ -15,7 +15,6 @@ use Library\Swoole\Contracts\TaskClosure;
 use Library\Swoole\Contracts\TaskHandler;
 use Symfony\Component\HttpFoundation\HeaderBag;
 use Symfony\Component\HttpFoundation\ParameterBag;
-use Library\Swoole\Http\Request as SwooleRequest;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
@@ -111,13 +110,11 @@ class SwooleHttpServer
             function (\swoole_http_request $request,\swoole_http_response $response){
 
 
-                $SRequest = new SwooleRequest($request);
+                $SRequest = $this->initRequest($request);
 
                 if ($SRequest->getContentType() === 'json' &&
                     in_array(strtoupper($SRequest->server->get('REQUEST_METHOD', 'GET')), array('POST','PUT', 'DELETE', 'PATCH'))
                 ) {
-
-                    //parse_str($SRequest->getContent(), $data);
                     $SRequest->query = new ParameterBag(json_decode($request->rawContent(), true));
                 }
 
@@ -127,21 +124,12 @@ class SwooleHttpServer
 
                 $SResponse = $this->app->handle($SRequest);
 
-               /* $response->write($SResponse->getContent());*/
-              //  var_dump($SResponse->getContent());
-
                 if ($SResponse instanceof SymfonyResponse) {
                     $this->formatResponse($response, $SResponse);
                 } else {
                     $response->end( (string)$SResponse );
                 }
 
-
-                //xdebug_debug_zval('baseRequest');
-                //var_dump($this->app['api.router']->getRoutesDispatched());
-                /*if (count($this->app->middleware) > 0) {
-                    $this->app->callTerminableMiddleware($SResponse);
-                }*/
             });
     }
 
@@ -149,22 +137,9 @@ class SwooleHttpServer
         if (empty(config('swoole.settings.task_worker_num'))){
             return ;
         }
-        /*if ( app('events')->hasListeners("swoole.task") ){
-            $this->registerEvents("task");
-            return ;
-        }*/
-        $this->swooleServer->on("task",function (\swoole_http_server $server, $taskId, $workerId, $abstract){
-//var_dump($abstract);
-        /*    var_dump($abstract);
-            var_dump($abstract("a","b"));*/
 
-            //$taskReutrn = null;
-            /*if (!is_null($taskReutrn[0])){
-                return $taskReutrn;
-            }*/
-            /*if ($abstract instanceof \Closure){
-                $taskReutrn = call_user_func($abstract);
-            }else*/
+        $this->swooleServer->on("task",function (\swoole_http_server $server, $taskId, $workerId, $abstract){
+
             if ($abstract instanceof TaskClosure){
                 $params = $abstract->getParams();
                 $abstract =  $abstract();
@@ -226,5 +201,26 @@ class SwooleHttpServer
         } else {
             $response->end($realResponse->getContent());
         }
+    }
+
+    public function initRequest(\swoole_http_request $request)
+    {
+        $get     = isset($request->get) ? $request->get : [];
+        $post    = isset($request->post) ? $request->post : [];
+        $cookies = isset($request->cookie) ? $request->cookie : [];
+        $server  = isset($request->server) ? $request->server : [];
+        $header   = isset($request->header) ? $request->header : [];
+        $files   = isset($request->files) ? $request->files : [];
+
+        foreach ($server as $key => $value) {
+            $server[strtoupper($key)] = $value;
+            unset($server[$key]);
+        }
+        foreach ($header as $key => $value) {
+            $_key = 'HTTP_' . strtoupper(str_replace('-', '_', $key));
+            $server[$_key] = $value;
+        }
+        $SRequest = new Request($get, $post, ["_fd"=>$request->fd], $cookies, $files, $server);
+        return $SRequest;
     }
 }

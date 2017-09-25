@@ -8,7 +8,7 @@
 
 return [
     'app_debug'     => true,
-    'app_model'     =>"dingo", //default, dingo, mix
+    'app_model'     =>"default", //default, dingo, mix
 
     'log'           =>  'daily',
     'log_max_files' =>  3,

@@ -94,7 +94,7 @@ if (! function_exists('task')) {
      * @param int $workerId
      */
     function task($abstract, $params, $workerId = -1){
-        $task = new \Library\Swoole\Contracts\TaskClosure($abstract, $params);
+        $task = serializeClosure($abstract, $params);
        // var_dump($task);
         app("swoole")->task($task, $workerId);
     }
@@ -107,9 +107,39 @@ if (! function_exists('syncTask')) {
      * @param $workerId
      */
     function syncTask($abstract, $params,  $timeout = 0.5, $workerId = -1){
-        $task = new \Library\Swoole\Contracts\TaskClosure($abstract, $params);
+        $task = serializeClosure($abstract, $params);
         // var_dump($task);
         app("swoole")->taskwait($task, $timeout, $workerId);
+    }
+}
+if (! function_exists('barrier')) {
+
+    /**
+     * @return \Library\Swoole\Contracts\TaskBarrier
+     */
+    function barrier(){
+        return app('\Library\Swoole\Contracts\TaskBarrier');
+    }
+}
+
+if (! function_exists('serializeClosure')) {
+    /**
+     * @param $abstract
+     * @param $params
+     * @return \Library\Swoole\Contracts\TaskClosure
+     */
+    function serializeClosure($abstract, $params){
+        return new \Library\Swoole\Contracts\TaskClosure($abstract, $params);
+    }
+}
+
+if (! function_exists('db')) {
+
+    /**
+     * @return \Illuminate\Database\MySqlConnection|\Illuminate\Database\PostgresConnection
+     */
+    function db(){
+       return app("db");
     }
 }
 
