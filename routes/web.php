@@ -7,7 +7,8 @@
  */
 
 $app->router->group(['namespace' => 'App\Http\Controllers','middleware'=>"auth"], function () use($app) {
-    $app->router->post('/', 'ExampleControllers@taskDemo');
+    $app->router->get('/', 'ExampleControllers@index');
+    $app->router->get('/task', 'ExampleControllers@taskDemo');
     $app->router->post('/cookie', 'ExampleControllers@CookieDemo');
     $app->router->post('/validate', 'ExampleControllers@validateDemo');
     $app->router->post('/event', 'ExampleControllers@eventDemo');

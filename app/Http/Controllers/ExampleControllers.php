@@ -93,4 +93,9 @@ class ExampleControllers extends Controller
         //db()->table("table");
         DB::table("table")->first();
     }
+
+    public function index()
+    {
+        return new Response(["message"=>"success"]);
+    }
 }
