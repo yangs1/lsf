@@ -1,5 +1,5 @@
 {
-    "name": "lsf",
+    "name": "young/lsf",
     "description": "Just a easy lumen swoole Framework.",
     "keywords": ["framework", "php", "laravel", "lumen", "swoole"],
     "license": "MIT",
