@@ -1,7 +1,7 @@
 {
-    "name": "YsF",
-    "description": "Just a easy Framework.",
-    "keywords": ["framework", "php"],
+    "name": "lsf",
+    "description": "Just a easy lumen swoole Framework.",
+    "keywords": ["framework", "php", "laravel", "lumen", "swoole"],
     "license": "MIT",
     "type": "project",
     "require": {
