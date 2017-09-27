@@ -63,7 +63,7 @@ trait RegistersConsole
                 break;
             // 未知命令
             default :
-                echo "Usage: php startfile.php {start|stop|status|kill}\n";
+                echo "Usage: php startfile.php {start|stop|status|reload}\n";
                 break;
         }
     }

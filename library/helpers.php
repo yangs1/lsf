@@ -63,7 +63,7 @@ if (! function_exists('response')) {
      * @param  string  $content
      * @param  int     $status
      * @param  array   $headers
-     * @return \Illuminate\Http\Response|\Laravel\Lumen\Http\ResponseFactory
+     * @return \Illuminate\Http\Response
      */
    /* function response($content = '', $status = 200, array $headers = [])
     {
@@ -93,10 +93,8 @@ if (! function_exists('task')) {
      * @param $params
      * @param int $workerId
      */
-    function task($abstract, $params, $workerId = -1){
-        $task = serializeClosure($abstract, $params);
-       // var_dump($task);
-        app("swoole")->task($task, $workerId);
+    function task($abstract, $params = [], $workerId = -1){
+        app("task")->task($abstract, $params, $workerId);
     }
 }
 if (! function_exists('syncTask')) {
@@ -104,32 +102,31 @@ if (! function_exists('syncTask')) {
      * @param $abstract
      * @param $params
      * @param float $timeout
-     * @param $workerId
+     * @param int $workerId
+     * @return mixed
      */
-    function syncTask($abstract, $params,  $timeout = 0.5, $workerId = -1){
-        $task = serializeClosure($abstract, $params);
-        // var_dump($task);
-        app("swoole")->taskwait($task, $timeout, $workerId);
+    function syncTask($abstract, $params = [],  $timeout = 0.5, $workerId = -1){
+       return app("task")->task($abstract, $params, $workerId, $timeout);
     }
 }
 if (! function_exists('barrier')) {
-
     /**
-     * @return \Library\Swoole\Contracts\TaskBarrier
+     * @return \Library\Swoole\Task\Barrier
      */
     function barrier(){
-        return app('\Library\Swoole\Contracts\TaskBarrier');
+       return new \Library\Swoole\Task\Barrier();
     }
 }
+
 
 if (! function_exists('serializeClosure')) {
     /**
      * @param $abstract
      * @param $params
-     * @return \Library\Swoole\Contracts\TaskClosure
+     * @return \Library\Swoole\Contracts\SuperClosure
      */
     function serializeClosure($abstract, $params){
-        return new \Library\Swoole\Contracts\TaskClosure($abstract, $params);
+        return new \Library\Swoole\Contracts\SuperClosure($abstract, $params);
     }
 }
 

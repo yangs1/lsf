@@ -6,24 +6,22 @@
  * Date: 17-8-9
  * Time: 上午9:38
  */
-namespace App;
+namespace Library;
 
 use App\Exceptions\Handler;
 use App\Providers\EventServiceProvider;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Container\Container;
 use Illuminate\Filesystem\FilesystemManager;
+use Illuminate\Support\Facades\Facade;
 use Library\Concerns\RegistersConsole;
 use Library\Concerns\RoutesRequests;
-use Library\ConfigRepository;
 use Library\Dingo\DingoServiceProvider;
 use Library\Log\LogServiceProvider;
 use Illuminate\Support\ServiceProvider;
 use Library\Concerns\RegistersExceptionHandlers;
 use Library\Routing\Router;
-use Illuminate\Support\Facades\Facade;
-use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
+use Library\Swoole\Task\TaskManager;
 
 class Application extends Container{
 
@@ -84,11 +82,13 @@ class Application extends Container{
         'files'     =>  'registerFilesBindings',
         'validator'=>'registerValidatorBindings',
         "translator"    =>"registerTranslationBindings",
-        FilesystemManager::class =>"registerFilesSystemBindings"
+        FilesystemManager::class => "registerFilesSystemBindings",
     ];
 
     protected $aliases = [
         'request' => 'Illuminate\Http\Request',
+        'task'      => TaskManager::class,
+        'Psr\Log\LoggerInterface' => 'log',
         'Illuminate\Contracts\Debug\ExceptionHandler'=> Handler::class
     ];
     /**
@@ -373,6 +373,15 @@ class Application extends Container{
     }
 
     /**
+     * Load the Eloquent library for the application.
+     *
+     * @return void
+     */
+    public function withEloquent()
+    {
+        $this->make('db');
+    }
+    /**
      * Register the facades for the application.
      *
      * @param  bool  $aliases
@@ -397,15 +406,9 @@ class Application extends Container{
     public function withAliases($userAliases = [])
     {
         $defaults = [
-            //'Illuminate\Support\Facades\Auth' => 'Auth',
-            //'Illuminate\Support\Facades\Cache' => 'Cache',
             'Illuminate\Support\Facades\DB' => 'DB',
             'Illuminate\Support\Facades\Event' => 'Event',
-            'Illuminate\Support\Facades\Gate' => 'Gate',
             'Illuminate\Support\Facades\Log' => 'Log',
-            'Illuminate\Support\Facades\Queue' => 'Queue',
-            //'Illuminate\Support\Facades\Schema' => 'Schema',
-            //'Illuminate\Support\Facades\URL' => 'URL',
             'Illuminate\Support\Facades\Validator' => 'Validator',
         ];
 

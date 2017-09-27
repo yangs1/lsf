@@ -9,7 +9,7 @@ class Router
     /**
      * The application instance.
      *
-     * @var \App\Application
+     * @var \Library\Application
      */
     public $app;
 
@@ -37,7 +37,7 @@ class Router
     /**
      * Router constructor.
      *
-     * @param  \App\Application  $app
+     * @param  \Library\Application  $app
      */
     public function __construct($app)
     {

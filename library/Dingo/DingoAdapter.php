@@ -8,7 +8,7 @@
 
 namespace Library\Dingo;
 
-use App\Application;
+use Library\Application;
 use ArrayIterator;
 use ReflectionClass;
 use FastRoute\Dispatcher;
@@ -25,7 +25,7 @@ class DingoAdapter implements Adapter
     /**
      * Lumen application instance.
      *
-     * @var \App\Application
+     * @var \Library\Application
      */
     protected $app;
 
@@ -67,7 +67,7 @@ class DingoAdapter implements Adapter
     /**
      * Create a new lumen adapter instance.
      *
-     * @param \App\Application $app
+     * @param \Library\Application $app
      * @param \FastRoute\RouteParser     $parser
      * @param \FastRoute\DataGenerator   $generator
      * @param string                     $dispatcher

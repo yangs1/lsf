@@ -1,32 +1,29 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: yf
- * Date: 2017/7/5
- * Time: 下午5:20
+ * User: yang
+ * Date: 17-9-26
+ * Time: 下午10:27
  */
 
-namespace Library\Swoole\Contracts;
+namespace Library\Swoole\Task;
 
 
-class TaskBarrier
+class Barrier
 {
     private $tasks = array();
     private $aliases = array();
     private $results = array();
-    private $totals = 0;
 
-    function add($abstract, $params = [], $aliases = null){
+    public function task($abstract, $params = [], $aliases = null){
         $closure = serializeClosure($abstract, $params);
         $this->tasks[] = $closure;
 
         if (!is_null($aliases)){
-            $this->aliases[$aliases] = $this->totals;
+            $this->aliases[$aliases] = count($this->tasks) - 1;
         }
-        $this->totals++;
         return $this;
     }
-
     function execute($timeout = 0.5){
         $this->results = [];
         $this->results = app('swoole')->taskWaitMulti($this->tasks, $timeout);
@@ -35,11 +32,9 @@ class TaskBarrier
     }
 
     public function flush(){
-        $this->totals = 0;
         $this->aliases =[];
         $this->tasks = [];
     }
-
     function getResults($aliases = null){
         if (is_null($aliases)){
             return $this->results;

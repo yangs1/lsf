@@ -8,19 +8,19 @@
 
 namespace App\Transformers;
 
-use App\A;
-use Illuminate\Http\Request;
+use App\User;
 use League\Fractal\TransformerAbstract;
 
 class UserTransformer extends TransformerAbstract
 {
-    public function transform(A $user)
+    /* dingo 模式下的 transformer 方法*/
+    public function transform(User $user)
     {
         return [
             'id' => $user->id,
-            'name' => $user->book_name,
-            'author' => $user->book_author,
-            'publishing_house' => $user->book_publishing_house,
+            'name' => $user->name,
+            'author' => $user->author,
+            'email' => $user->email,
         ];
     }
 }

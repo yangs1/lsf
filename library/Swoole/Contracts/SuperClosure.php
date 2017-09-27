@@ -10,7 +10,7 @@ namespace Library\Swoole\Contracts;
 
 use SuperClosure\Serializer;
 
-class TaskClosure
+class SuperClosure
 {
     protected $func;
     protected $params;

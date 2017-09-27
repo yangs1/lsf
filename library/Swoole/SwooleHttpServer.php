@@ -9,11 +9,10 @@
 namespace Library\Swoole;
 
 
-use Illuminate\Contracts\Http\Kernel;
+
 use Illuminate\Http\Request;
-use Library\Swoole\Contracts\TaskClosure;
+use Library\Swoole\Contracts\SuperClosure;
 use Library\Swoole\Contracts\TaskHandler;
-use Symfony\Component\HttpFoundation\HeaderBag;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -23,7 +22,7 @@ class SwooleHttpServer
     /**
      * The application instance.
      *
-     * @var \App\Application
+     * @var \Library\Application
      */
     protected $app;
 
@@ -36,9 +35,7 @@ class SwooleHttpServer
 
     /**
      * Router constructor.
-     *
      * @param  $app
-     * @param  $config
      */
     public function __construct($app)
     {
@@ -140,7 +137,7 @@ class SwooleHttpServer
 
         $this->swooleServer->on("task",function (\swoole_http_server $server, $taskId, $workerId, $abstract){
 
-            if ($abstract instanceof TaskClosure){
+            if ($abstract instanceof SuperClosure){
                 $params = $abstract->getParams();
                 $abstract =  $abstract();
 
@@ -164,7 +161,6 @@ class SwooleHttpServer
             function (\swoole_http_server $server, $taskId, $abstract){
                 //TODO 任务结束处理
                 app('events')->dispatch("swoole.finish", [$server, $taskId, $abstract]);
-
                 if ($abstract instanceof TaskHandler) {
                     $abstract->finishCallBack();
                 }
@@ -209,7 +205,7 @@ class SwooleHttpServer
         $post    = isset($request->post) ? $request->post : [];
         $cookies = isset($request->cookie) ? $request->cookie : [];
         $server  = isset($request->server) ? $request->server : [];
-        $header   = isset($request->header) ? $request->header : [];
+        $header  = isset($request->header) ? $request->header : [];
         $files   = isset($request->files) ? $request->files : [];
 
         foreach ($server as $key => $value) {
