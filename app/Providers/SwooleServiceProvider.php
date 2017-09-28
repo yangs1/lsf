@@ -51,7 +51,10 @@ class SwooleServiceProvider extends ServiceProvider
             }
 
         }
-        return new SwooleHttpServer($this->app, app("config")->get("swoole"));
+        if (!file_exists($path = $this->app->basePath().'/storage/logs')){
+            mkdir($path, 0777);
+        }
+        return new SwooleHttpServer($this->app);
     }
 
 }

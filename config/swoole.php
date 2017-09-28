@@ -19,7 +19,7 @@ return [
         "task_max_request"=>10,
         'max_request'=>3000,
         'worker_num'=>4,
-        "log_file"=>base_path('/storage/logs/swoole.log'),
+        "log_file"=>base_path('storage/logs/swoole.log'),
         'pid_file'=>base_path('pid.pid'),
 
     ]
