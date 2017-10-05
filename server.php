@@ -9,14 +9,17 @@ require 'vendor/autoload.php';
 
 $app = new \Library\Application();
 
+
+//$app->middleware()
 $app->routeMiddleware([
+    'session'=> \Illuminate\Session\Middleware\StartSession::class,
    "auth" =>\App\Http\Middleware\AuthMiddleware::class
 ]);
 
 
-$app->withFacades(true);
+//$app->withFacades(true);
 
-$app->withEloquent();
+//$app->withEloquent();
 
 
 

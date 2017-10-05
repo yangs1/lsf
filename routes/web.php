@@ -6,8 +6,10 @@
  * Time: 下午10:42
  */
 
-$app->router->group(['namespace' => 'App\Http\Controllers','middleware'=>"auth"], function () use($app) {
+$app->router->group(['namespace' => 'App\Http\Controllers','middleware'=>['auth:a','session']], function () use($app) {
     $app->router->get('/', 'ExampleControllers@index');
+    $app->router->get('/t', 'ExampleControllers@indext');
+    $app->router->get('/w', 'ExampleControllers@indexw');
     $app->router->get('/task', 'ExampleControllers@taskDemo');
     $app->router->post('/cookie', 'ExampleControllers@CookieDemo');
     $app->router->post('/validate', 'ExampleControllers@validateDemo');

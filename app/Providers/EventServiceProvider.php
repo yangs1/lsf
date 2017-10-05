@@ -2,8 +2,6 @@
 
 namespace App\Providers;
 
-use App\Events\Event;
-use App\Events\Listener;
 use Illuminate\Support\ServiceProvider;
 
 

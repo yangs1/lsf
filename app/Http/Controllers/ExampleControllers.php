@@ -94,8 +94,20 @@ class ExampleControllers extends Controller
         DB::table("table")->first();
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        return new Response(["message"=>"success"]);
+       // var_dump(get_class($request->session()));
+        $request->session()->flash('key', $request->session()->getId());
+        $a= db()->table("cc_apply")->take(5)->runSelect();
+        return new Response(["message"=>  gettype($a)]);
+    }
+
+    public function indext(Request $request)
+    {
+        var_dump($request->session()->get('key'));
+    }
+    public function indexw(Request $request)
+    {
+        var_dump($request->session()->get('key'));
     }
 }

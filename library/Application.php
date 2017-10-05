@@ -13,6 +13,7 @@ use App\Providers\EventServiceProvider;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Container\Container;
 use Illuminate\Filesystem\FilesystemManager;
+use Illuminate\Session\SessionServiceProvider;
 use Illuminate\Support\Facades\Facade;
 use Library\Concerns\RegistersConsole;
 use Library\Concerns\RoutesRequests;
@@ -82,11 +83,13 @@ class Application extends Container{
         'files'     =>  'registerFilesBindings',
         'validator'=>'registerValidatorBindings',
         "translator"    =>"registerTranslationBindings",
+        "session"   => "registerSessionBindings",
         FilesystemManager::class => "registerFilesSystemBindings",
     ];
 
     protected $aliases = [
         'request' => 'Illuminate\Http\Request',
+        'Illuminate\Session\SessionManager'=>'session',
         'task'      => TaskManager::class,
         'Psr\Log\LoggerInterface' => 'log',
         'Illuminate\Contracts\Debug\ExceptionHandler'=> Handler::class
@@ -102,6 +105,8 @@ class Application extends Container{
         $this->bootstrapContainer();
         $this->registerErrorHandling();
         $this->bootstrapRouter();
+
+        //$this->registerSessionBindings();
     }
 
 
@@ -341,6 +346,9 @@ class Application extends Container{
 
     protected function registerLogBindings()
     {
+        if (!file_exists($path = $this->app->basePath().'/storage/logs')){
+            mkdir($path, 0777);
+        }
         $this->singleton('log', function () {
             return $this->loadComponent(
                 'app',
@@ -370,6 +378,13 @@ class Application extends Container{
 
             return $this->make('translator');
         });
+    }
+
+    protected function registerSessionBindings(){
+        if (!file_exists($path = $this->basePath().'/storage/sessions')){
+            mkdir($path, 0777);
+        }
+        $this->loadComponent('session',SessionServiceProvider::class);
     }
 
     /**

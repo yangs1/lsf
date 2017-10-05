@@ -91,6 +91,7 @@ trait RoutesRequests
             $response = $this->make('api.router')->dispatch($request);
 
         }
+
         if (count($this->middleware) > 0) {
             $this->callTerminableMiddleware($response);
         }
@@ -252,10 +253,20 @@ trait RoutesRequests
         // Pipe through route middleware...
         if (isset($action['middleware'])) {
             $middleware = $this->gatherMiddlewareClassNames($action['middleware']);
-
-            return $this->prepareResponse($this->sendThroughPipeline($middleware, function () {
+            $response =  $this->prepareResponse($this->sendThroughPipeline($middleware, function () {
                 return $this->callActionOnArrayBasedRoute($this['request']->route());
             }));
+
+            foreach ((array)$middleware as $item) {
+                if (! is_string($item)) {
+                    continue;
+                }
+                $instance = $this->make(explode(':', $item)[0]);
+                if (method_exists($instance, 'terminate')) {
+                    $instance->terminate($this->make('request'), $response);
+                }
+            }
+            return $response;
         }
 
         return $this->prepareResponse(
