@@ -102,7 +102,11 @@ trait RegistersExceptionHandlers
 
         $handler->report($e);
 
-        return $handler->render($this->make('request'), $e);
+        if ($this->runningInModel() === 'api'){
+            return $handler->renderForConsole($this->make('request'), $e);
+        } else {
+            return $handler->render($this->make('request'), $e);
+        }
     }
 
     /**
@@ -120,7 +124,7 @@ trait RegistersExceptionHandlers
         }
         $handler->report($e);
 
-        if ($this->runningInConsole()) {
+        if ($this->runningInModel() === 'api'){
             $handler->renderForConsole($this->make('request'), $e)->send();
         } else {
             $handler->render($this->make('request'), $e)->send();
@@ -130,9 +134,9 @@ trait RegistersExceptionHandlers
     /**
      * Get the exception handler from the container.
      *
-     * @return mixed
+     * @return \App\Exceptions\Handler
      */
-    protected function resolveExceptionHandler()
+    public function resolveExceptionHandler()
     {
         return $this->make('Illuminate\Contracts\Debug\ExceptionHandler');
     }

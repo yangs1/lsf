@@ -166,9 +166,8 @@ class LogServiceProvider extends ServiceProvider
     protected function fileName()
     {
         if ($this->app->bound('config')) {
-            return $this->app->make('config')->get('app.log_file', 'log');
+            return $this->app->make('config')->get('app.log_name', 'log');
         }
-
         return 'log';
     }
 

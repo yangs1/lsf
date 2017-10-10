@@ -35,13 +35,20 @@ class Router
     public $namedRoutes = [];
 
     /**
-     * Router constructor.
-     *
-     * @param  \Library\Application  $app
+     *  if begin the version controller
+     * @var bool
      */
-    public function __construct($app)
+    protected $hasVersion = false;
+
+    /**
+     * Router constructor.
+     * @param \Library\Application  $app
+     * @param bool $hasVersion
+     */
+    public function __construct($app, $hasVersion = false)
     {
         $this->app = $app;
+        $this->hasVersion = $hasVersion;
     }
 
     /**
@@ -171,7 +178,9 @@ class Router
         if ($this->hasGroupStack()) {
             $attributes = $this->mergeWithLastGroup([]);
         }
-
+       /* if ($this->app->bound('config')) {
+            return $this->app->make('config')->get('app.log', 'single');
+        }*/
         if (isset($attributes) && is_array($attributes)) {
             if (isset($attributes['prefix'])) {
                 $uri = trim($attributes['prefix'], '/').'/'.trim($uri, '/');
@@ -190,12 +199,23 @@ class Router
             $this->namedRoutes[$action['as']] = $uri;
         }
 
-        if (is_array($method)) {
-            foreach ($method as $verb) {
+        if ($this->hasVersion){
+            if (isset($attributes['version'])){
+
+                $attributes['version'] = explode('|', $attributes['version']);
+
+                foreach ( (array)$attributes['version'] as $version ){
+                    foreach ( (array)$method as $verb ) {
+                        $this->routes[$verb.$uri] = ['method' => $verb, 'uri' => $uri, 'action' => $action, 'version'=>$version];
+                    }
+                }
+            }else{
+                throw new \Exception('A version is required for the api-version model.');
+            }
+        }else{
+            foreach ( (array)$method as $verb ) {
                 $this->routes[$verb.$uri] = ['method' => $verb, 'uri' => $uri, 'action' => $action];
             }
-        } else {
-            $this->routes[$method.$uri] = ['method' => $method, 'uri' => $uri, 'action' => $action];
         }
     }
 

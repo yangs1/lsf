@@ -9,6 +9,11 @@
         "illuminate/http": "5.5.*",
         "illuminate/events": "5.5.*",
         "illuminate/validation": "5.5.*",
+        "illuminate/cache": "5.5.*",
+        "illuminate/redis": "5.5.*",
+        "illuminate/encryption": "5.5.*",
+        "illuminate/pipeline": "5.5.*",
+
         "symfony/http-kernel": "^3.3",
         "monolog/monolog": "^1.23",
         "dingo/api": "1.0.x@dev",

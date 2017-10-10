@@ -1,36 +1,36 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: yang
- * Date: 17-8-8
- * Time: 上午9:55
- */
-require 'vendor/autoload.php';
+    /**
+     * Created by PhpStorm.
+     * User: yang
+     * Date: 17-8-8
+     * Time: 上午9:55
+     */
+    require 'vendor/autoload.php';
 
-$app = new \Library\Application();
-
-
-//$app->middleware()
-$app->routeMiddleware([
-    'session'=> \Illuminate\Session\Middleware\StartSession::class,
-   "auth" =>\App\Http\Middleware\AuthMiddleware::class
-]);
+    $app = new \Library\Application();
 
 
-//$app->withFacades(true);
-
-//$app->withEloquent();
-
-
-
-require __DIR__.'/routes/web.php';
+    //$app->middleware()
+    $app->routeMiddleware([
+        "session"   => \Illuminate\Session\Middleware\StartSession::class,
+        "auth"      =>\App\Http\Middleware\AuthMiddleware::class
+    ]);
 
 
-if(function_exists('apc_clear_cache')){
-    apc_clear_cache();
-}
-if(function_exists('opcache_reset')){
-    opcache_reset();
-}
+    //$app->withFacades(true);
 
-$app->parse_command();
+    //$app->withEloquent();
+
+
+
+    require __DIR__.'/routes/web.php';
+
+
+    if(function_exists('apc_clear_cache')){
+        apc_clear_cache();
+    }
+    if(function_exists('opcache_reset')){
+        opcache_reset();
+    }
+    //var_dump($app->router);
+    $app->parse_command();

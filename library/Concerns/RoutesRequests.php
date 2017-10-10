@@ -4,6 +4,7 @@ namespace Library\Concerns;
 
 use Closure;
 use Exception;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Throwable;
 use FastRoute\Dispatcher;
 use Illuminate\Support\Str;
@@ -83,20 +84,28 @@ trait RoutesRequests
     /**
      * {@inheritdoc}
      */
-    public function handle(SymfonyRequest $request)
+    public function handle(Request $request)
     {
-        if ($this->runningInModel() === "default"){
-            $response = $this->dispatch($request);
+
+        //var_dump($this->router);
+        $response = $this->dispatch($request);
+        /*if ($this->runningInModel() === "api"){
         }else{
-            $response = $this->make('api.router')->dispatch($request);
-
-        }
-
+            $response = $this->dispatch($request);
+        }*/
         if (count($this->middleware) > 0) {
             $this->callTerminableMiddleware($response);
         }
 
         return $response;
+    }
+
+    public function checkVersion($request, $version){
+        if (!($this->parseAccept($request)['version'] === $version)){
+            throw new NotFoundHttpException("This version has not been found ,Your version is not accepted ");
+        }
+
+
     }
 
     /**
@@ -150,22 +159,25 @@ trait RoutesRequests
     /**
      * Dispatch the incoming request.
      *
-     * @param  SymfonyRequest|null  $request
+     * @param  Request|null  $request
      * @return Response
      */
     public function dispatch($request = null)
     {
-        list($method, $pathInfo) = $this->parseIncomingRequest($request);
 
+        list($method, $pathInfo) = $this->parseIncomingRequest($request);
         try {
             return $this->sendThroughPipeline($this->middleware, function () use ($method, $pathInfo) {
                 if (isset($this->router->getRoutes()[$method.$pathInfo])) {
+                    if ($this->runningInModel() === "api"){
+                        $this->checkVersion($this['request'], $this->router->getRoutes()[$method.$pathInfo]['version']);
+                    }
+
                     return $this->handleFoundRoute([true, $this->router->getRoutes()[$method.$pathInfo]['action'], []]);
                 }
 
-                return $this->handleDispatcherResponse(
-                    $this->createDispatcher()->dispatch($method, $pathInfo)
-                );
+                return $this->handleDispatcherResponse([0]);
+                // $this->createDispatcher()->dispatch($method, $pathInfo)
             });
         } catch (Exception $e) {
             return $this->prepareResponse($this->sendExceptionToHandler($e));
@@ -180,8 +192,7 @@ trait RoutesRequests
      * @param  \Symfony\Component\HttpFoundation\Request|null  $request
      * @return array
      */
-    protected function parseIncomingRequest($request)
-    {
+    protected function parseIncomingRequest($request){
         if (! $request) {
             $request = Request::capture();
         }
@@ -438,9 +449,7 @@ trait RoutesRequests
             $response = $response->toResponse(Request::capture());
         }
 
-        if ($response instanceof PsrResponseInterface) {
-            $response = (new HttpFoundationFactory)->createResponse($response);
-        } elseif (! $response instanceof SymfonyResponse) {
+        if (! $response instanceof SymfonyResponse) {
             $response = new Response($response);
         } elseif ($response instanceof BinaryFileResponse) {
             $response = $response->prepare(Request::capture());
@@ -470,13 +479,33 @@ trait RoutesRequests
         if (! $request instanceof Request) {
             $request = Request::createFromBase($request);
         }
-
-        $request->setUserResolver(function ($guard = null) {
+        $request->setRouteResolver(function () {
+            return $this->currentRoute;
+        });
+        /*$request->setUserResolver(function ($guard = null) {
             return $this->make('auth')->guard($guard)->user();
         })->setRouteResolver(function () {
             return $this->currentRoute;
-        });
+        });*/
 
         return $request;
+    }
+
+    protected function parseAccept(Request $request)
+    {
+        $config = $this->make('config')->get("app");
+        $pattern = '/application\/'.$config['standardsTree'].'\.('.$config['subtype'].')\.([\w\d\.\-]+)\+([\w]+)/';
+
+        if (! preg_match($pattern, $request->header('accept'), $matches)) {
+            if ($config['strict']) {
+                throw new BadRequestHttpException('Accept header could not be properly parsed because of a strict matching process.');
+            }
+
+            $default = 'application/'.$config['standardsTree'].'.'.$config['subtype'].'.'.$config['version'].'+'.$config['defaultFormat'];
+
+            preg_match($pattern, $default, $matches);
+        }
+
+        return array_combine(['subtype', 'version', 'format'], array_slice($matches, 1));
     }
 }

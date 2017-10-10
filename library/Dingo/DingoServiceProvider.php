@@ -10,7 +10,7 @@ namespace Library\Dingo;
 
 use RuntimeException;
 use ReflectionClass;
-use Dingo\Api\Provider\ApiServiceProvider;
+use Dingo\Api\Provider\DingoServiceProvider as ApiServiceProvider;
 use FastRoute\RouteParser\Std as StdRouteParser;
 use FastRoute\DataGenerator\GroupCountBased as GcbDataGenerator;
 

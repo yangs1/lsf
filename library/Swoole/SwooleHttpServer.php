@@ -119,14 +119,17 @@ class SwooleHttpServer
                 //$baseRequest = Request::createFromBase($SRequest);
                 //$baseRequest->headers = $SRequest->headers;
 
-                $SResponse = $this->app->handle($SRequest);
-
+               try{
+                   $SResponse = $this->app->handle($SRequest);
+               }catch (\Exception $e){
+                   $exception = $this->app->resolveExceptionHandler();
+                   $SResponse = $exception->render($SRequest, $e);
+               }
                 if ($SResponse instanceof SymfonyResponse) {
                     $this->formatResponse($response, $SResponse);
                 } else {
                     $response->end( (string)$SResponse );
                 }
-
             });
     }
 

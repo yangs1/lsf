@@ -8,7 +8,6 @@
  */
 namespace Library;
 
-use App\Exceptions\Handler;
 use App\Providers\EventServiceProvider;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Container\Container;
@@ -17,12 +16,10 @@ use Illuminate\Session\SessionServiceProvider;
 use Illuminate\Support\Facades\Facade;
 use Library\Concerns\RegistersConsole;
 use Library\Concerns\RoutesRequests;
-use Library\Dingo\DingoServiceProvider;
 use Library\Log\LogServiceProvider;
 use Illuminate\Support\ServiceProvider;
 use Library\Concerns\RegistersExceptionHandlers;
 use Library\Routing\Router;
-use Library\Swoole\Task\TaskManager;
 
 class Application extends Container{
 
@@ -37,7 +34,7 @@ class Application extends Container{
     /**
      * The Router instance.
      *
-     * @var \Dingo\Api\Routing\Router
+     * @var \Library\Routing\Router
      */
     public $router;
     /**
@@ -67,7 +64,7 @@ class Application extends Container{
      *
      * @var callable|null
      */
-    protected $monologConfigurator;
+    //protected $monologConfigurator;
     /**
      * Indicates if the class aliases have been registered.
      *
@@ -76,23 +73,26 @@ class Application extends Container{
     protected static $aliasesRegistered = false;
 
     public $availableBindings = [
-        'config'    =>  'registerConfigBindings',
         'db'        =>  'registerDatabaseBindings',
-        'events'    =>  'registerEventBindings',
         'log'       =>  'registerLogBindings',
         'files'     =>  'registerFilesBindings',
-        'validator'=>'registerValidatorBindings',
-        "translator"    =>"registerTranslationBindings",
-        "session"   => "registerSessionBindings",
-        FilesystemManager::class => "registerFilesSystemBindings",
+        'cache'     =>  'registerCacheBindings',
+        "redis"     =>  'registerRedisBindings',
+        'config'    =>  'registerConfigBindings',
+        'events'    =>  'registerEventBindings',
+        'session'   =>  'registerSessionBindings',
+        'encrypter' =>  'registerEncrypterBindings',
+        'validator' =>  'registerValidatorBindings',
+        'translator'=>  'registerTranslationBindings',
+        'Illuminate\Filesystem\FilesystemManager' => "registerFilesSystemBindings",
     ];
 
     protected $aliases = [
-        'request' => 'Illuminate\Http\Request',
-        'Illuminate\Session\SessionManager'=>'session',
-        'task'      => TaskManager::class,
-        'Psr\Log\LoggerInterface' => 'log',
-        'Illuminate\Contracts\Debug\ExceptionHandler'=> Handler::class
+        'task'                              => 'Library\Swoole\Task\TaskManager',
+        'request'                           => 'Illuminate\Http\Request',
+        'Psr\Log\LoggerInterface'           => 'log',
+        'Illuminate\Session\SessionManager' =>  'session',
+        'Illuminate\Contracts\Debug\ExceptionHandler' => 'App\Exceptions\Handler'
     ];
     /**
      * Create a new Lumen application instance.
@@ -105,8 +105,6 @@ class Application extends Container{
         $this->bootstrapContainer();
         $this->registerErrorHandling();
         $this->bootstrapRouter();
-
-        //$this->registerSessionBindings();
     }
 
 
@@ -129,11 +127,11 @@ class Application extends Container{
      */
     public function bootstrapRouter()
     {
-        if ($this->runningInModel() === "dingo"){
-            $this->router = $this->loadComponent("app",DingoServiceProvider::class, 'api.router');
-        }else if ($this->runningInModel() === "mix"){
-            $this->router = new Router($this);
-            $this->loadComponent("app",DingoServiceProvider::class);
+        $this->configure('app');
+
+
+        if ($this->runningInModel() === "api"){
+            $this->router = new Router($this, true);
         }else{
             $this->router = new Router($this);
         }
@@ -151,8 +149,7 @@ class Application extends Container{
 
     public function runningInModel()
     {
-        $this->configure('app');
-        return config('app.app_model', 'default');
+        return config('app.app_model', 'http');
     }
 
     /**
@@ -164,7 +161,6 @@ class Application extends Container{
     public function make($abstract, array $parameters = [])
     {
         $abstract = $this->getAlias($abstract);
-
         if (array_key_exists($abstract, $this->availableBindings) &&
             ! array_key_exists($this->availableBindings[$abstract], $this->ranServiceBinders)) {
             $this->{$method = $this->availableBindings[$abstract]}();
@@ -346,16 +342,7 @@ class Application extends Container{
 
     protected function registerLogBindings()
     {
-        if (!file_exists($path = $this->app->basePath().'/storage/logs')){
-            mkdir($path, 0777);
-        }
-        $this->singleton('log', function () {
-            return $this->loadComponent(
-                'app',
-                [LogServiceProvider::class],
-                'log'
-            );
-        });
+        $this->loadComponent('app', [LogServiceProvider::class]);
     }
 
     protected function registerValidatorBindings()
@@ -381,10 +368,48 @@ class Application extends Container{
     }
 
     protected function registerSessionBindings(){
-        if (!file_exists($path = $this->basePath().'/storage/sessions')){
-            mkdir($path, 0777);
-        }
+
         $this->loadComponent('session',SessionServiceProvider::class);
+        if ($this->make('config')->get('session.driver') === 'file'){;
+            $this->ensureCacheDirectoryExists($this->make('config')->get('session.files'));
+        }
+    }
+
+
+    protected function registerCacheBindings()
+    {
+        $this->loadComponent('cache', 'Illuminate\Cache\CacheServiceProvider');
+    }
+
+    protected function registerRedisBindings()
+    {
+        $this->singleton('redis', function () {
+            return $this->loadComponent(
+                'database',
+                ['Illuminate\Redis\RedisServiceProvider'],
+                'redis'
+            );
+        });
+    }
+
+    protected function registerEncrypterBindings()
+    {
+        $this->singleton('encrypter', function () {
+            return $this->loadComponent('app', 'Illuminate\Encryption\EncryptionServiceProvider', 'encrypter');
+        });
+    }
+    /**
+     * Create the file cache directory if necessary.
+     *
+     * @param  string  $path
+     * @return void
+     */
+    protected function ensureCacheDirectoryExists($path)
+    {
+        $files = $this->make('files');
+        if (! $files->exists($path)) {
+            $files->makeDirectory($path, 0777, true, true);
+        }
     }
 
     /**

@@ -6,22 +6,27 @@ use Exception;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Contracts\Debug\ExceptionHandler;
+use Library\Concerns\ExceptionTransformHandler;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Illuminate\Http\Response;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Symfony\Component\Debug\Exception\FlattenException;
+
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Debug\ExceptionHandler as SymfonyExceptionHandler;
 
 class Handler implements ExceptionHandler
 {
+    use ExceptionTransformHandler;
+
+
     /**
      * A list of the exception types that should not be reported.
      *
      * @var array
      */
     protected $dontReport = [
-        //AuthorizationException::class,
         HttpException::class,
         ModelNotFoundException::class,
         ValidationException::class
@@ -64,6 +69,8 @@ class Handler implements ExceptionHandler
             $e = new NotFoundHttpException($e->getMessage(), $e);
         } elseif ($e instanceof ValidationException && $e->getResponse()) {
             return $e->getResponse();
+        }elseif($e instanceof BadRequestHttpException){
+            $e = new NotFoundHttpException($e->getMessage(), $e);
         }
 
         $fe = FlattenException::create($e);
@@ -94,12 +101,16 @@ class Handler implements ExceptionHandler
             $e = new NotFoundHttpException($e->getMessage(), $e);
         } elseif ($e instanceof ValidationException && $e->getResponse()) {
             return $e->getResponse();
+        }elseif($e instanceof BadRequestHttpException){
+            $e = new NotFoundHttpException($e->getMessage(), $e);
         }
 
-        $fe = FlattenException::create($e);
+        return $this->genericResponse($e);
+        /*$fe = FlattenException::create($e);
         $response = new Response($e, $fe->getStatusCode(), $fe->getHeaders());
         $response->exception = $e;
-        return $response;
+        return $response;*/
+
     }
 
 
@@ -111,7 +122,7 @@ class Handler implements ExceptionHandler
      */
     public function shouldReport(Exception $e)
     {
-        return ! $this->shouldntReport($e);
+        return !$this->shouldntReport($e);
     }
 
     /**
@@ -160,4 +171,37 @@ class Handler implements ExceptionHandler
 </html>
 EOF;
     }
+
+    function get_caller_info() {
+        $c = '';
+        $file = '';
+        $func = '';
+        $class = '';
+        $trace = debug_backtrace();
+        if (isset($trace[2])) {
+            $file = $trace[1]['file'];
+            $func = $trace[2]['function'];
+            if ((substr($func, 0, 7) == 'include') || (substr($func, 0, 7) == 'require')) {
+                $func = '';
+            }
+        } else if (isset($trace[1])) {
+            $file = $trace[1]['file'];
+            $func = '';
+        }
+        if (isset($trace[3]['class'])) {
+            $class = $trace[3]['class'];
+            $func = $trace[3]['function'];
+            $file = $trace[2]['file'];
+        } else if (isset($trace[2]['class'])) {
+            $class = $trace[2]['class'];
+            $func = $trace[2]['function'];
+            $file = $trace[1]['file'];
+        }
+        if ($file != '') $file = basename($file);
+        $c = $file . ": ";
+        $c .= ($class != '') ? ":" . $class . "->" : "";
+        $c .= ($func != '') ? $func . "(): " : "";
+        return($c);
+    }
+
 }

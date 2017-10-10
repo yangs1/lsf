@@ -69,6 +69,45 @@ if (! function_exists('config')) {
     }
 }
 
+if (! function_exists('cache')) {
+    /**
+     * Get / set the specified cache value.
+     *
+     * If an array is passed, we'll assume you want to put to the cache.
+     *
+     * @param  dynamic  key|key,default|data,expiration|null
+     * @return mixed|\Illuminate\Cache\CacheManager
+     *
+     * @throws \Exception
+     */
+    function cache()
+    {
+        $arguments = func_get_args();
+
+        if (empty($arguments)) {
+            return app('cache');
+        }
+
+        if (is_string($arguments[0])) {
+            return app('cache')->get($arguments[0], $arguments[1] ?? null);
+        }
+
+        if (! is_array($arguments[0])) {
+            throw new Exception(
+                'When setting a value in the cache, you must pass an array of key / value pairs.'
+            );
+        }
+
+        if (! isset($arguments[1])) {
+            throw new Exception(
+                'You must specify an expiration time when setting a value in the cache.'
+            );
+        }
+
+        return app('cache')->put(key($arguments[0]), reset($arguments[0]), $arguments[1]);
+    }
+}
+
 if (! function_exists('response')) {
     /**
      * Return a new response from the application.
@@ -152,5 +191,63 @@ if (! function_exists('db')) {
        return app("db");
     }
 }
+if (! function_exists('encrypt')) {
+    /**
+     * Encrypt the given value.
+     *
+     * @param  string  $value
+     * @return string
+     */
+    function encrypt($value)
+    {
+        return app('encrypter')->encrypt($value);
+    }
+}
 
+if (! function_exists('decrypt')) {
+    /**
+     * Decrypt the given value.
+     *
+     * @param  string  $value
+     * @return string
+     */
+    function decrypt($value)
+    {
+        return app('encrypter')->decrypt($value);
+    }
+}
 
+if (! function_exists('trans')) {
+    /**
+     * Translate the given message.
+     *
+     * @param  string  $id
+     * @param  array   $replace
+     * @param  string  $locale
+     * @return \Illuminate\Contracts\Translation\Translator|string
+     */
+    function trans($id = null, $replace = [], $locale = null)
+    {
+        if (is_null($id)) {
+            return app('translator');
+        }
+
+        return app('translator')->trans($id, $replace, $locale);
+    }
+}
+
+if (! function_exists('trans_choice')) {
+    /**
+     * Translates the given message based on a count.
+     *
+     * @param  string  $id
+     * @param  int|array|\Countable  $number
+     * @param  array   $replace
+     * @param  string  $locale
+     * @return string
+     */
+    function trans_choice($id, $number, array $replace = [], $locale = null)
+    {
+        return app('translator')->transChoice($id, $number, $replace, $locale);
+    }
+}

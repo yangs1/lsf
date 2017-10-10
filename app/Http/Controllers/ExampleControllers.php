@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Library\Routing\Controller;
+use Swoole\Mysql\Exception;
 use Symfony\Component\HttpFoundation\Cookie;
 
 class ExampleControllers extends Controller
@@ -97,17 +98,14 @@ class ExampleControllers extends Controller
     public function index(Request $request)
     {
        // var_dump(get_class($request->session()));
-        $request->session()->flash('key', $request->session()->getId());
-        $a= db()->table("cc_apply")->take(5)->runSelect();
-        return new Response(["message"=>  gettype($a)]);
-    }
+      //  $request->session()->put('key', $request->session()->getId());
+      /*  $a= db()->table("cc_apply")->take(5)->runSelect();
+        return new Response(["message"=>  gettype($a)]);*/
 
-    public function indext(Request $request)
-    {
-        var_dump($request->session()->get('key'));
-    }
-    public function indexw(Request $request)
-    {
-        var_dump($request->session()->get('key'));
+     /*   cache()->add("a", "t",10);
+        var_dump( cache()->get("a"));*/
+   //  throw new Exception('s');
+        //$request->session()->put('key', $request->session()->getId());
+         return new Response(["message"=>encrypt('"success"')]);
     }
 }
