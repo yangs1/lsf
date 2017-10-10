@@ -106,6 +106,6 @@ class ExampleControllers extends Controller
         var_dump( cache()->get("a"));*/
    //  throw new Exception('s');
         //$request->session()->put('key', $request->session()->getId());
-         return new Response(["message"=>encrypt('"success"')]);
+         return new Response(["message"=>"success"]);
     }
 }

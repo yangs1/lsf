@@ -9,6 +9,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Debug\Exception\FatalErrorException;
 use Symfony\Component\Debug\Exception\FatalThrowableError;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 trait RegistersExceptionHandlers
 {
@@ -125,9 +126,16 @@ trait RegistersExceptionHandlers
         $handler->report($e);
 
         if ($this->runningInModel() === 'api'){
-            $handler->renderForConsole($this->make('request'), $e)->send();
+            $response = $handler->renderForConsole($this->make('request'), $e);
         } else {
-            $handler->render($this->make('request'), $e)->send();
+            $response = $handler->render($this->make('request'), $e);
+        }
+        if (app()->bound('swoole_response') && app()->bound('swoole_server')){
+            if ($response instanceof SymfonyResponse) {
+                app('swoole_server')->formatResponse(app('swoole_response'), $response);
+            } else {
+                app('swoole_response')->end( (string)$response );
+            }
         }
     }
 

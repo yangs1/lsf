@@ -11,7 +11,7 @@ return [
     'cipher'        => 'AES-256-CBC', // AES-128-CBC , AES-256-CBC
 
     'app_debug'     =>  true,
-    'app_model'     =>  "api", //http, api
+    'app_model'     =>  "http", //http, api
 
     'log'           =>  'daily',
     'log_max_files' =>  3,
@@ -39,7 +39,7 @@ return [
      * 默认版本号
      */
     'version' => 'v1',
-    
+
     /*
      * 默认域名，与前缀二选一
      */

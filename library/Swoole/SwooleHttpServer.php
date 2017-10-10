@@ -62,6 +62,7 @@ class SwooleHttpServer
             $this->swooleServer = new \swoole_http_server(config('swoole.listen'), config('swoole.port'));
         }
         $this->app->instance('swoole',$this->swooleServer);
+        $this->app->instance('swoole_server',$this);
     }
 
     public function start()
@@ -106,6 +107,8 @@ class SwooleHttpServer
         $this->swooleServer->on("request",
             function (\swoole_http_request $request,\swoole_http_response $response){
 
+                $this->app->instance('swoole_request' , $request);
+                $this->app->instance('swoole_response', $response);
 
                 $SRequest = $this->initRequest($request);
 
@@ -130,6 +133,9 @@ class SwooleHttpServer
                 } else {
                     $response->end( (string)$SResponse );
                 }
+
+                $this->app->forgetInstance('swoole_response');
+                $this->app->forgetInstance('swoole_request');
             });
     }
 

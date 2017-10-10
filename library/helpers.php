@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Container\Container;
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 if (! function_exists('app')) {
     /**
@@ -249,5 +251,37 @@ if (! function_exists('trans_choice')) {
     function trans_choice($id, $number, array $replace = [], $locale = null)
     {
         return app('translator')->transChoice($id, $number, $replace, $locale);
+    }
+}
+
+if (! function_exists('trans_choice')) {
+    /**
+     * @param \swoole_http_response $response
+     * @param  $realResponse
+     */
+    function formatResponse(\swoole_http_response $response, SymfonyResponse $realResponse)
+    {
+        // Build header.
+        foreach ($realResponse->headers->allPreserveCase() as $name => $values) {
+            foreach ($values as $value) {
+                $response->header($name, $value);
+            }
+        }
+
+        // Build cookies.
+        foreach ($realResponse->headers->getCookies() as $cookie) {
+            $response->cookie($cookie->getName(), $cookie->getValue(), $cookie->getExpiresTime(),
+                $cookie->getPath(),
+                $cookie->getDomain(), $cookie->isSecure(), $cookie->isHttpOnly());
+        }
+
+        // Set HTTP status code into the swoole response.
+        $response->status($realResponse->getStatusCode());
+
+        if ($realResponse instanceof BinaryFileResponse) {
+            $response->sendfile($realResponse->getFile()->getPathname());
+        } else {
+            $response->end($realResponse->getContent());
+        }
     }
 }
