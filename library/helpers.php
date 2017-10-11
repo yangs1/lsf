@@ -47,6 +47,20 @@ if (! function_exists('storage_path')) {
     }
 }
 
+if (! function_exists('config_path')) {
+    /**
+     * Get the path to the base of the install.
+     *
+     * @param  string  $path
+     * @return string
+     */
+    function config_path($path = '')
+    {
+        return app()->basePath()."/config".($path ? '/'.$path : $path);
+    }
+}
+
+
 if (! function_exists('config')) {
     /**
      * Get / set the specified configuration value.
@@ -283,5 +297,18 @@ if (! function_exists('trans_choice')) {
         } else {
             $response->end($realResponse->getContent());
         }
+    }
+}
+
+
+if (! function_exists('transformData')) {
+    /**
+     * @param \Illuminate\Database\Eloquent\Model|\Illuminate\support\Collection $data
+     * @param \Library\Transformer\AbstractTransformer|null $transformer
+     * @return \Library\Transformer\TransformerEngine
+     */
+    function transformData($data, $transformer = null)
+    {
+        return new \Library\Transformer\TransformerEngine($data, $transformer);
     }
 }

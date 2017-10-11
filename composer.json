@@ -16,8 +16,6 @@
 
         "symfony/http-kernel": "^3.3",
         "monolog/monolog": "^1.23",
-        "dingo/api": "1.0.x@dev",
-        "nikic/fast-route": "^1.2",
         "jeremeamia/superclosure": "^2.3",
         "league/flysystem": "^1.0"
     },

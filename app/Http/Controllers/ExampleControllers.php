@@ -9,6 +9,7 @@
 namespace App\Http\Controllers;
 
 use App\Task\TestTask;
+use App\Transformers\UserTransformer;
 use Illuminate\Contracts\Queue\Job;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -106,6 +107,7 @@ class ExampleControllers extends Controller
         var_dump( cache()->get("a"));*/
    //  throw new Exception('s');
         //$request->session()->put('key', $request->session()->getId());
-         return new Response(["message"=>"success"]);
+        //var_dump(get_class(\db()->table("cc_banner")->get()));
+         return new Response(["message"=>transformData(DB::table("cc_banner")->get(), new UserTransformer())]);
     }
 }

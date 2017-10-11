@@ -17,10 +17,9 @@
     ]);
 
 
-    //$app->withFacades(true);
+    $app->withFacades(true);
 
     //$app->withEloquent();
-
 
 
     require __DIR__.'/routes/web.php';

@@ -398,6 +398,7 @@ class Application extends Container{
             return $this->loadComponent('app', 'Illuminate\Encryption\EncryptionServiceProvider', 'encrypter');
         });
     }
+
     /**
      * Create the file cache directory if necessary.
      *
@@ -449,7 +450,7 @@ class Application extends Container{
             'Illuminate\Support\Facades\DB' => 'DB',
             'Illuminate\Support\Facades\Event' => 'Event',
             'Illuminate\Support\Facades\Log' => 'Log',
-            'Illuminate\Support\Facades\Validator' => 'Validator',
+            'Illuminate\Support\Facades\Validator' => 'Validator'
         ];
 
         if (! static::$aliasesRegistered) {
