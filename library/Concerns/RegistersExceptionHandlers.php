@@ -126,8 +126,10 @@ trait RegistersExceptionHandlers
         $handler->report($e);
 
         if ($this->runningInModel() === 'api'){
+            $response = $handler->renderForApi($this->make('request'), $e);
+        } elseif ($this->runningInConsole()){
             $response = $handler->renderForConsole($this->make('request'), $e);
-        } else {
+        }else {
             $response = $handler->render($this->make('request'), $e);
         }
         if (app()->bound('swoole_response') && app()->bound('swoole_server')){
@@ -136,6 +138,8 @@ trait RegistersExceptionHandlers
             } else {
                 app('swoole_response')->end( (string)$response );
             }
+        }else{
+            $response->send();
         }
     }
 

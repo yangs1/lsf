@@ -105,12 +105,33 @@ class Handler implements ExceptionHandler
             $e = new NotFoundHttpException($e->getMessage(), $e);
         }
 
-        return $this->genericResponse($e);
-        /*$fe = FlattenException::create($e);
+        $fe = FlattenException::create($e);
         $response = new Response($e, $fe->getStatusCode(), $fe->getHeaders());
         $response->exception = $e;
-        return $response;*/
+        return $response;
 
+    }
+
+    /**
+     * Render an exception into an HTTP response.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Exception  $e
+     * @return \Illuminate\Http\Response
+     */
+    public function renderForApi($request, Exception $e)
+    {
+        if ($e instanceof HttpResponseException) {
+            return $e->getResponse();
+        } elseif ($e instanceof ModelNotFoundException) {
+            $e = new NotFoundHttpException($e->getMessage(), $e);
+        } elseif ($e instanceof ValidationException && $e->getResponse()) {
+            return $e->getResponse();
+        }elseif($e instanceof BadRequestHttpException){
+            $e = new NotFoundHttpException($e->getMessage(), $e);
+        }
+
+        return $this->genericResponse($e);
     }
 
 

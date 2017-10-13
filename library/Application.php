@@ -90,8 +90,10 @@ class Application extends Container{
     protected $aliases = [
         'task'                              => 'Library\Swoole\Task\TaskManager',
         'request'                           => 'Illuminate\Http\Request',
+        'filesystem'                        => 'Illuminate\Filesystem\FilesystemManager',
         'Psr\Log\LoggerInterface'           => 'log',
         'Illuminate\Session\SessionManager' =>  'session',
+        'Illuminate\Contracts\Filesystem\Factory'     => 'Illuminate\Filesystem\FilesystemManager',
         'Illuminate\Contracts\Debug\ExceptionHandler' => 'App\Exceptions\Handler'
     ];
     /**
@@ -450,7 +452,8 @@ class Application extends Container{
             'Illuminate\Support\Facades\DB' => 'DB',
             'Illuminate\Support\Facades\Event' => 'Event',
             'Illuminate\Support\Facades\Log' => 'Log',
-            'Illuminate\Support\Facades\Validator' => 'Validator'
+            'Illuminate\Support\Facades\Validator' => 'Validator',
+            'Illuminate\Support\Facades\Storage' => 'filesystem'
         ];
 
         if (! static::$aliasesRegistered) {
