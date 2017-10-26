@@ -13,4 +13,5 @@ $app->router->group([ 'namespace' => 'App\Http\Controllers','version'=>"v1"], fu
     $app->router->post('/cookie', 'ExampleControllers@CookieDemo');
     $app->router->post('/validate', 'ExampleControllers@validateDemo');
     $app->router->post('/event', 'ExampleControllers@eventDemo');*/
+    $app->router->post('/validate', 'ExampleControllers@validateDemo');
 });//'domain'=>'fccn.cc','middleware'=>['auth:a','session']

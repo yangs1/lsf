@@ -175,8 +175,8 @@ trait RoutesRequests
 
                     return $this->handleFoundRoute([true, $this->router->getRoutes()[$method.$pathInfo]['action'], []]);
                 }
-
-                return $this->handleDispatcherResponse([0]);
+                throw new NotFoundHttpException;
+                //return $this->handleDispatcherResponse([0]);
                 // $this->createDispatcher()->dispatch($method, $pathInfo)
             });
         } catch (Exception $e) {
@@ -235,14 +235,15 @@ trait RoutesRequests
      */
     protected function handleDispatcherResponse($routeInfo)
     {
-        switch ($routeInfo[0]) {
+       /* switch ($routeInfo[0]) {
             case Dispatcher::NOT_FOUND:
                 throw new NotFoundHttpException;
             case Dispatcher::METHOD_NOT_ALLOWED:
                 throw new MethodNotAllowedHttpException($routeInfo[1]);
             case Dispatcher::FOUND:
                 return $this->handleFoundRoute($routeInfo);
-        }
+        }*/
+        throw new NotFoundHttpException;
     }
 
     /**

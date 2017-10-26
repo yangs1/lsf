@@ -392,6 +392,7 @@ class Application extends Container{
                 'redis'
             );
         });
+       // $this->loadComponent('database', ['Illuminate\Redis\RedisServiceProvider'], 'redis');
     }
 
     protected function registerEncrypterBindings()

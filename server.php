@@ -9,6 +9,9 @@
 
     $app = new \Library\Application();
 
+    $app->withFacades(true);
+
+    //$app->withEloquent();
 
     //$app->middleware()
     $app->routeMiddleware([
@@ -16,10 +19,10 @@
         "auth"      =>\App\Http\Middleware\AuthMiddleware::class
     ]);
 
+    $app->register(Overtrue\LaravelFilesystem\Qiniu\QiniuStorageServiceProvider::class);
 
-    $app->withFacades(true);
 
-    //$app->withEloquent();
+
 
 
     require __DIR__.'/routes/web.php';

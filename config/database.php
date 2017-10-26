@@ -89,7 +89,7 @@ return [
 
     'redis' => [
 
-        'client' => 'predis',
+        'client' => 'phpredis', // predis
 
         'default' => [
             'host' => '127.0.0.1',

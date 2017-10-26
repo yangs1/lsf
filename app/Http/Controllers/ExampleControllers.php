@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Library\Routing\Controller;
 use Swoole\Mysql\Exception;
@@ -32,19 +33,24 @@ class ExampleControllers extends Controller
             'B' => 'boolean',
             'C' => 'numeric'
         ];
-        $message = [
+       /* $message = [
             'A.required'=>"A是必须的",
             'B.boolean'=>'B是布尔值',
             'C.numeric' => 'C是数值'
-        ];
+        ];*/
         // Validator::make(); 门面模式
-        $validator = $this->getValidationFactory()->make($request->all(),$rules,$message);
+        $validator = $this->getValidationFactory()->make($request->all(),$rules);
         if ($validator->fails()){
             return new Response([$validator->errors()->first()],400);
         }
 
-        $request->file('photo')->store(""); // 文件存储*/
-        $request->get('_fd'); // 获取 swoole server 的 fd
+      //七牛测试
+      /*  $disk = Storage::disk('qiniu');
+        $a = $disk->putFileAs('', $request->file('photo'), "test_".$request->file('photo')->hashName());*/
+
+
+        //$a= $request->file('photo')->store("test_", ['disk'=>'qiniu']); // 文件存储*/
+       // $request->get('_fd'); // 获取 swoole server 的 fd
         return new Response(["message"=>"success"]);
     }
 
@@ -103,11 +109,12 @@ class ExampleControllers extends Controller
       /*  $a= db()->table("cc_apply")->take(5)->runSelect();
         return new Response(["message"=>  gettype($a)]);*/
 
-     /*   cache()->add("a", "t",10);
-        var_dump( cache()->get("a"));*/
+        cache()->add("a", "t",10);
+        var_dump( cache()->get("a"));
    //  throw new Exception('s');
         //$request->session()->put('key', $request->session()->getId());
         //var_dump(get_class(\db()->table("cc_banner")->get()));
-         return new Response(["message"=>transformData(DB::table("cc_banner")->get(), new UserTransformer())]);
+
+        // return new Response(["message"=>transformData(DB::table("cc_banner")->get(), new UserTransformer())]);
     }
 }
