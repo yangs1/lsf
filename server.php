@@ -19,11 +19,7 @@
         "auth"      =>\App\Http\Middleware\AuthMiddleware::class
     ]);
 
-    $app->register(Overtrue\LaravelFilesystem\Qiniu\QiniuStorageServiceProvider::class);
-
-
-
-
+   // $app->register(Overtrue\LaravelFilesystem\Qiniu\QiniuStorageServiceProvider::class);
 
     require __DIR__.'/routes/web.php';
 

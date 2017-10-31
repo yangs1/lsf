@@ -1,6 +1,6 @@
 <?php
 
-namespace Library;
+namespace Library\Concerns;
 
 use ArrayAccess;
 use Illuminate\Support\Arr;

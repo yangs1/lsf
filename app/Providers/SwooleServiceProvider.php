@@ -30,6 +30,8 @@ class SwooleServiceProvider extends ServiceProvider
         //"swoole.request" => "App\\Events\\SwooleEvents@onRequest",
         "swoole.task" => "App\\Events\\SwooleEvents@onTask",
         "swoole.finish" => "App\\Events\\SwooleEvents@onFinish",
+
+        "swoole.message" => "App\\Events\\SwooleEvents@onMessage",
     ];
 
     /**

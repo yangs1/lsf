@@ -14,6 +14,7 @@ use Illuminate\Container\Container;
 use Illuminate\Filesystem\FilesystemManager;
 use Illuminate\Session\SessionServiceProvider;
 use Illuminate\Support\Facades\Facade;
+use Library\Concerns\ConfigRepository;
 use Library\Concerns\RegistersConsole;
 use Library\Concerns\RoutesRequests;
 use Library\Log\LogServiceProvider;

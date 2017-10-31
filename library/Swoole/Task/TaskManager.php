@@ -15,9 +15,9 @@ class TaskManager
     {
         $task = serializeClosure($abstract, $params);
         if ($timeout === 0){
-            return app("swoole")->task($task, $workerId);
+            return app("swoole_server")->task($task, $workerId);
         }
-        return app("swoole")->taskwait($task, $timeout, $workerId);
+        return app("swoole_server")->taskwait($task, $timeout, $workerId);
     }
 
     public function asyTask($abstract, $params = [], $workerId = -1)

@@ -8,8 +8,6 @@
 
 namespace Library\Swoole;
 
-
-
 use Illuminate\Http\Request;
 use Library\Swoole\Contracts\SuperClosure;
 use Library\Swoole\Contracts\TaskHandler;
@@ -58,11 +56,12 @@ class SwooleHttpServer
         }*/
         if (config('swoole.wss')){
             $this->swooleServer = new \swoole_websocket_server(config('swoole.listen'), config('swoole.port'));
+            $this->registerEvents('message');
         }else{
             $this->swooleServer = new \swoole_http_server(config('swoole.listen'), config('swoole.port'));
         }
-        $this->app->instance('swoole',$this->swooleServer);
-        $this->app->instance('swoole_server',$this);
+        $this->app->instance('swoole_server', $this->swooleServer);
+        $this->app->instance('swoole', $this);
     }
 
     public function start()

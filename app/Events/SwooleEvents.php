@@ -54,4 +54,9 @@ class SwooleEvents
     {
         // TODO: Implement onRequest() method.
     }
+
+    public function onMessage(\swoole_websocket_server $server, \swoole_websocket_frame $frame)
+    {
+        // TODO: Implement onMessage() method.
+    }
 }
