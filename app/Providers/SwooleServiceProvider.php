@@ -10,7 +10,7 @@ namespace  App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use League\Flysystem\Exception;
-use Library\Swoole\SwooleHttpServer;
+use Foundation\Swoole\SwooleHttpServer;
 
 class SwooleServiceProvider extends ServiceProvider
 {

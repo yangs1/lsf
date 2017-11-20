@@ -7,7 +7,7 @@
      */
     require 'vendor/autoload.php';
 
-    $app = new \Library\Application();
+    $app = new \Foundation\Application();
 
     $app->withFacades(true);
 
@@ -30,5 +30,6 @@
     if(function_exists('opcache_reset')){
         opcache_reset();
     }
+
     //var_dump($app->router);
     $app->parse_command();

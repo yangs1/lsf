@@ -9,10 +9,19 @@
 namespace App\Events;
 
 
+use Foundation\Application;
+use Foundation\Queue\SwooleWorker;
+use Foundation\Queue\WorkerOptions;
+
 class SwooleEvents
 {
-    public function beforeStart($app)
+    public function beforeStart(Application $app)
     {
+      /*  $app['queue'];
+        $work = new WorkerOptions();
+
+        $app['queue.worker']->daemon('redis', "lsf",$work);*/
+
         // TODO: Implement beforeStart() method.
     }
 

@@ -11,7 +11,7 @@ namespace App\Transformers;
 use App\User;
 //use League\Fractal\TransformerAbstract;
 use Illuminate\Database\Eloquent\Model;
-use \Library\Transformer\AbstractTransformer;
+use \Foundation\Transformer\AbstractTransformer;
 
 class UserTransformer extends AbstractTransformer
 {

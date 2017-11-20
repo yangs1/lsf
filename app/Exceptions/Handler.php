@@ -6,7 +6,7 @@ use Exception;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Contracts\Debug\ExceptionHandler;
-use Library\Concerns\ExceptionTransformHandler;
+use Foundation\Concerns\ExceptionTransformHandler;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Illuminate\Http\Response;

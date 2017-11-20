@@ -9,7 +9,7 @@
 namespace App\Task;
 
 
-use Library\Swoole\Contracts\TaskHandler;
+use Foundation\Swoole\Contracts\TaskHandler;
 
 class TestTask extends TaskHandler
 {

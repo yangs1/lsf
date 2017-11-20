@@ -8,8 +8,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\SendReminderEmail;
 use App\Task\TestTask;
 use App\Transformers\UserTransformer;
+use Foundation\Bus\Dispatchable;
 use Illuminate\Contracts\Queue\Job;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -17,7 +19,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-use Library\Routing\Controller;
+use Foundation\Routing\Controller;
 use Swoole\Mysql\Exception;
 use Symfony\Component\HttpFoundation\Cookie;
 
@@ -85,12 +87,12 @@ class ExampleControllers extends Controller
     }
 
     /**
-     * 事件可在 EventServiceProvider 中设置坚挺事件
+     * 事件可在 EventServiceProvider 中设置监听事件
      * 将事件类定义在 Events 文件夹中
      */
     public function eventDemo(){
         //app('events')->dispatch("aa");
-        dispatch("aa");
+        event("aa");
     }
 
     /**
@@ -108,9 +110,10 @@ class ExampleControllers extends Controller
       //  $request->session()->put('key', $request->session()->getId());
       /*  $a= db()->table("cc_apply")->take(5)->runSelect();
         return new Response(["message"=>  gettype($a)]);*/
+        dispatch( new SendReminderEmail())->delay(2);
 
-        cache()->add("a", "t",10);
-        var_dump( cache()->get("a"));
+       // cache()->add("a", "t",10);
+      //  var_dump( cache()->get("a"));
    //  throw new Exception('s');
         //$request->session()->put('key', $request->session()->getId());
         //var_dump(get_class(\db()->table("cc_banner")->get()));
