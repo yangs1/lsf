@@ -9,8 +9,8 @@
 $app->router->group([ 'namespace' => 'App\Http\Controllers','version'=>"v1"], function () use($app) {
     //$app->router->get('/', 'ExampleControllers@index');
     $app->router->get('/', 'ExampleControllers@index');//->where('name', '[A-Za-z]+');
-  /*  $app->router->get('/task', 'ExampleControllers@taskDemo');
-    $app->router->post('/cookie', 'ExampleControllers@CookieDemo');
+    $app->router->get('/task', 'ExampleControllers@taskDemo');
+   /* $app->router->post('/cookie', 'ExampleControllers@CookieDemo');
     $app->router->post('/validate', 'ExampleControllers@validateDemo');
     $app->router->post('/event', 'ExampleControllers@eventDemo');*/
     $app->router->post('/validate', 'ExampleControllers@validateDemo');

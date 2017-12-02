@@ -26,7 +26,7 @@ class Barrier
     }
     function execute($timeout = 0.5){
         $this->results = [];
-        $this->results = app('swoole')->taskWaitMulti($this->tasks, $timeout);
+        $this->results = app('swoole_server')->taskWaitMulti($this->tasks, $timeout);
         $this->flush();
         return $this->results;
     }

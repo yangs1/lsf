@@ -9,7 +9,7 @@ use Foundation\Bus\Dispatchable;
 use Swoole\Mysql\Exception;
 
 //若需要马上执行获取返回值 可把 shouldQueue 删除
-class SendReminderEmail implements ShouldQueue
+class SendReminderEmail // implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable;
 
@@ -31,9 +31,10 @@ class SendReminderEmail implements ShouldQueue
     public function handle()
     {
 //var_dump('handle');
-throw new Exception("test Exception");
-        return "11";
+//throw new Exception("test Exception");
+ //       return "11";
         //
+        var_dump("execute over");
     }
 
     public function failed($payload, $e)
