@@ -16,7 +16,6 @@
 
         "symfony/http-kernel": "^3.3",
         "monolog/monolog": "^1.23",
-        "jeremeamia/superclosure": "^2.3",
         "league/flysystem": "^1.0",
         "illuminate/bus": "^5.5"
     },

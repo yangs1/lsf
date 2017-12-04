@@ -110,9 +110,11 @@ class ExampleControllers extends Controller
       //  $request->session()->put('key', $request->session()->getId());
       /*  $a= db()->table("cc_apply")->take(5)->runSelect();
         return new Response(["message"=>  gettype($a)]);*/
-     // var_dump(memory_get_usage());
+      //var_dump(memory_get_usage());
         dispatch( new SendReminderEmail(), true)->delay(2);
-     //   var_dump(memory_get_usage());
+      //var_dump(memory_get_usage());
+        return new Response(["message"=>"success"]);
+
        // cache()->add("a", "t",10);
       //  var_dump( cache()->get("a"));
    //  throw new Exception('s');

@@ -82,7 +82,6 @@ class Application extends Container{
     ];
 
     protected $aliases = [
-        'task'                              => 'Foundation\Swoole\Task\TaskManager',
         'request'                           => 'Illuminate\Http\Request',
         'filesystem'                        => 'Illuminate\Filesystem\FilesystemManager',
         'Psr\Log\LoggerInterface'           => 'log',

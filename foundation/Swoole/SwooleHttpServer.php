@@ -10,7 +10,6 @@ namespace Foundation\Swoole;
 
 use Foundation\Queue\SwooleQueue;
 use Illuminate\Http\Request;
-use Foundation\Swoole\Contracts\SuperClosure;
 use Foundation\Swoole\Contracts\TaskHandler;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
@@ -151,22 +150,7 @@ class SwooleHttpServer
             if ($command instanceof SwooleQueue){
                 return $this->container->call([$command, 'handle']);
             }
-            //$this->container['queue']->connection('swoole')->push($abstract);
-            //throw new \RuntimeException('Queue resolver did not return a Queue implementation.');
-
-            /*if ($command instanceof SuperClosure){
-                $params = $command->getParams();
-                $command =  $command();
-
-                if (is_string($command) && class_exists($command)){
-                    $command = new $command();
-                    if ($command instanceof TaskHandler) {
-                        return $command->execute($server, $taskId, $workerId, $params);
-                    }
-                }
-                return $command;
-            }*/
-            return 2;
+            return 0;
         });
     }
 

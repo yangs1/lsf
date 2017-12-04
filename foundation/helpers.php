@@ -1,8 +1,6 @@
 <?php
 
 use Illuminate\Container\Container;
-use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 if (! function_exists('app')) {
     /**
@@ -170,49 +168,6 @@ if (! function_exists('dispatch')) {
     }
 }
 
-if (! function_exists('task')) {
-    /**
-     * @param $abstract
-     * @param $params
-     * @param int $workerId
-     */
-    function task($abstract, $params = [], $workerId = -1){
-        app("task")->task($abstract, $params, $workerId);
-    }
-}
-if (! function_exists('syncTask')) {
-    /**
-     * @param $abstract
-     * @param $params
-     * @param float $timeout
-     * @param int $workerId
-     * @return mixed
-     */
-    function syncTask($abstract, $params = [],  $timeout = 0.5, $workerId = -1){
-       return app("task")->task($abstract, $params, $workerId, $timeout);
-    }
-}
-if (! function_exists('barrier')) {
-    /**
-     * @return \Foundation\Swoole\Task\Barrier
-     */
-    function barrier(){
-       return new \Foundation\Swoole\Task\Barrier();
-    }
-}
-
-
-if (! function_exists('serializeClosure')) {
-    /**
-     * @param $abstract
-     * @param $params
-     * @return \Foundation\Swoole\Contracts\SuperClosure
-     */
-    function serializeClosure($abstract, $params){
-        return new \Foundation\Swoole\Contracts\SuperClosure($abstract, $params);
-    }
-}
-
 if (! function_exists('db')) {
 
     /**
@@ -283,37 +238,37 @@ if (! function_exists('trans_choice')) {
     }
 }
 
-if (! function_exists('trans_choice')) {
-    /**
-     * @param \swoole_http_response $response
-     * @param  $realResponse
-     */
-    function formatResponse(\swoole_http_response $response, SymfonyResponse $realResponse)
-    {
-        // Build header.
-        foreach ($realResponse->headers->allPreserveCase() as $name => $values) {
-            foreach ($values as $value) {
-                $response->header($name, $value);
-            }
-        }
-
-        // Build cookies.
-        foreach ($realResponse->headers->getCookies() as $cookie) {
-            $response->cookie($cookie->getName(), $cookie->getValue(), $cookie->getExpiresTime(),
-                $cookie->getPath(),
-                $cookie->getDomain(), $cookie->isSecure(), $cookie->isHttpOnly());
-        }
-
-        // Set HTTP status code into the swoole response.
-        $response->status($realResponse->getStatusCode());
-
-        if ($realResponse instanceof BinaryFileResponse) {
-            $response->sendfile($realResponse->getFile()->getPathname());
-        } else {
-            $response->end($realResponse->getContent());
-        }
-    }
-}
+//if (! function_exists('formatResponse')) {
+//    /**
+//     * @param \swoole_http_response $response
+//     * @param  $realResponse
+//     */
+//    function formatResponse(\swoole_http_response $response, SymfonyResponse $realResponse)
+//    {
+//        // Build header.
+//        foreach ($realResponse->headers->allPreserveCase() as $name => $values) {
+//            foreach ($values as $value) {
+//                $response->header($name, $value);
+//            }
+//        }
+//
+//        // Build cookies.
+//        foreach ($realResponse->headers->getCookies() as $cookie) {
+//            $response->cookie($cookie->getName(), $cookie->getValue(), $cookie->getExpiresTime(),
+//                $cookie->getPath(),
+//                $cookie->getDomain(), $cookie->isSecure(), $cookie->isHttpOnly());
+//        }
+//
+//        // Set HTTP status code into the swoole response.
+//        $response->status($realResponse->getStatusCode());
+//
+//        if ($realResponse instanceof BinaryFileResponse) {
+//            $response->sendfile($realResponse->getFile()->getPathname());
+//        } else {
+//            $response->end($realResponse->getContent());
+//        }
+//    }
+//}
 
 
 if (! function_exists('transformData')) {
