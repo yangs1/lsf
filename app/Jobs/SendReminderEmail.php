@@ -2,14 +2,14 @@
 
 namespace App\Jobs;
 
+use Foundation\Queue\SwooleQueue;
 use Illuminate\Bus\Queueable;
 use Foundation\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Foundation\Bus\Dispatchable;
-use Swoole\Mysql\Exception;
 
 //若需要马上执行获取返回值 可把 shouldQueue 删除
-class SendReminderEmail implements ShouldQueue
+class SendReminderEmail implements SwooleQueue//implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable;
 
@@ -37,18 +37,9 @@ class SendReminderEmail implements ShouldQueue
         var_dump("execute over");
     }
 
-    public function failed($payload, $e)
+    public function failed($e)
     {
-        var_dump($payload);
+        var_dump('...');
     }
 
-    public function queue($queue, $command)
-    {
-      /* if ($command->delay){
-           swoole_timer_after($command->delay*1000, function() use($queue, $command){
-
-           });
-       }*/
-        app('swoole_server')->task($command);
-    }
 }

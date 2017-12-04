@@ -78,7 +78,7 @@ class QueueServiceProvider extends ServiceProvider
      */
     public function registerConnectors($manager)
     {
-        foreach (['Null', 'Sync', 'Redis','Swoole'] as $connector) {
+        foreach (['Null', 'Sync', 'Redis'] as $connector) {
             $this->{"register{$connector}Connector"}($manager);
         }
     }
@@ -121,19 +121,6 @@ class QueueServiceProvider extends ServiceProvider
 
         $manager->addConnector('redis', function () use ($app) {
             return new RedisConnector($app['redis']);
-        });
-    }
-
-    /**
-     * Register the Redis queue connector.
-     *
-     * @param  \Foundation\Queue\QueueManager  $manager
-     * @return void
-     */
-    protected function registerSwooleConnector($manager)
-    {
-        $manager->addConnector('swoole', function () {
-            return new SwooleConnector();
         });
     }
 

@@ -161,11 +161,12 @@ if (! function_exists('dispatch')) {
      * Dispatch a job to its appropriate handler.
      *
      * @param  mixed  $job
+     * @param  mixed  $inTask
      * @return \Foundation\Bus\PendingDispatch
      */
-    function dispatch($job)
+    function dispatch($job, $inTask = false)
     {
-        return new \Foundation\Bus\PendingDispatch($job);
+        return new \Foundation\Bus\PendingDispatch($job, $inTask);
     }
 }
 
