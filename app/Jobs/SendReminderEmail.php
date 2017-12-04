@@ -9,7 +9,7 @@ use Foundation\Bus\Dispatchable;
 use Swoole\Mysql\Exception;
 
 //若需要马上执行获取返回值 可把 shouldQueue 删除
-class SendReminderEmail // implements ShouldQueue
+class SendReminderEmail implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable;
 
@@ -40,5 +40,15 @@ class SendReminderEmail // implements ShouldQueue
     public function failed($payload, $e)
     {
         var_dump($payload);
+    }
+
+    public function queue($queue, $command)
+    {
+      /* if ($command->delay){
+           swoole_timer_after($command->delay*1000, function() use($queue, $command){
+
+           });
+       }*/
+        app('swoole_server')->task($command);
     }
 }

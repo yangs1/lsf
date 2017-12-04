@@ -110,7 +110,7 @@ class ExampleControllers extends Controller
       //  $request->session()->put('key', $request->session()->getId());
       /*  $a= db()->table("cc_apply")->take(5)->runSelect();
         return new Response(["message"=>  gettype($a)]);*/
-        dispatch( new SendReminderEmail())->delay(2);
+        dispatch( new SendReminderEmail())->onConnection('swoole')->delay(2);
 
        // cache()->add("a", "t",10);
       //  var_dump( cache()->get("a"));

@@ -144,8 +144,11 @@ class SwooleHttpServer
         }
 
         $this->swooleServer->on("task",function (\swoole_http_server $server, $taskId, $workerId, $abstract){
-
-            if ($abstract instanceof SuperClosure){
+           //var_dump(get_class($abstract));
+//TODO swoole queue
+            $this->app['queue']->connection('swoole')->push($abstract);
+            //throw new \RuntimeException('Queue resolver did not return a Queue implementation.');
+            /*if ($abstract instanceof SuperClosure){
                 $params = $abstract->getParams();
                 $abstract =  $abstract();
 
@@ -156,8 +159,8 @@ class SwooleHttpServer
                     }
                 }
                 return $abstract;
-            }
-            return null;
+            }*/
+            return 1;
         });
     }
 
