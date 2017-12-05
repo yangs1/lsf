@@ -34,9 +34,6 @@ return [
         'sync' => [
             'driver' => 'sync',
         ],
-        'swoole' => [
-            'driver' => 'swoole',
-        ],
 
         'database' => [
             'driver' => 'database',

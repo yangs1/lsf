@@ -33,10 +33,18 @@ class SendReminderEmail implements SwooleQueue//implements ShouldQueue
     {
 //var_dump('handle');
 //throw new Exception("test Exception");
- //       return "11";
-        //
+
+        //并发测试 -n 1000 -c 900
         var_dump("execute over");
-        return 666666;
+        /*cache()->delete("count");
+        cache()->add("count",1,60);*/
+        $count = cache()->get("count",0);
+        cache()->increment('count',1);
+
+        /*$count = app('redis')->get("count",0);
+        var_dump($count);
+        $count = app('redis')->increment("count", 1);*/
+        var_dump($count);
     }
 
     public function failed($e)

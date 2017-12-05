@@ -112,10 +112,9 @@ class ExampleControllers extends Controller
         return new Response(["message"=>  gettype($a)]);*/
       //var_dump(memory_get_usage());
 
-        //$a = dispatch( new SendReminderEmail())->taskWait()->delay(2)->execute();
-        //var_dump($a);
-        $a = dispatchMulti([new SendReminderEmail(), new SendReminderEmail()]);
-        var_dump($a);
+         dispatch( new SendReminderEmail())->task()->delay(2);
+        /*$a = dispatchMulti([new SendReminderEmail(), new SendReminderEmail()]);
+        var_dump($a);*/
       //var_dump(memory_get_usage());
         return new Response(["message"=>"success"]);
 
