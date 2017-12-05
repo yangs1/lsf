@@ -111,7 +111,11 @@ class ExampleControllers extends Controller
       /*  $a= db()->table("cc_apply")->take(5)->runSelect();
         return new Response(["message"=>  gettype($a)]);*/
       //var_dump(memory_get_usage());
-        dispatch( new SendReminderEmail(), true)->delay(2);
+
+        //$a = dispatch( new SendReminderEmail())->taskWait()->delay(2)->execute();
+        //var_dump($a);
+        $a = dispatchMulti([new SendReminderEmail(), new SendReminderEmail()]);
+        var_dump($a);
       //var_dump(memory_get_usage());
         return new Response(["message"=>"success"]);
 

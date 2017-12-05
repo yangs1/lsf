@@ -15,27 +15,23 @@ class PendingDispatch
      */
     protected $job;
 
-    protected $inTask = false;
-
-    protected $task_id = -1;
+    protected $hasExecute = false;
 
     /**
      * Create a new pending job dispatch.
      *
-     * @param  mixed  $job
-     * @param  $inTask  $job
+     * @param  mixed $job
      * @return void
      */
-    public function __construct($job, $inTask = false)
+    public function __construct($job)
     {
         $this->job = $job;
-        $this->inTask = $inTask;
     }
 
     /**
      * Set the desired connection for the job.
      *
-     * @param  string|null  $connection
+     * @param  string|null $connection
      * @return $this
      */
     public function onConnection($connection)
@@ -48,7 +44,7 @@ class PendingDispatch
     /**
      * Set the desired queue for the job.
      *
-     * @param  string|null  $queue
+     * @param  string|null $queue
      * @return $this
      */
     public function onQueue($queue)
@@ -61,7 +57,7 @@ class PendingDispatch
     /**
      * Set the desired delay for the job.
      *
-     * @param  \DateTime|int|null  $delay
+     * @param  \DateTime|int|null $delay
      * @return $this
      */
     public function delay($delay)
@@ -74,7 +70,7 @@ class PendingDispatch
     /**
      * Set the jobs that should run if this job is successful.
      *
-     * @param  array  $chain
+     * @param  array $chain
      * @return $this
      */
     public function chain($chain)
@@ -84,34 +80,67 @@ class PendingDispatch
         return $this;
     }
 
-    private function pushPipe (){
+    private function pushPipe()
+    {
 
         $pipe = [];
-        if ($this->job instanceof SwooleQueue){
-            if ($this->job->delay){
-                $pipe[] = function ($request, Closure $next){
-                    swoole_timer_after($this->job->delay*1000, function() use($next, $request){
+        if ($this->job instanceof SwooleQueue) {
+
+            if ($this->job->delay && !$this->job->is_task_wait) {
+
+                // array_unshift($pipe, );
+                $pipe[] = function ($request, Closure $next) {
+                    swoole_timer_after($this->job->delay * 1000, function () use ($next, $request) {
                         $next($request);
                     });
                 };
             }
 
-            if ($this->inTask){
-                $pipe[] = function ($request, Closure $next){
-                    app('swoole_server')->task($request, $this->task_id);
-                };
+            if ($this->job->in_task) {
+
+                if ($this->job->is_task_wait) {
+                    $pipe[] = function ($request, Closure $next) {
+                        return app('swoole_server')->taskwait($request, $this->job->timeout, $this->job->task_id);
+                    };
+                } else {
+                    $pipe[] = function ($request, Closure $next) {
+                        app('swoole_server')->task($request, $this->job->task_id);
+                    };
+                }
+
             }
+
+
         }
 
         return $pipe;
     }
 
-    public function task($taskId)
+    public function task($taskId = -1)
     {
-        $this->task_id = $taskId;
+        $this->job->setInTask(true);
+
+        $this->job->setTaskId($taskId);
 
         return $this;
     }
+
+    public function taskWait($timeout = 0.5, $taskId = -1)
+    {
+        $this->job->setIsTaskWait(true);
+
+        $this->job->setTaskId($taskId);
+
+        $this->job->setTimeout($timeout);
+        return $this;
+    }
+
+    public function execute()
+    {
+        $this->hasExecute = true;
+        return app(Dispatcher::class)->pipeThrough($this->pushPipe())->dispatch($this->job);
+    }
+
     /**
      * Handle the object's destruction.
      *
@@ -119,6 +148,7 @@ class PendingDispatch
      */
     public function __destruct()
     {
-        app(Dispatcher::class)->pipeThrough($this->pushPipe())->dispatch($this->job);
+        $this->hasExecute || $this->execute();
+        //app(Dispatcher::class)->pipeThrough($this->pushPipe())->dispatch($this->job);
     }
 }

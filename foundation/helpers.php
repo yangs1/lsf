@@ -159,12 +159,24 @@ if (! function_exists('dispatch')) {
      * Dispatch a job to its appropriate handler.
      *
      * @param  mixed  $job
-     * @param  mixed  $inTask
      * @return \Foundation\Bus\PendingDispatch
      */
-    function dispatch($job, $inTask = false)
+    function dispatch($job)
     {
-        return new \Foundation\Bus\PendingDispatch($job, $inTask);
+        return new \Foundation\Bus\PendingDispatch($job);
+    }
+}
+
+if (! function_exists('dispatchMulti')) {
+    /**
+     * Dispatch a job to its appropriate handler.
+     *
+     * @param  mixed  $job
+     * @return mixed
+     */
+    function dispatchMulti($job)
+    {
+        return (new \Foundation\Bus\PendingDispatchMulti($job))->execute();
     }
 }
 

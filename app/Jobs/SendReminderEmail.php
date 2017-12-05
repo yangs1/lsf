@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use Foundation\Bus\SwooleTaskable;
 use Foundation\Queue\SwooleQueue;
 use Illuminate\Bus\Queueable;
 use Foundation\Queue\InteractsWithQueue;
@@ -11,7 +12,7 @@ use Foundation\Bus\Dispatchable;
 //若需要马上执行获取返回值 可把 shouldQueue 删除
 class SendReminderEmail implements SwooleQueue//implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable;
+    use Dispatchable, InteractsWithQueue, Queueable, SwooleTaskable;
 
     /**
      * Create a new job instance.
@@ -35,6 +36,7 @@ class SendReminderEmail implements SwooleQueue//implements ShouldQueue
  //       return "11";
         //
         var_dump("execute over");
+        return 666666;
     }
 
     public function failed($e)
