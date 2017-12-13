@@ -64,6 +64,16 @@ class SwooleWorker
     public $paused = false;
 
     /**
+     * swoole process.
+     *
+     * @var \swoole_process
+     */
+    public $currentWorker = null;
+
+    public $works = [];
+
+
+    /**
      * Create a new queue worker.
      *
      * @param  \Foundation\Queue\QueueManager  $manager
@@ -78,6 +88,8 @@ class SwooleWorker
         $this->events = $events;
         $this->manager = $manager;
         $this->exceptions = $exceptions;
+        $this->masterId = posix_getpid();
+        swoole_set_process_name( sprintf('lsf-queue:%s', 'master') );
     }
 
     /**
@@ -86,49 +98,48 @@ class SwooleWorker
      * @param  string  $connectionName
      * @param  string  $queue
      * @param  \Foundation\Queue\WorkerOptions  $options
-     * @return void
+     * @return int
      */
     public function daemon($connectionName, $queue, WorkerOptions $options)
     {
-        $this->listenForSignals();
+       // $this->listenForSignals();
 
-        $lastRestart = $this->getTimestampOfLastQueueRestart();
+        $process = new \swoole_process(function(\swoole_process $worker) use ($connectionName, $queue, $options){
 
-        while (true) {
-            // Before reserving any jobs, we will make sure this queue is not paused and
-            // if it is we will just pause this worker for a given amount of time and
-            // make sure we do not need to kill this worker process off completely.
-            if (! $this->daemonShouldRun($options, $connectionName, $queue)) {
-                $this->pauseWorker($options, $lastRestart);
+            $this->currentWorker = $worker;
 
-                continue;
+            $worker->name( sprintf('lsf-queue:%s', $queue) );
+
+            while (true){
+
+                // First, we will attempt to get the next job off of the queue. We will also
+                // register the timeout handler and reset the alarm for this job so it is
+                // not stuck in a frozen state forever. Then, we can fire off this job.
+                $job = $this->getNextJob(
+                    $this->manager->connection($connectionName), $queue
+                );
+
+                //$this->registerTimeoutHandler($job, $options);
+
+                // If the daemon should run (not in maintenance mode, etc.), then we can run
+                // fire off this job for processing. Otherwise, we will need to sleep the
+                // worker so no more jobs are processed until they should be processed.
+
+                if ($job) {
+                    $this->runJob($job, $connectionName, $options);
+                } else {
+                    $this->sleep($options->sleep);
+                }
+
+                // Finally, we will check to see if we have exceeded our memory limits or if
+                // the queue should restart based on other indications. If so, we'll stop
+                // this worker and let whatever is "monitoring" it restart the process.
+                $this->stopIfNecessary($options);
+
             }
+        }, false, false);
 
-            // First, we will attempt to get the next job off of the queue. We will also
-            // register the timeout handler and reset the alarm for this job so it is
-            // not stuck in a frozen state forever. Then, we can fire off this job.
-            $job = $this->getNextJob(
-                $this->manager->connection($connectionName), $queue
-            );
-
-            $this->registerTimeoutHandler($job, $options);
-
-            // If the daemon should run (not in maintenance mode, etc.), then we can run
-            // fire off this job for processing. Otherwise, we will need to sleep the
-            // worker so no more jobs are processed until they should be processed.
-
-            if ($job) {
-                $this->runJob($job, $connectionName, $options);
-            } else {
-
-                $this->sleep($options->sleep);
-            }
-
-            // Finally, we will check to see if we have exceeded our memory limits or if
-            // the queue should restart based on other indications. If so, we'll stop
-            // this worker and let whatever is "monitoring" it restart the process.
-            $this->stopIfNecessary($options, $lastRestart);
-        }
+        return $process->start();
     }
 
     /**
@@ -166,42 +177,14 @@ class SwooleWorker
         return $job && ! is_null($job->timeout()) ? $job->timeout() : $options->timeout;
     }
 
-    /**
-     * Determine if the daemon should process on this iteration.
-     *
-     * @param  \Foundation\Queue\WorkerOptions  $options
-     * @param  string  $connectionName
-     * @param  string  $queue
-     * @return bool
-     */
-    protected function daemonShouldRun(WorkerOptions $options, $connectionName, $queue)
-    {
-        return ! ($options->force ||
-            $this->paused ||
-            $this->events->until(new Events\Looping($connectionName, $queue)) === false);
-    }
-
-    /**
-     * Pause the worker for the current loop.
-     *
-     * @param  \Foundation\Queue\WorkerOptions  $options
-     * @param  int  $lastRestart
-     * @return void
-     */
-    protected function pauseWorker(WorkerOptions $options, $lastRestart)
-    {
-        $this->sleep($options->sleep > 0 ? $options->sleep : 1);
-
-        $this->stopIfNecessary($options, $lastRestart);
-    }
 
     /**
      * Stop the process if necessary.
      *
      * @param  \Foundation\Queue\WorkerOptions  $options
-     * @param  int  $lastRestart
+     *
      */
-    protected function stopIfNecessary(WorkerOptions $options, $lastRestart)
+    protected function stopIfNecessary(WorkerOptions $options)
     {
         if ($this->shouldQuit) {
             $this->kill();
@@ -209,8 +192,6 @@ class SwooleWorker
 
         if ($this->memoryExceeded($options->memory)) {
             $this->stop(12);
-        } elseif ($this->queueShouldRestart($lastRestart)) {
-            $this->stop();
         }
     }
 
@@ -271,7 +252,7 @@ class SwooleWorker
      * @param  \Illuminate\Contracts\Queue\Job  $job
      * @param  string  $connectionName
      * @param  \Foundation\Queue\WorkerOptions  $options
-     * @return void
+     * @return mixed
      */
     protected function runJob($job, $connectionName, WorkerOptions $options)
     {
@@ -307,7 +288,7 @@ class SwooleWorker
      * @param  string  $connectionName
      * @param  \Illuminate\Contracts\Queue\Job  $job
      * @param  \Foundation\Queue\WorkerOptions  $options
-     * @return void
+     * @return mixed
      *
      * @throws \Throwable
      */
@@ -500,53 +481,6 @@ class SwooleWorker
     }
 
     /**
-     * Determine if the queue worker should restart.
-     *
-     * @param  int|null  $lastRestart
-     * @return bool
-     */
-    protected function queueShouldRestart($lastRestart)
-    {
-        return $this->getTimestampOfLastQueueRestart() != $lastRestart;
-    }
-
-    /**
-     * Get the last queue restart timestamp, or null.
-     *
-     * @return int|null
-     */
-    protected function getTimestampOfLastQueueRestart()
-    {
-        if ($this->cache) {
-            return $this->cache->get('illuminate:queue:restart');
-        }
-    }
-
-    /**
-     * Enable async signals for the process.
-     *
-     * @return void
-     */
-    protected function listenForSignals()
-    {
-        if ($this->supportsAsyncSignals()) {
-            pcntl_async_signals(true);
-
-            pcntl_signal(SIGTERM, function () {
-                $this->shouldQuit = true;
-            });
-
-            pcntl_signal(SIGUSR2, function () {
-                $this->paused = true;
-            });
-
-            pcntl_signal(SIGCONT, function () {
-                $this->paused = false;
-            });
-        }
-    }
-
-    /**
      * Determine if "async" signals are supported.
      *
      * @return bool
@@ -554,7 +488,7 @@ class SwooleWorker
     protected function supportsAsyncSignals()
     {
         return version_compare(PHP_VERSION, '7.1.0') >= 0 &&
-            extension_loaded('pcntl');
+            extension_loaded('swoole');
     }
 
     /**
@@ -578,7 +512,9 @@ class SwooleWorker
     {
         $this->events->dispatch(new Events\WorkerStopping);
 
-        exit($status);
+        \swoole_process::kill(getmypid(), $status);
+
+        $this->currentWorker->exit(0);
     }
 
     /**
@@ -589,8 +525,10 @@ class SwooleWorker
      */
     public function kill($status = 0)
     {
-        if (extension_loaded('posix')) {
-            posix_kill(getmypid(), SIGKILL);
+        if (extension_loaded('swoole')) {
+           //posix_kill(getmypid(), SIGKILL);
+            var_dump("???");
+           \swoole_process::kill(getmypid(), SIGKILL);
         }
 
         exit($status);

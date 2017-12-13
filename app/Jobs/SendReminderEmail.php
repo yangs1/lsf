@@ -10,7 +10,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Foundation\Bus\Dispatchable;
 
 //若需要马上执行获取返回值 可把 shouldQueue 删除
-class SendReminderEmail implements SwooleQueue//implements ShouldQueue
+class SendReminderEmail implements ShouldQueue //implements SwooleQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SwooleTaskable;
 
@@ -22,6 +22,7 @@ class SendReminderEmail implements SwooleQueue//implements ShouldQueue
     public function __construct()
     {
         //
+
     }
 
     /**
@@ -33,8 +34,9 @@ class SendReminderEmail implements SwooleQueue//implements ShouldQueue
     {
 //var_dump('handle');
 //throw new Exception("test Exception");
-
+       // sleep(25);
         //并发测试 -n 1000 -c 900
+        var_dump(microtime(true));
         var_dump("execute over");
         /*cache()->delete("count");
         cache()->add("count",1,60);*/

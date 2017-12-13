@@ -74,7 +74,7 @@ class SwooleHttpServer
         }
 
         $this->swooleServer->set(config('swoole.settings'));
-        $this->registerEvents('beforeStart', [$this->container], false);
+        $this->registerEvents('beforeStart', [$this->swooleServer], false);
 
         foreach (['start', 'shutdown', 'workerStart', 'workerStop', 'workererror'] as $event) {
             $this->registerEvents($event);

@@ -15,14 +15,17 @@ use Foundation\Queue\WorkerOptions;
 
 class SwooleEvents
 {
-    public function beforeStart(Application $app)
+    public function beforeStart(\swoole_http_server $server)
     {
-      /*  $app['queue'];
-        $work = new WorkerOptions();
-
-        $app['queue.worker']->daemon('redis', "lsf",$work);*/
 
         // TODO: Implement beforeStart() method.
+
+        //假想 ：   可以通过 swoole_event_add 对队列内的任务进行控制
+        /* $process = new \swoole_process(function(\swoole_process $process){
+             $process->exec("/usr/bin/php", ["/var/www/lsf/artisan.php"]);
+         });
+         $server->addProcess($process);*/
+
     }
 
     public function onStart(\swoole_http_server $server)
@@ -44,7 +47,8 @@ class SwooleEvents
     {
         // TODO: Implement onWorkerStop() method.
     }
-    public  function onWorkerError(\swoole_http_server $server, $worker_id, $worker_pid, $exit_code)
+
+    public function onWorkerError(\swoole_http_server $server, $worker_id, $worker_pid, $exit_code)
     {
         // TODO: Implement onWorkerError() method.
     }
@@ -59,7 +63,7 @@ class SwooleEvents
         // TODO: Implement onFinish() method.
     }
 
-    public function onRequest(\swoole_http_request $request,\swoole_http_response $response)
+    public function onRequest(\swoole_http_request $request, \swoole_http_response $response)
     {
         // TODO: Implement onRequest() method.
     }

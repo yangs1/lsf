@@ -76,13 +76,17 @@ class ExampleControllers extends Controller
 
         //task(TestTask::class , ["params"=>"a"]); // 异步
 
+
+        //var_dump(memory_get_usage());
+
+        var_dump(microtime(true));
+        dispatch( new SendReminderEmail())->delay(2);
+        /*$a = dispatchMulti([new SendReminderEmail(), new SendReminderEmail()]);
+        var_dump($a);*/
+        //var_dump(memory_get_usage());
+        return new Response(["message"=>"success"]);
         // 栅栏任务， 全部执行结束，一起返回
-        $result = barrier()->task(function (){
-            return "o";
-        })->task(function (){
-            return "k";
-        })->execute(0.5);
-        return $result;
+
 
     }
 
@@ -110,14 +114,8 @@ class ExampleControllers extends Controller
       //  $request->session()->put('key', $request->session()->getId());
       /*  $a= db()->table("cc_apply")->take(5)->runSelect();
         return new Response(["message"=>  gettype($a)]);*/
-      //var_dump(memory_get_usage());
 
-         dispatch( new SendReminderEmail())->task()->delay(2);
-        /*$a = dispatchMulti([new SendReminderEmail(), new SendReminderEmail()]);
-        var_dump($a);*/
-      //var_dump(memory_get_usage());
-        return new Response(["message"=>"success"]);
-
+        return new Response(["message"=>"success1"]);
        // cache()->add("a", "t",10);
       //  var_dump( cache()->get("a"));
    //  throw new Exception('s');
