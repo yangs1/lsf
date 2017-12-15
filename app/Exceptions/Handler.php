@@ -73,6 +73,11 @@ class Handler implements ExceptionHandler
             $e = new NotFoundHttpException($e->getMessage(), $e);
         }
 
+        if ($request->expectsJson() || config('app.app_model') === 'api'){
+
+            return $this->genericResponse($e);
+        }
+
         $fe = FlattenException::create($e);
 
         $handler = new SymfonyExceptionHandler(config('app.app_debug',false));
@@ -111,29 +116,6 @@ class Handler implements ExceptionHandler
         return $response;
 
     }
-
-    /**
-     * Render an exception into an HTTP response.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Exception  $e
-     * @return \Illuminate\Http\Response
-     */
-    public function renderForApi($request, Exception $e)
-    {
-        if ($e instanceof HttpResponseException) {
-            return $e->getResponse();
-        } elseif ($e instanceof ModelNotFoundException) {
-            $e = new NotFoundHttpException($e->getMessage(), $e);
-        } elseif ($e instanceof ValidationException && $e->getResponse()) {
-            return $e->getResponse();
-        }elseif($e instanceof BadRequestHttpException){
-            $e = new NotFoundHttpException($e->getMessage(), $e);
-        }
-
-        return $this->genericResponse($e);
-    }
-
 
     /**
      * Determine if the exception should be reported.

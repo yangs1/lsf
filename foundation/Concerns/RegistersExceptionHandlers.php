@@ -103,11 +103,7 @@ trait RegistersExceptionHandlers
 
         $handler->report($e);
 
-        if ($this->runningInModel() === 'api'){
-            return $handler->renderForConsole($this->make('request'), $e);
-        } else {
-            return $handler->render($this->make('request'), $e);
-        }
+        return $handler->render($this->make('request'), $e);
     }
 
     /**
@@ -125,20 +121,17 @@ trait RegistersExceptionHandlers
         }
         $handler->report($e);
 
-        if ($this->runningInModel() === 'api'){
-            $response = $handler->renderForApi($this->make('request'), $e);
-        }elseif ($this->runningInConsole()){
-            $response = $handler->renderForConsole($this->make('request'), $e);
-        }else {
-            $response = $handler->render($this->make('request'), $e);
-        }
         if (app()->bound('swoole_response') && app()->bound('swoole')){
+
+            $response = $handler->render($this->make('request'), $e);
+
             if ($response instanceof SymfonyResponse) {
                 app('swoole')->formatResponse(app('swoole_response'), $response);
             } else {
                 app('swoole_response')->end( (string)$response );
             }
         }else{
+            $response = $handler->renderForConsole($this->make('request'), $e);
             $response->send();
         }
     }

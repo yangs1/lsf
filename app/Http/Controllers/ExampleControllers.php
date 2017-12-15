@@ -110,12 +110,17 @@ class ExampleControllers extends Controller
 
     public function index(Request $request)
     {
+        $this->validate($request,[
+        'A' => 'required',
+        'B' => 'boolean',
+        'C' => 'numeric'
+    ]);
        // var_dump(get_class($request->session()));
       //  $request->session()->put('key', $request->session()->getId());
       /*  $a= db()->table("cc_apply")->take(5)->runSelect();
         return new Response(["message"=>  gettype($a)]);*/
-
-        return new Response(["message"=>"success1"]);
+return ["message"=>"success1"];
+        //return new Response(["message"=>"success1"]);
        // cache()->add("a", "t",10);
       //  var_dump( cache()->get("a"));
    //  throw new Exception('s');
