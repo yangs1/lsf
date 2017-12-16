@@ -31,11 +31,15 @@ class ExampleControllers extends Controller
      * 工具类 Arr , Str
      */
     public function validateDemo(Request $request){
-        $rules = [
+
+        app(UpdateUserRequest::class )->scene('B')->validate($request->all());
+
+        $this->validate($request,[
             'A' => 'required',
             'B' => 'boolean',
             'C' => 'numeric'
-        ];
+        ]);
+
        /* $message = [
             'A.required'=>"A是必须的",
             'B.boolean'=>'B是布尔值',
@@ -111,13 +115,8 @@ class ExampleControllers extends Controller
 
     public function index(Request $request)
     {
-        UpdateUserRequest::validate($request->all());
+        //UpdateUserRequest::validate($request->all());
 
-        $this->validate($request,[
-        'A' => 'required',
-        'B' => 'boolean',
-        'C' => 'numeric'
-    ]);
        // var_dump(get_class($request->session()));
       //  $request->session()->put('key', $request->session()->getId());
       /*  $a= db()->table("cc_apply")->take(5)->runSelect();

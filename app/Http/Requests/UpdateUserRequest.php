@@ -2,24 +2,27 @@
 
 namespace App\Http\Requests;
 
-class UpdateUserRequest extends Request
+use Foundation\Concerns\FromRequests;
+
+class UpdateUserRequest extends FromRequests
 {
     public function rules()
     {
         return [
-            'github_id'       => 'unique:users',
-            'github_name'     => 'string',
-            'wechat_openid'   => 'string',
-            'email'           => 'email|unique:users,email,',
-            'github_url'      => 'url',
-            'image_url'       => 'url',
-            'wechat_unionid'  => 'string',
-            'linkedin'        => 'url',
-            'weibo_link'      => 'url',
-            'payment_qrcode'  => 'image',
-            'wechat_qrcode'  => 'image',
+            'account' => 'required|string|max:20|unique:users',
         ];
     }
 
+    public function sceneRules()
+    {
+        return [
+            'A'=> [
+                'name' => 'required|string|max:20',
+            ],
+            'B'=> [
+                'password' => 'required|string|min:6|confirmed',
+            ]
+        ];
+    }
 
 }

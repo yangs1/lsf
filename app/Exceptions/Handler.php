@@ -67,8 +67,13 @@ class Handler implements ExceptionHandler
             return $e->getResponse();
         } elseif ($e instanceof ModelNotFoundException) {
             $e = new NotFoundHttpException($e->getMessage(), $e);
-        } elseif ($e instanceof ValidationException && $e->getResponse()) {
-            return $e->getResponse();
+        } elseif ($e instanceof ValidationException ) {
+            if ($e->getResponse()){
+                return $e->getResponse();
+            }
+            if ($request->expectsJson()){
+                return new Response( $e->errors(), 422);
+            }
         }elseif($e instanceof BadRequestHttpException){
             $e = new NotFoundHttpException($e->getMessage(), $e);
         }
@@ -104,8 +109,13 @@ class Handler implements ExceptionHandler
             return $e->getResponse();
         } elseif ($e instanceof ModelNotFoundException) {
             $e = new NotFoundHttpException($e->getMessage(), $e);
-        } elseif ($e instanceof ValidationException && $e->getResponse()) {
-            return $e->getResponse();
+        } elseif ($e instanceof ValidationException ) {
+            if ($e->getResponse()){
+                return $e->getResponse();
+            }
+            if ($request->expectsJson()){
+                return new Response( $e->errors(), 422);
+            }
         }elseif($e instanceof BadRequestHttpException){
             $e = new NotFoundHttpException($e->getMessage(), $e);
         }

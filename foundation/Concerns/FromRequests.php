@@ -12,45 +12,51 @@ class FromRequests //extends Request
 {
     use ValidatesWhenResolvedTrait;
 
-    protected $data;
-
-    public function __construct(  array $data = [] )
+    protected $scene;
+    /**
+     * Prepare the data for validation.
+     * @param $scene
+     * @return self
+     */
+    public function scene( $scene )
     {
-        $this->data = $data;
+        $this->scene = $scene;
+
+        return $this;
     }
 
     /**
      * Get the validator instance for the request.
      *
-     * @param $data
      * @return \Illuminate\Validation\Validator
      */
-    protected function getValidatorInstance( array $data = [] )
+    protected function getValidatorInstance( array $data, $rules )
     {
         $factory = app( Factory::class );
 
+        $instance =  $factory->make(
+            $data, $rules, $this->messages(), $this->attributes()
+        );
+
         if (method_exists($this, 'validator')) {
-            return app()->call([$this, 'validator'], compact('factory','data'));
+            return app()->call([$this, 'validator'], compact('instance', 'rules'));
         }
 
-        if (empty($data)){
-            $data = $this->data;
-        };
-        return $factory->make(
-            $data, app()->call([$this, 'rules']), $this->messages(), $this->attributes()
-        );
+        return $instance;
     }
 
     /**
      * Validate the class instance.
-     * @param $data
+     *
      * @return void
      */
-    protected function validate(array $data = [])
+    public function validate( array $data)
     {
         $this->prepareForValidation();
 
-        $instance = $this->getValidatorInstance($data);
+        $rules = $this->scene ? $this->sceneRules()[$this->scene] ?? $this->rules() : $this->rules();
+
+        $instance = $this->getValidatorInstance( $data, $rules );
 
         if (! $this->passesAuthorization()) {
             $this->failedAuthorization();
@@ -59,45 +65,26 @@ class FromRequests //extends Request
         }
     }
 
-
     /**
      * Handle a failed validation attempt.
      *
-     * @param  \Illuminate\Contracts\Validation\Validator $validator
+     * @param  \Illuminate\Contracts\Validation\Validator  $validator
      * @return mixed
      */
     protected function failedValidation(Validator $validator)
     {
-        throw new HttpResponseException($this->response(
-            $this->formatErrors($validator)
-        ));
+        throw new HttpResponseException( new JsonResponse( $this->formatErrors($validator), 422));
     }
-
     /**
      * Format the errors from the given Validator instance.
      *
-     * @param  \Illuminate\Contracts\Validation\Validator $validator
+     * @param  \Illuminate\Contracts\Validation\Validator  $validator
      * @return array
      */
     protected function formatErrors(Validator $validator)
     {
         return $validator->getMessageBag()->toArray();
     }
-
-    /**
-     * Get the proper failed validation response for the request.
-     *
-     * @param  array $errors
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function response(array $errors)
-    {
-        return new JsonResponse($errors, 422);
-        /*return $this->redirector->to($this->getRedirectUrl())
-            ->withInput($this->except($this->dontFlash))
-            ->withErrors($errors, $this->errorBag);*/
-    }
-
 
     /**
      * Set custom messages for validator errors.
@@ -119,20 +106,14 @@ class FromRequests //extends Request
         return [];
     }
 
-    public function all()
+    public function sceneRules()
     {
-        return $this->data;
+        return [];
     }
 
-    /**
-     * Handle dynamic static method calls into the method.
-     *
-     * @param  string  $method
-     * @param  array  $parameters
-     * @return mixed
-     */
-    public static function __callStatic($method, $parameters)
+    public function rules()
     {
-        return (new static)->$method(...$parameters);
+        return [];
     }
+
 }
