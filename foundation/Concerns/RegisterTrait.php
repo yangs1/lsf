@@ -56,7 +56,7 @@ trait RegisterTrait
     }
 
     protected function registerValidatorBindings()
-    {
+    {//在为注入 db 的时候可能出现异常
         $this->register('Illuminate\Validation\ValidationServiceProvider');
     }
 

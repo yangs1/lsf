@@ -12,7 +12,7 @@ return [
 
     'app_debug'     =>  true,
     'app_model'     =>  "api", //http, api
-    'locale'        => 'zh_cn',
+    'locale'        => 'zh_cn', //zh_cn, en
     'fallback_locale'   => 'en',
 
     'log'           =>  'daily',

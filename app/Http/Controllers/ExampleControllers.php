@@ -8,6 +8,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UpdateUserRequest;
 use App\Jobs\SendReminderEmail;
 use App\Task\TestTask;
 use App\Transformers\UserTransformer;
@@ -110,6 +111,8 @@ class ExampleControllers extends Controller
 
     public function index(Request $request)
     {
+        UpdateUserRequest::validate($request->all());
+
         $this->validate($request,[
         'A' => 'required',
         'B' => 'boolean',

@@ -11,7 +11,7 @@
 
     $app->withFacades(true);
 
-    //$app->withEloquent();
+    $app->withEloquent();
 
     //$app->middleware()
     $app->routeMiddleware([

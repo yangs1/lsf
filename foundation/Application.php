@@ -88,8 +88,10 @@ class Application extends Container{
         'Illuminate\Session\SessionManager' =>  'session',
         'Illuminate\Contracts\Queue\Factory'          => 'queue',
         'Illuminate\Contracts\Events\Dispatcher'      => 'events',
+        'Illuminate\Contracts\Validation\Factory'     => 'validator',
         'Illuminate\Contracts\Filesystem\Factory'     => 'Illuminate\Filesystem\FilesystemManager',
-        'Illuminate\Contracts\Debug\ExceptionHandler' => 'App\Exceptions\Handler'
+        'Illuminate\Contracts\Debug\ExceptionHandler' => 'App\Exceptions\Handler',
+        'Illuminate\Contracts\Translation\Translator' => 'translator'
     ];
     /**
      * Create a new Lumen application instance.
