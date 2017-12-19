@@ -14,6 +14,7 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Filesystem\FilesystemManager;
 use Foundation\Log\LogServiceProvider;
 use Illuminate\Encryption\EncryptionServiceProvider;
+use Illuminate\Hashing\HashServiceProvider;
 use Illuminate\Session\SessionServiceProvider;
 
 trait RegisterTrait
@@ -120,5 +121,10 @@ trait RegisterTrait
 
             return $this->make('Illuminate\Contracts\Bus\Dispatcher');
         });
+    }
+
+    public function registerHashingBindings()
+    {
+        $this->register(HashServiceProvider::class );
     }
 }

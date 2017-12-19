@@ -74,6 +74,7 @@ class Application extends Container{
         'events'    =>  'registerEventBindings',
         'config'    =>  'registerConfigBindings',
         'session'   =>  'registerSessionBindings',
+        'hash'      =>  'registerHashingBindings',
         'encrypter' =>  'registerEncrypterBindings',
         'validator' =>  'registerValidatorBindings',
         'translator'=>  'registerTranslationBindings',
