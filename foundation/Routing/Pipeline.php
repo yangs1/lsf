@@ -75,9 +75,9 @@ class Pipeline extends BasePipeline
 
         $handler->report($e);
 
-        if ($this->container->runningInModel() === 'api'){
+      /*  if ($this->container->runningInModel() === 'api'){
             return $handler->renderForConsole($passable, $e);
-        }
+        }*/
         return $handler->render($passable, $e);
     }
 }

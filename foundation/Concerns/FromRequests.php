@@ -54,7 +54,8 @@ class FromRequests //extends Request
     {
         $this->prepareForValidation();
 
-        $rules = $this->scene ? $this->sceneRules()[$this->scene] ?? $this->rules() : $this->rules();
+        $rules = $this->scene ?
+            array_merge($this->rules(), $this->sceneRules()[$this->scene] ?? []) : $this->rules();
 
         $instance = $this->getValidatorInstance( $data, $rules );
 
