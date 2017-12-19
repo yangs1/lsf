@@ -67,6 +67,7 @@ class Application extends Container{
     public $availableBindings = [
         'db'        =>  'registerDatabaseBindings',
         'log'       =>  'registerLogBindings',
+        'hash'      =>  'registerHashingBindings',
         'files'     =>  'registerFilesBindings',
         'cache'     =>  'registerCacheBindings',
         "redis"     =>  'registerRedisBindings',
@@ -74,7 +75,6 @@ class Application extends Container{
         'events'    =>  'registerEventBindings',
         'config'    =>  'registerConfigBindings',
         'session'   =>  'registerSessionBindings',
-        'hash'      =>  'registerHashingBindings',
         'encrypter' =>  'registerEncrypterBindings',
         'validator' =>  'registerValidatorBindings',
         'translator'=>  'registerTranslationBindings',
@@ -388,7 +388,8 @@ class Application extends Container{
             'Illuminate\Support\Facades\Queue' => 'Queue',
             'Illuminate\Support\Facades\Log' => 'Log',
             'Illuminate\Support\Facades\Validator' => 'Validator',
-            'Illuminate\Support\Facades\Storage' => 'filesystem'
+            'Illuminate\Support\Facades\Storage' => 'filesystem',
+            'Illuminate\Support\Facades\Hash' => 'hash'
         ];
 
         if (! static::$aliasesRegistered) {
