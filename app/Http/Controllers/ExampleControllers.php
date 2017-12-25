@@ -65,6 +65,7 @@ class ExampleControllers extends Controller
      * Cookie 的使用方法
      */
     public function CookieDemo(Request $request){
+        //Cookie::queue(new \Symfony\Component\HttpFoundation\Cookie("cookie_test",'test'));
 
         return (new Response(['cookie'=>$request->cookie()]));//->withCookie(new Cookie('sid', 'sid9999', time()+3600));
     }

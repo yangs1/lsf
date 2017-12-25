@@ -73,6 +73,7 @@ class Application extends Container{
         "redis"     =>  'registerRedisBindings',
         'queue'     =>  'registerQueueBindings',
         'events'    =>  'registerEventBindings',
+        'cookie'     => 'registerCookieBindings',
         'config'    =>  'registerConfigBindings',
         'session'   =>  'registerSessionBindings',
         'encrypter' =>  'registerEncrypterBindings',
@@ -91,6 +92,7 @@ class Application extends Container{
         'Illuminate\Contracts\Events\Dispatcher'      => 'events',
         'Illuminate\Contracts\Validation\Factory'     => 'validator',
         'Illuminate\Contracts\Filesystem\Factory'     => 'Illuminate\Filesystem\FilesystemManager',
+        'Illuminate\Contracts\Cookie\QueueingFactory' => 'cookie',
         'Illuminate\Contracts\Debug\ExceptionHandler' => 'App\Exceptions\Handler',
         'Illuminate\Contracts\Translation\Translator' => 'translator'
     ];
@@ -389,7 +391,8 @@ class Application extends Container{
             'Illuminate\Support\Facades\Log' => 'Log',
             'Illuminate\Support\Facades\Validator' => 'Validator',
             'Illuminate\Support\Facades\Storage' => 'filesystem',
-            'Illuminate\Support\Facades\Hash' => 'hash'
+            'Illuminate\Support\Facades\Hash' => 'hash',
+            'Illuminate\Support\Facades\Cookie' => 'cookie'
         ];
 
         if (! static::$aliasesRegistered) {

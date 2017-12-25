@@ -6,7 +6,7 @@
  * Time: 下午10:42
  */
 
-$app->router->group([ 'namespace' => 'App\Http\Controllers','version'=>"v1", "middleware"=>'session'], function () use($app) {
+$app->router->group([ 'namespace' => 'App\Http\Controllers','version'=>"v1", "middleware"=>['session','cookie']], function () use($app) {
     //$app->router->get('/', 'ExampleControllers@index');
     $app->router->get('/', 'ExampleControllers@index');//->where('name', '[A-Za-z]+');
     $app->router->get('/task', 'ExampleControllers@taskDemo');

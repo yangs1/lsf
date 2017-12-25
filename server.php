@@ -16,6 +16,7 @@
     //$app->middleware()
     $app->routeMiddleware([
         "session"   => \Foundation\Session\StartSession::class,
+        "cookie"    => \Foundation\Cookie\Middleware\AddQueuedCookiesToResponse::class,
         "auth"      =>\App\Http\Middleware\AuthMiddleware::class
     ]);
 

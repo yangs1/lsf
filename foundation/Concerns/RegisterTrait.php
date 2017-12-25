@@ -10,6 +10,7 @@ namespace Foundation\Concerns;
 
 use App\Providers\EventServiceProvider;
 use Foundation\Config\Repository;
+use Foundation\Cookie\CookieServiceProvider;
 use Foundation\Session\SessionServiceProvider;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Filesystem\FilesystemManager;
@@ -126,5 +127,10 @@ trait RegisterTrait
     public function registerHashingBindings()
     {
         $this->register(HashServiceProvider::class );
+    }
+
+    public function registerCookieBindings()
+    {
+        $this->register( CookieServiceProvider::class );
     }
 }
