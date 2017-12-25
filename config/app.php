@@ -11,7 +11,7 @@ return [
     'cipher'        => 'AES-256-CBC', // AES-128-CBC , AES-256-CBC
 
     'app_debug'     =>  true,
-    'app_model'     =>  "api", //http, api
+    'app_model'     =>  "http", //http, api
     'locale'        => 'zh_cn', //zh_cn, en
     'fallback_locale'   => 'en',
 

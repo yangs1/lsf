@@ -10,12 +10,12 @@ namespace Foundation\Concerns;
 
 use App\Providers\EventServiceProvider;
 use Foundation\Config\Repository;
+use Foundation\Session\SessionServiceProvider;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Filesystem\FilesystemManager;
 use Foundation\Log\LogServiceProvider;
 use Illuminate\Encryption\EncryptionServiceProvider;
 use Illuminate\Hashing\HashServiceProvider;
-use Illuminate\Session\SessionServiceProvider;
 
 trait RegisterTrait
 {

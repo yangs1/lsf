@@ -15,7 +15,7 @@
 
     //$app->middleware()
     $app->routeMiddleware([
-        "session"   => \Illuminate\Session\Middleware\StartSession::class,
+        "session"   => \Foundation\Session\StartSession::class,
         "auth"      =>\App\Http\Middleware\AuthMiddleware::class
     ]);
 
