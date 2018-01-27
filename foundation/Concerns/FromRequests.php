@@ -10,7 +10,7 @@ use Illuminate\Validation\ValidatesWhenResolvedTrait;
 
 class FromRequests //extends Request
 {
-    use ValidatesWhenResolvedTrait;
+   // use ValidatesWhenResolvedTrait;
 
     protected $scene;
     /**
@@ -50,18 +50,21 @@ class FromRequests //extends Request
      *
      * @return void
      */
-    public function validate( array $data)
+    public function validate( array $data )
     {
-        $this->prepareForValidation();
+        $this->prepareForValidation( $data );
 
         $rules = $this->scene ?
             array_merge($this->rules(), $this->sceneRules()[$this->scene] ?? []) : $this->rules();
 
         $instance = $this->getValidatorInstance( $data, $rules );
 
-        if (! $this->passesAuthorization()) {
+        /*if (! $this->passesAuthorization()) {
             $this->failedAuthorization();
         } elseif (! $instance->passes()) {
+            $this->failedValidation($instance);
+        }*/
+        if (! $instance->passes()) {
             $this->failedValidation($instance);
         }
     }
@@ -117,4 +120,8 @@ class FromRequests //extends Request
         return [];
     }
 
+    public function prepareForValidation( array $data )
+    {
+
+    }
 }

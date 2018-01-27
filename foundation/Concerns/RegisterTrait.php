@@ -106,7 +106,7 @@ trait RegisterTrait
     }
 
     protected function registerQueueBindings()
-    {
+    { // 可以直接使用 laravel 的 Illuminate\Queue\QueueServiceProvider ;
         $this->loadComponent('queue', 'Foundation\Queue\QueueServiceProvider');
     }
 
