@@ -6,7 +6,7 @@
  * Time: 下午3:37
  */
 
-namespace Foundation\Concerns;
+namespace Foundation\Component;
 
 use App\Providers\EventServiceProvider;
 use Foundation\Config\Repository;
@@ -42,7 +42,7 @@ trait RegisterTrait
     protected function registerFilesSystemBindings()
     {
         $this->configure('filesystems');
-        $this->singleton(FilesystemManager::class,function (){
+        $this->singleton('filesystem', function (){
             return new FilesystemManager(app());
         });
     }

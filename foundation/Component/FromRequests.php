@@ -1,6 +1,6 @@
 <?php
 
-namespace Foundation\Concerns;
+namespace Foundation\Component;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\Factory;

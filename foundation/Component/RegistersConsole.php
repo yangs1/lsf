@@ -6,7 +6,7 @@
  * Time: 上午8:33
  */
 
-namespace Foundation\Concerns;
+namespace Foundation\Component;
 
 
 use App\Providers\SwooleServiceProvider;

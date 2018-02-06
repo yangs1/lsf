@@ -6,13 +6,12 @@ use Exception;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Contracts\Debug\ExceptionHandler;
-use Foundation\Concerns\ExceptionTransformHandler;
+use Foundation\Component\ExceptionTransformHandler;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Illuminate\Http\Response;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Symfony\Component\Debug\Exception\FlattenException;
-
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Debug\ExceptionHandler as SymfonyExceptionHandler;
 
@@ -56,27 +55,18 @@ class Handler implements ExceptionHandler
 
     /**
      * Render an exception into an HTTP response.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Exception  $e
-     * @return \Illuminate\Http\Response
+     * @param \Illuminate\Http\Request $request
+     * @param Exception $e
+     * @return Exception|Response|null|\Symfony\Component\HttpFoundation\Response|NotFoundHttpException
+     * @throws Exception
      */
     public function render($request, Exception $e)
     {
-        if ($e instanceof HttpResponseException) {
-            return $e->getResponse();
-        } elseif ($e instanceof ModelNotFoundException) {
-            $e = new NotFoundHttpException($e->getMessage(), $e);
-        } elseif ($e instanceof ValidationException ) {
-            if ($e->getResponse()){
-                return $e->getResponse();
-            }
-            if ($request->expectsJson()){
-                return new Response( $e->errors(), 422);
-            }
-        }elseif($e instanceof BadRequestHttpException){
-            $e = new NotFoundHttpException($e->getMessage(), $e);
-        }
+        $e = $this->filterException( $request, $e);
+
+        if ($e instanceof \Symfony\Component\HttpFoundation\Response){
+            return $e;
+        };
 
         if ($request->expectsJson() || config('app.app_model') === 'api'){
 
@@ -105,26 +95,44 @@ class Handler implements ExceptionHandler
      */
     public function renderForConsole($request, Exception $e)
     {
-        if ($e instanceof HttpResponseException) {
-            return $e->getResponse();
-        } elseif ($e instanceof ModelNotFoundException) {
-            $e = new NotFoundHttpException($e->getMessage(), $e);
-        } elseif ($e instanceof ValidationException ) {
-            if ($e->getResponse()){
-                return $e->getResponse();
-            }
-            if ($request->expectsJson()){
-                return new Response( $e->errors(), 422);
-            }
-        }elseif($e instanceof BadRequestHttpException){
-            $e = new NotFoundHttpException($e->getMessage(), $e);
-        }
+        $e = $this->filterException( $request, $e);
+
+        if ($e instanceof \Symfony\Component\HttpFoundation\Response){
+            return $e;
+        };
 
         $fe = FlattenException::create($e);
         $response = new Response($e, $fe->getStatusCode(), $fe->getHeaders());
         $response->exception = $e;
         return $response;
 
+    }
+
+    /**
+     * @param \Illuminate\Http\Request $request
+     * @param Exception $e
+     * @return Exception|Response|null|\Symfony\Component\HttpFoundation\Response|NotFoundHttpException
+     */
+    protected function filterException( $request, Exception $e){
+
+        if ($e instanceof HttpResponseException) {
+
+            return $e->getResponse();
+
+        } elseif ($e instanceof ModelNotFoundException) {
+
+            $e = new NotFoundHttpException($e->getMessage(), $e);
+
+        }elseif ($e instanceof ValidationException ) {
+            if ($e->getResponse()){
+                return $e->getResponse();
+            }
+            if ($request->expectsJson()){
+                return new Response( $e->errors(), 422);
+            }
+        }
+
+        return $e;
     }
 
     /**
@@ -184,37 +192,4 @@ class Handler implements ExceptionHandler
 </html>
 EOF;
     }
-
-    function get_caller_info() {
-        $c = '';
-        $file = '';
-        $func = '';
-        $class = '';
-        $trace = debug_backtrace();
-        if (isset($trace[2])) {
-            $file = $trace[1]['file'];
-            $func = $trace[2]['function'];
-            if ((substr($func, 0, 7) == 'include') || (substr($func, 0, 7) == 'require')) {
-                $func = '';
-            }
-        } else if (isset($trace[1])) {
-            $file = $trace[1]['file'];
-            $func = '';
-        }
-        if (isset($trace[3]['class'])) {
-            $class = $trace[3]['class'];
-            $func = $trace[3]['function'];
-            $file = $trace[2]['file'];
-        } else if (isset($trace[2]['class'])) {
-            $class = $trace[2]['class'];
-            $func = $trace[2]['function'];
-            $file = $trace[1]['file'];
-        }
-        if ($file != '') $file = basename($file);
-        $c = $file . ": ";
-        $c .= ($class != '') ? ":" . $class . "->" : "";
-        $c .= ($func != '') ? $func . "(): " : "";
-        return($c);
-    }
-
 }

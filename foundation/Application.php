@@ -8,14 +8,14 @@
  */
 namespace Foundation;
 
-use Foundation\Concerns\RegisterTrait;
+use Foundation\Component\RegisterTrait;
 use Foundation\Queue\SwooleWorker;
 use Illuminate\Container\Container;
 use Illuminate\Support\Facades\Facade;
-use Foundation\Concerns\RegistersConsole;
-use Foundation\Concerns\RoutesRequests;
+use Foundation\Component\RegistersConsole;
+use Foundation\Component\RoutesRequests;
 use Illuminate\Support\ServiceProvider;
-use Foundation\Concerns\RegistersExceptionHandlers;
+use Foundation\Component\RegistersExceptionHandlers;
 use Foundation\Routing\Router;
 
 class Application extends Container{
@@ -79,19 +79,22 @@ class Application extends Container{
         'encrypter' =>  'registerEncrypterBindings',
         'validator' =>  'registerValidatorBindings',
         'translator'=>  'registerTranslationBindings',
-        'Illuminate\Contracts\Bus\Dispatcher'     => 'registerBusBindings',
-        'Illuminate\Filesystem\FilesystemManager' => "registerFilesSystemBindings",
+        'bus'       =>  'registerBusBindings',
+        'filesystem' => 'registerFilesSystemBindings'
     ];
+   /* public $availableBindings = [ 'db', 'log', 'hash', 'files','cache','redis','queue','events',
+        'cookie','config', 'session', 'encrypter', 'validator', 'translator', 'bus', 'filesystem' ];*/
 
     protected $aliases = [
         'request'                           => 'Illuminate\Http\Request',
-        'filesystem'                        => 'Illuminate\Filesystem\FilesystemManager',
         'Psr\Log\LoggerInterface'           => 'log',
         'Illuminate\Session\SessionManager' =>  'session',
         'Illuminate\Contracts\Queue\Factory'          => 'queue',
+        'Illuminate\Contracts\Bus\Dispatcher'         => 'bus',
         'Illuminate\Contracts\Events\Dispatcher'      => 'events',
         'Illuminate\Contracts\Validation\Factory'     => 'validator',
-        'Illuminate\Contracts\Filesystem\Factory'     => 'Illuminate\Filesystem\FilesystemManager',
+        'Illuminate\Filesystem\FilesystemManager'     => 'filesystem',
+        'Illuminate\Contracts\Filesystem\Factory'     => 'filesystem',
         'Illuminate\Contracts\Cookie\QueueingFactory' => 'cookie',
         'Illuminate\Contracts\Debug\ExceptionHandler' => 'App\Exceptions\Handler',
         'Illuminate\Contracts\Translation\Translator' => 'translator'
@@ -166,15 +169,6 @@ class Application extends Container{
         //   $this['events']->fire('locale.changed', [$locale]);
     }
 
-    /**
-     * Determine if the application is running in the console.
-     *
-     * @return bool
-     */
-    public function runningInConsole()
-    {
-        return php_sapi_name() == 'cli';
-    }
 
     public function runningInModel()
     {

@@ -6,7 +6,7 @@
  * Time: 下午2:13
  */
 
-namespace Foundation\Concerns;
+namespace Foundation\Component;
 
 use Exception;
 use Illuminate\Http\Response;

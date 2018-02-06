@@ -1,6 +1,6 @@
 <?php
 
-namespace Foundation\Concerns;
+namespace Foundation\Component;
 
 
 use Error;

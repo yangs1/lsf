@@ -32,13 +32,13 @@ class ExampleControllers extends Controller
      */
     public function validateDemo(Request $request){
 
-        app(UpdateUserRequest::class )->scene('B')->validate($request->all());
+       /* app(UpdateUserRequest::class )->scene('B')->validate($request->all());
 
         $this->validate($request,[
             'A' => 'required',
             'B' => 'boolean',
             'C' => 'numeric'
-        ]);
+        ]);*/
 
        /* $message = [
             'A.required'=>"A是必须的",
@@ -46,10 +46,10 @@ class ExampleControllers extends Controller
             'C.numeric' => 'C是数值'
         ];*/
         // Validator::make(); 门面模式
-        $validator = $this->getValidationFactory()->make($request->all(),$rules);
-        if ($validator->fails()){
-            return new Response([$validator->errors()->first()],400);
-        }
+//        $validator = $this->getValidationFactory()->make($request->all(),$rules);
+//        if ($validator->fails()){
+//            return new Response([$validator->errors()->first()],400);
+//        }
 
       //七牛测试
       /*  $disk = Storage::disk('qiniu');

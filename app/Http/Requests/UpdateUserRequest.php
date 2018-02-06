@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use Foundation\Concerns\FromRequests;
+use Foundation\Component\FromRequests;
 
 class UpdateUserRequest extends FromRequests
 {
