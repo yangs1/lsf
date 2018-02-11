@@ -9,26 +9,25 @@
 namespace Foundation\Component;
 
 use App\Providers\EventServiceProvider;
-use Foundation\Config\Repository;
+use Foundation\Config\ConfigRepository;
 use Foundation\Cookie\CookieServiceProvider;
 use Foundation\Session\SessionServiceProvider;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Filesystem\FilesystemManager;
 use Foundation\Log\LogServiceProvider;
-use Illuminate\Encryption\EncryptionServiceProvider;
 use Illuminate\Hashing\HashServiceProvider;
 
-trait RegisterTrait
+trait RegisterBindingsHandler
 {
 
     protected function registerConfigBindings()
     {
-        $this->singleton('config', Repository::class);
+        $this->singleton('config', ConfigRepository::class);
     }
 
-    protected function registerDatabaseBindings()
+    protected function registerDbBindings()
     {
-         $this->loadComponent('database', ['Illuminate\Database\DatabaseServiceProvider']);
+         $this->loadComponent( ['Illuminate\Database\DatabaseServiceProvider']);
     }
 
 
@@ -39,17 +38,16 @@ trait RegisterTrait
         });
     }
 
-    protected function registerFilesSystemBindings()
+    protected function registerFilesystemBindings()
     {
-        $this->configure('filesystems');
         $this->singleton('filesystem', function (){
-            return new FilesystemManager(app());
+            return new FilesystemManager( app() );
         });
     }
 
-    protected function registerEventBindings()
+    protected function registerEventsBindings()
     {
-        $this->loadComponent('events',['Illuminate\Events\EventServiceProvider',EventServiceProvider::class]);
+        $this->loadComponent( ['Illuminate\Events\EventServiceProvider',EventServiceProvider::class]);
     }
 
     protected function registerLogBindings()
@@ -62,7 +60,7 @@ trait RegisterTrait
         $this->register('Illuminate\Validation\ValidationServiceProvider');
     }
 
-    protected function registerTranslationBindings()
+    protected function registerTranslatorBindings()
     {
         $this->singleton('translator', function () {
 
@@ -76,7 +74,7 @@ trait RegisterTrait
 
     protected function registerSessionBindings(){
 
-        $this->loadComponent('session',SessionServiceProvider::class);
+        $this->loadComponent(SessionServiceProvider::class);
         if ($this->make('config')->get('session.driver') === 'file'){;
             $this->ensureCacheDirectoryExists($this->make('config')->get('session.files'));
         }
@@ -84,18 +82,12 @@ trait RegisterTrait
 
     protected function registerCacheBindings()
     {
-        $this->loadComponent('cache', 'Illuminate\Cache\CacheServiceProvider');
+        $this->loadComponent('Illuminate\Cache\CacheServiceProvider');
     }
 
     protected function registerRedisBindings()
     {
-        $this->singleton('redis', function () {
-            return $this->loadComponent(
-                'database',
-                ['Illuminate\Redis\RedisServiceProvider'],
-                'redis'
-            );
-        });
+        return $this->loadComponent(['Illuminate\Redis\RedisServiceProvider'], 'redis');
         // $this->loadComponent('database', ['Illuminate\Redis\RedisServiceProvider'], 'redis');
     }
 
@@ -117,14 +109,16 @@ trait RegisterTrait
      */
     protected function registerBusBindings()
     {
-        $this->singleton('Illuminate\Contracts\Bus\Dispatcher', function () {
+        $this->singleton('bus', function () {
             $this->register('Illuminate\Bus\BusServiceProvider');
 
             return $this->make('Illuminate\Contracts\Bus\Dispatcher');
         });
+
+        $this->offsetUnset('Illuminate\Contracts\Bus\Dispatcher');
     }
 
-    public function registerHashingBindings()
+    public function registerHashBindings()
     {
         $this->register(HashServiceProvider::class );
     }

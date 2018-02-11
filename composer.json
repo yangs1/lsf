@@ -5,20 +5,18 @@
     "license": "MIT",
     "type": "project",
     "require": {
-        "illuminate/database": "5.5.*",
-        "illuminate/http": "5.5.*",
-        "illuminate/events": "5.5.*",
-        "illuminate/validation": "5.5.*",
-        "illuminate/cache": "5.5.*",
-        "illuminate/redis": "5.5.*",
-        "illuminate/encryption": "5.5.*",
-        "illuminate/pipeline": "5.5.*",
-
-        "symfony/http-kernel": "^3.3",
+        "illuminate/database": "^5.5",
+        "illuminate/http": "^5.5",
+        "illuminate/validation": "^5.5",
+        "illuminate/pipeline": "^5.5",
         "monolog/monolog": "^1.23",
-        "league/flysystem": "^1.0",
-        "illuminate/bus": "^5.5",
-        "illuminate/hashing": "^5.5"
+        "illuminate/events": "^5.5",
+        "illuminate/cache": "^5.6",
+        "illuminate/redis": "^5.5",
+        "overtrue/laravel-filesystem-qiniu": "^1.0",
+        "illuminate/encryption": "^5.6",
+        "illuminate/hashing": "^5.6",
+        "illuminate/bus": "^5.6"
     },
     "autoload": {
         "psr-4": {

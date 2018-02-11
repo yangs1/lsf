@@ -6,7 +6,6 @@ use Closure;
 use Exception;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Throwable;
-use FastRoute\Dispatcher;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -14,14 +13,14 @@ use Foundation\Routing\Pipeline;
 use Illuminate\Contracts\Support\Responsable;
 use Foundation\Routing\Closure as RoutingClosure;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use Foundation\Routing\Controller as LumenController;
+use Foundation\Routing\Controller as BaseController;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 
-trait RoutesRequests
+trait RequestsParseHandler
 {
     /**
      * All of the global middleware for the application.
@@ -47,7 +46,7 @@ trait RoutesRequests
     /**
      * The FastRoute dispatcher.
      *
-     * @var \FastRoute\Dispatcher
+     * @var
      */
     protected $dispatcher;
 
@@ -86,13 +85,8 @@ trait RoutesRequests
      */
     public function handle(Request $request)
     {
-
-        //var_dump($this->router);
         $response = $this->dispatch($request);
-        /*if ($this->runningInModel() === "api"){
-        }else{
-            $response = $this->dispatch($request);
-        }*/
+
         if (count($this->middleware) > 0) {
             $this->callTerminableMiddleware($response);
         }
@@ -100,32 +94,38 @@ trait RoutesRequests
         return $response;
     }
 
-    public function checkVersion($request, $version){
-        if (!($this->parseAccept($request)['version'] === $version)){
-            throw new NotFoundHttpException("This version has not been found ,Your version is not accepted ");
-        }
+    public function getVersion($request ){
 
-
+        return $this->parseAccept($request)['version'] ?: $this->router->getDefaultVersion();
     }
 
     /**
-     * Run the application and send the response.
+     * Dispatch the incoming request.
      *
-     * @param  SymfonyRequest|null  $request
-     * @return void
+     * @param null $request
+     * @return Response|mixed
+     * @throws Exception
      */
-    public function run($request = null)
+    public function dispatch($request = null)
     {
-        $response = $this->dispatch($request);
 
-        if ($response instanceof SymfonyResponse) {
-            $response->send();
-        } else {
-            echo (string) $response;
-        }
+        list($method, $pathInfo) = $this->parseIncomingRequest($request);
+        try {
+            return $this->sendThroughPipeline($this->middleware, function () use ($method, $pathInfo) {
 
-        if (count($this->middleware) > 0) {
-            $this->callTerminableMiddleware($response);
+                $version = $this->router->isVersionControl() ? '.'.$this->getVersion( $this['request'] ) : '';
+
+                if ( $routeInfo = $this->router->getRoutes()->get($method.$pathInfo.$version) ){
+
+                    return $this->handleFoundRoute([true, $routeInfo['action'], []]);
+
+                }
+                throw new NotFoundHttpException;
+            });
+        } catch (Exception $e) {
+            return $this->prepareResponse($this->sendExceptionToHandler($e));
+        } catch (Throwable $e) {
+            return $this->prepareResponse($this->sendExceptionToHandler($e));
         }
     }
 
@@ -157,93 +157,16 @@ trait RoutesRequests
     }
 
     /**
-     * Dispatch the incoming request.
-     *
-     * @param  Request|null  $request
-     * @return Response
-     */
-    public function dispatch($request = null)
-    {
-
-        list($method, $pathInfo) = $this->parseIncomingRequest($request);
-        try {
-            return $this->sendThroughPipeline($this->middleware, function () use ($method, $pathInfo) {
-                if (isset($this->router->getRoutes()[$method.$pathInfo])) {
-                    if ($this->runningInModel() === "api"){
-                        $this->checkVersion($this['request'], $this->router->getRoutes()[$method.$pathInfo]['version']);
-                    }
-
-                    return $this->handleFoundRoute([true, $this->router->getRoutes()[$method.$pathInfo]['action'], []]);
-                }
-                throw new NotFoundHttpException;
-                //return $this->handleDispatcherResponse([0]);
-                // $this->createDispatcher()->dispatch($method, $pathInfo)
-            });
-        } catch (Exception $e) {
-            return $this->prepareResponse($this->sendExceptionToHandler($e));
-        } catch (Throwable $e) {
-            return $this->prepareResponse($this->sendExceptionToHandler($e));
-        }
-    }
-
-    /**
      * Parse the incoming request and return the method and path info.
      *
      * @param  \Symfony\Component\HttpFoundation\Request|null  $request
      * @return array
      */
     protected function parseIncomingRequest($request){
-        if (! $request) {
-            $request = Request::capture();
-        }
 
-        $this->instance(Request::class, $this->prepareRequest($request));
+        $this->instance(Request::class, $request ); //$this->prepareRequest($request)
 
         return [$request->getMethod(), '/'.trim($request->getPathInfo(), '/')];
-    }
-
-    /**
-     * Create a FastRoute dispatcher instance for the application.
-     *
-     * @return Dispatcher
-     */
-    protected function createDispatcher()
-    {
-        return $this->dispatcher ?: \FastRoute\simpleDispatcher(function ($r) {
-            foreach ($this->router->getRoutes() as $route) {
-                $r->addRoute($route['method'], $route['uri'], $route['action']);
-            }
-        });
-    }
-
-    /**
-     * Set the FastRoute dispatcher instance.
-     *
-     * @param  \FastRoute\Dispatcher  $dispatcher
-     * @return void
-     */
-    public function setDispatcher(Dispatcher $dispatcher)
-    {
-        $this->dispatcher = $dispatcher;
-    }
-
-    /**
-     * Handle the response from the FastRoute dispatcher.
-     *
-     * @param  array  $routeInfo
-     * @return mixed
-     */
-    protected function handleDispatcherResponse($routeInfo)
-    {
-       /* switch ($routeInfo[0]) {
-            case Dispatcher::NOT_FOUND:
-                throw new NotFoundHttpException;
-            case Dispatcher::METHOD_NOT_ALLOWED:
-                throw new MethodNotAllowedHttpException($routeInfo[1]);
-            case Dispatcher::FOUND:
-                return $this->handleFoundRoute($routeInfo);
-        }*/
-        throw new NotFoundHttpException;
     }
 
     /**
@@ -334,8 +257,8 @@ trait RoutesRequests
             throw new NotFoundHttpException;
         }
 
-        if ($instance instanceof LumenController) {
-            return $this->callLumenController($instance, $method, $routeInfo);
+        if ($instance instanceof BaseController) {
+            return $this->callBaseController($instance, $method, $routeInfo);
         } else {
             return $this->callControllerCallable(
                 [$instance, $method], $routeInfo[2]
@@ -351,12 +274,12 @@ trait RoutesRequests
      * @param  array  $routeInfo
      * @return mixed
      */
-    protected function callLumenController($instance, $method, $routeInfo)
+    protected function callBaseController($instance, $method, $routeInfo)
     {
         $middleware = $instance->getMiddlewareForMethod($method);
 
         if (count($middleware) > 0) {
-            return $this->callLumenControllerWithMiddleware(
+            return $this->callBaseControllerWithMiddleware(
                 $instance, $method, $routeInfo, $middleware
             );
         } else {
@@ -375,7 +298,7 @@ trait RoutesRequests
      * @param  array  $middleware
      * @return mixed
      */
-    protected function callLumenControllerWithMiddleware($instance, $method, $routeInfo, $middleware)
+    protected function callBaseControllerWithMiddleware($instance, $method, $routeInfo, $middleware)
     {
         $middleware = $this->gatherMiddlewareClassNames($middleware);
 
@@ -405,7 +328,7 @@ trait RoutesRequests
     /**
      * Gather the full class names for the middleware short-cut string.
      *
-     * @param  string  $middleware
+     * @param  string|array  $middleware
      * @return array
      */
     protected function gatherMiddlewareClassNames($middleware)
@@ -446,9 +369,9 @@ trait RoutesRequests
      */
     public function prepareResponse($response)
     {
-        if ($response instanceof Responsable) {
+       /* if ($response instanceof Responsable) {
             $response = $response->toResponse(Request::capture());
-        }
+        }*/
 
         if (! $response instanceof SymfonyResponse) {
             $response = new Response($response);
@@ -483,15 +406,14 @@ trait RoutesRequests
         $request->setRouteResolver(function () {
             return $this->currentRoute;
         });
-        /*$request->setUserResolver(function ($guard = null) {
-            return $this->make('auth')->guard($guard)->user();
-        })->setRouteResolver(function () {
-            return $this->currentRoute;
-        });*/
 
         return $request;
     }
 
+    /**
+     * @param Request $request
+     * @return array
+     */
     protected function parseAccept(Request $request)
     {
         $config = $this->make('config')->get("app");
@@ -509,4 +431,51 @@ trait RoutesRequests
 
         return array_combine(['subtype', 'version', 'format'], array_slice($matches, 1));
     }
+
+
+    /**
+     * Create a FastRoute dispatcher instance for the application.
+     *
+     * @return Dispatcher
+     */
+//    protected function createDispatcher()
+//    {
+//        return $this->dispatcher ?: \FastRoute\simpleDispatcher(function ($r) {
+//            foreach ($this->router->getRoutes() as $route) {
+//                $r->addRoute($route['method'], $route['uri'], $route['action']);
+//            }
+//        });
+//    }
+
+    /**
+     * Set the FastRoute dispatcher instance.
+     *
+     * @param  \FastRoute\Dispatcher  $dispatcher
+     * @return void
+     */
+//    public function setDispatcher(Dispatcher $dispatcher)
+//    {
+//        $this->dispatcher = $dispatcher;
+//    }
+
+    /**
+     * Run the application and send the response.
+     *
+     * @param null $request
+     * @throws Exception
+     */
+//    public function run($request = null)
+//    {
+//        $response = $this->dispatch($request);
+//
+//        if ($response instanceof SymfonyResponse) {
+//            $response->send();
+//        } else {
+//            echo (string) $response;
+//        }
+//
+//        if (count($this->middleware) > 0) {
+//            $this->callTerminableMiddleware($response);
+//        }
+//    }
 }

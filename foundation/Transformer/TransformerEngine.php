@@ -29,38 +29,34 @@ class TransformerEngine implements Arrayable, Jsonable, JsonSerializable
      *
      * @var string
      */
-    private static $group = 'default';
+    private $group = 'default';
 
     /**
      * Create an instance of the transformer engine.
      *
-     * @param Model|Collection $data
-     * @param AbstractTransformer $transformer
+     * TransformerEngine constructor.
+     * @param $data
+     * @param null $transformer
+     * @param null $group
      * @throws Exception
      */
-    public function __construct($data, $transformer = null)
+    public function __construct($data, $transformer = null, $group = null)
     {
-        // We only support Models and Eloquent Collections
+        $group && $this->setGroup( $group );
+
         if (! is_a($data, Model::class) && ! is_a($data, Collection::class)) {
             throw new Exception('Only Eloquent models and collections are supported by the transformer.');
         }
 
-        // If we weren't provided a transformer, see if we can infer which one to use from the config
         if (is_null($transformer)) {
-            if (! is_a($data, Model::class)) {
-                throw new Exception('Collections require a transformer to be explicitly set.');
-            }
 
-            // Check to see if the supplied model has a default transformer
-            if (! isset(config('transformer.groups')[self::$group][get_class($data)])) {
+            if ( ! $transformer = config('transformer.groups.'.$this->group.".".get_class($data)) ) {
                 throw new Exception('A default transformer has not be supplied for ' . get_class($data) . '.');
             }
-
-            // Create the transformer
-            $transformer = app(config('transformer.groups')[self::$group][get_class($data)]);
         }
-
-        // Ensure we were provided a valid transformer
+        if ( is_string( $transformer ) && class_exists( $transformer )){
+            $transformer = new $transformer();
+        }
         if (! is_a($transformer, AbstractTransformer::class)) {
             throw new Exception('The supplied transformer is not supported by the transformer engine.');
         }
@@ -123,17 +119,18 @@ class TransformerEngine implements Arrayable, Jsonable, JsonSerializable
      * Set the group of transformers to use when attempting to
      * automatically resolve a transformer.
      *
-     * @param string $group
-     * @return bool
+     * @param $group
+     * @return $this
+     * @throws Exception
      */
-    public static function setGroup($group)
+    public function setGroup($group)
     {
-        if (! array_key_exists($group, config('transformer.groups', []))) {
-            return false;
+        if (config('transformer.groups.'.$group)) {
+
+            $this->group = $group;
+
+            return $this;
         }
-
-        self::$group = $group;
-
-        return true;
+        throw new Exception('not find the group in this config file.');
     }
 }

@@ -9,20 +9,32 @@
 
     $app = new \Foundation\Application();
 
-    $app->withFacades(true);
-
+    $app->withFacades();
     $app->withEloquent();
-
     //$app->middleware()
     $app->routeMiddleware([
-        "session"   => \Foundation\Session\StartSession::class,
-        "cookie"    => \Foundation\Cookie\Middleware\AddQueuedCookiesToResponse::class,
         "auth"      =>\App\Http\Middleware\AuthMiddleware::class
     ]);
+    $app->middleware([
+        \Foundation\Session\StartSession::class,
+        \App\Http\Middleware\AuthMiddleware::class,
+        \Foundation\Cookie\Middleware\AddQueuedCookiesToResponse::class
+    ]);
+    $app->register(Overtrue\LaravelFilesystem\Qiniu\QiniuStorageServiceProvider::class);
+    $app->router->group([ 'namespace' => 'App\Http\Controllers'], function () use($app) {
 
-   // $app->register(Overtrue\LaravelFilesystem\Qiniu\QiniuStorageServiceProvider::class);
+        //$app->router->get('/', 'ExampleControllers@index');
+        $app->router->get('/', 'ExampleControllers@validator');
+        $app->router->get('/', 'ExampleControllers@CookieDemo');
+        $app->router->get('/', 'ExampleControllers@eventDemo');
 
-    require __DIR__.'/routes/web.php';
+        $app->router->get('/', 'ExampleControllers@SessionDemo');
+        $app->router->get('/', 'ExampleControllers@CacheDemo');
+        $app->router->post('/', 'ExampleControllers@FilesDemo');
+        $app->router->get('/', 'ExampleControllers@encryptDemo');
+        $app->router->get('/', 'ExampleControllers@dbDemo');
+        $app->router->get('/', 'ExampleControllers@taskDemo');
+    });
 
 
     if(function_exists('apc_clear_cache')){

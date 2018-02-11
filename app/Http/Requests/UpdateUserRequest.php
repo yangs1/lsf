@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests;
 
-use Foundation\Component\FromRequests;
+use Foundation\Http\ValidateRequests;
 
-class UpdateUserRequest extends FromRequests
+class UpdateUserRequest extends ValidateRequests
 {
     public function rules()
     {

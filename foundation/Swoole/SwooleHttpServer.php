@@ -8,15 +8,12 @@
 
 namespace Foundation\Swoole;
 
-use Foundation\Queue\SwooleQueue;
-use Illuminate\Http\Request;
-use Foundation\Swoole\Contracts\TaskHandler;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class SwooleHttpServer
 {
+    use SwooleHelperTrait;
     /**
      * The application instance.
      *
@@ -38,17 +35,8 @@ class SwooleHttpServer
     public function __construct($app)
     {
         $this->container = $app;
-
-
-        $this->bootstrapSwoole();
     }
 
-    /**
-     * @return \swoole_server  $swooleServer
-     */
-    function getServer(){
-        return $this->swooleServer;
-    }
 
     public function bootstrapSwoole(){
 
@@ -58,22 +46,23 @@ class SwooleHttpServer
             $this->registerEvents('message');
 
         }else{
-
             $this->swooleServer = new \swoole_http_server(config('swoole.listen'), config('swoole.port'));
-
         }
 
         $this->container->instance('swoole_server', $this->swooleServer);
-        $this->container->instance('swoole', $this);
+        //$this->container->instance('swoole', $this);
     }
 
     public function start()
     {
-        if (!$this->swooleServer instanceof \swoole_server){
+        $this->bootstrapSwoole();
+
+       /* if (!$this->swooleServer instanceof \swoole_server){
             throw new \Exception('swoole server init fail.');
-        }
+        }*/
 
         $this->swooleServer->set(config('swoole.settings'));
+
         $this->registerEvents('beforeStart', [$this->swooleServer], false);
 
         foreach (['start', 'shutdown', 'workerStart', 'workerStop', 'workererror'] as $event) {
@@ -106,33 +95,30 @@ class SwooleHttpServer
             return ;
         }
         $this->swooleServer->on("request",
-            function (\swoole_http_request $request,\swoole_http_response $response){
+            function (\swoole_http_request $swooleRequest,\swoole_http_response $swooleResponse){
 
-                $this->container->instance('swoole_request' , $request);
-                $this->container->instance('swoole_response', $response);
+                $this->container->instance('swoole_request' , $swooleRequest);
+                $this->container->instance('swoole_response', $swooleResponse);
 
-                $SRequest = $this->initRequest($request);
+                $request = self::initRequest($swooleRequest);
 
-                if ($SRequest->getContentType() === 'json' &&
-                    in_array(strtoupper($SRequest->server->get('REQUEST_METHOD', 'GET')), array('POST','PUT', 'DELETE', 'PATCH'))
+                if ( $request->isJson() &&
+                    in_array( $request->getMethod(), array('POST','PUT', 'DELETE', 'PATCH'))
                 ) {
-                    $SRequest->query = new ParameterBag(json_decode($request->rawContent(), true));
+                    $request->query = new ParameterBag( json_decode( $swooleRequest->rawContent(), true ) );
                 }
 
-               // var_dump($SRequest->request);
-                //$baseRequest = Request::createFromBase($SRequest);
-                //$baseRequest->headers = $SRequest->headers;
-
                try{
-                   $SResponse = $this->container->handle($SRequest);
+                   $response = $this->container->handle($request);
                }catch (\Exception $e){
                    $exception = $this->container->resolveExceptionHandler();
-                   $SResponse = $exception->render($SRequest, $e);
+                   $response = $exception->render($request, $e);
                }
-                if ($SResponse instanceof SymfonyResponse) {
-                    $this->formatResponse($response, $SResponse);
+
+                if ($response instanceof SymfonyResponse) {
+                    $this->formatResponse($swooleResponse, $response);
                 } else {
-                    $response->end( (string)$SResponse );
+                    $swooleResponse->end( $response );
                 }
 
                 $this->container->forgetInstance('swoole_response');
@@ -146,11 +132,11 @@ class SwooleHttpServer
         }
 
         $this->swooleServer->on("task",function (\swoole_http_server $server, $taskId, $workerId, $command){
-//TODO swoole queue
+
             if ($command instanceof SwooleQueue){
                 return $this->container->call([$command, 'handle']);
             }
-            return 0;
+            return $command;
         });
     }
 
@@ -159,65 +145,15 @@ class SwooleHttpServer
             return ;
         }
         $this->swooleServer->on("finish",
-            function (\swoole_http_server $server, $taskId, $abstract){
+            function (\swoole_http_server $server, $taskId, $command){
                 //TODO 任务结束处理
-                $this->container['events']->dispatch("swoole.finish", [$server, $taskId, $abstract]);
-                if ($abstract instanceof TaskHandler) {
-                    $abstract->finishCallBack();
+               // $this->container['events']->dispatch("swoole.finish", [$server, $taskId, $abstract]);
+                if ($command instanceof SwooleQueue) {
+                    return $this->container->call([$command, 'finish']);
                 }
+                return $command;
             }
         );
     }
 
-
-    /**
-     * @param \swoole_http_response $response
-     * @param  $realResponse
-     */
-    public function formatResponse(\swoole_http_response $response, SymfonyResponse $realResponse)
-    {
-        // Build header.
-        foreach ($realResponse->headers->allPreserveCase() as $name => $values) {
-            foreach ($values as $value) {
-                $response->header($name, $value);
-            }
-        }
-
-        // Build cookies.
-        foreach ($realResponse->headers->getCookies() as $cookie) {
-            $response->cookie($cookie->getName(), $cookie->getValue(), $cookie->getExpiresTime(),
-                $cookie->getPath(),
-                $cookie->getDomain(), $cookie->isSecure(), $cookie->isHttpOnly());
-        }
-
-        // Set HTTP status code into the swoole response.
-        $response->status($realResponse->getStatusCode());
-
-        if ($realResponse instanceof BinaryFileResponse) {
-            $response->sendfile($realResponse->getFile()->getPathname());
-        } else {
-            $response->end($realResponse->getContent());
-        }
-    }
-
-    public function initRequest(\swoole_http_request $request)
-    {
-        $get     = isset($request->get) ? $request->get : [];
-        $post    = isset($request->post) ? $request->post : [];
-        $cookies = isset($request->cookie) ? $request->cookie : [];
-        $server  = isset($request->server) ? $request->server : [];
-        $header  = isset($request->header) ? $request->header : [];
-        $files   = isset($request->files) ? $request->files : [];
-
-        foreach ($server as $key => $value) {
-            $server[strtoupper($key)] = $value;
-            unset($server[$key]);
-        }
-        foreach ($header as $key => $value) {
-            $_key = 'HTTP_' . strtoupper(str_replace('-', '_', $key));
-            $server[$_key] = $value;
-        }
-        $SRequest = new Request($get, $post, ["_fd"=>$request->fd], $cookies, $files, $server);
-        return $SRequest;
-    }
 }

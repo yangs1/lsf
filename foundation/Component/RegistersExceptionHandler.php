@@ -2,7 +2,6 @@
 
 namespace Foundation\Component;
 
-
 use Error;
 use ErrorException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -11,7 +10,7 @@ use Symfony\Component\Debug\Exception\FatalThrowableError;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
-trait RegistersExceptionHandlers
+trait RegistersExceptionHandler
 {
     /**
      * Throw an HttpException with the given data.
@@ -58,8 +57,7 @@ trait RegistersExceptionHandlers
 
     /**
      * Handle the application shutdown routine.
-     *
-     * @return void
+     * @throws \Exception
      */
     protected function handleShutdown()
     {
@@ -89,9 +87,9 @@ trait RegistersExceptionHandlers
 
     /**
      * Send the exception to the handler and return the response.
-     *
-     * @param  \Throwable  $e
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @param $e
+     * @return \Illuminate\Http\Response
+     * @throws \Exception
      */
     protected function sendExceptionToHandler($e)
     {
@@ -108,9 +106,8 @@ trait RegistersExceptionHandlers
 
     /**
      * Handle an uncaught exception instance.
-     *
-     * @param  \Throwable  $e
-     * @return void
+     * @param $e
+     * @throws \Exception
      */
     protected function handleUncaughtException($e)
     {
@@ -121,7 +118,7 @@ trait RegistersExceptionHandlers
         }
         $handler->report($e);
 
-        if (app()->bound('swoole_response') && app()->bound('swoole')){
+        if ($this->bound('swoole_response') && $this->bound('swoole')){
 
             $response = $handler->render($this->make('request'), $e);
 

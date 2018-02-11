@@ -26,9 +26,9 @@ if (! function_exists('base_path')) {
      * @param  string  $path
      * @return string
      */
-    function base_path($path = '')
+    function base_path($path = null)
     {
-        return app()->basePath().($path ? '/'.$path : $path);
+        return app()->basePath( $path );
     }
 }
 
@@ -89,7 +89,7 @@ if (! function_exists('cache')) {
      *
      * If an array is passed, we'll assume you want to put to the cache.
      *
-     * @param  dynamic  key|key,default|data,expiration|null
+     * @param  mixed  key|key,default|data,expiration|null
      * @return mixed|\Illuminate\Cache\CacheManager
      *
      * @throws \Exception
@@ -122,27 +122,6 @@ if (! function_exists('cache')) {
     }
 }
 
-if (! function_exists('response')) {
-    /**
-     * Return a new response from the application.
-     *
-     * @param  string  $content
-     * @param  int     $status
-     * @param  array   $headers
-     * @return \Illuminate\Http\Response
-     */
-   /* function response($content = '', $status = 200, array $headers = [])
-    {
-        $factory = new Laravel\Lumen\Http\ResponseFactory;
-
-        if (func_num_args() === 0) {
-            return $factory;
-        }
-
-        return $factory->make($content, $status, $headers);
-    }*/
-}
-
 if (! function_exists('event')) {
     /**
      * @param $event
@@ -171,12 +150,11 @@ if (! function_exists('dispatchMulti')) {
     /**
      * Dispatch a job to its appropriate handler.
      *
-     * @param  mixed  $job
-     * @return mixed
+     * @return \Foundation\Bus\PendingDispatchMulti
      */
-    function dispatchMulti($job)
+    function dispatchMulti()
     {
-        return (new \Foundation\Bus\PendingDispatchMulti($job))->execute();
+        return new \Foundation\Bus\PendingDispatchMulti();
     }
 }
 
@@ -250,48 +228,18 @@ if (! function_exists('trans_choice')) {
     }
 }
 
-//if (! function_exists('formatResponse')) {
-//    /**
-//     * @param \swoole_http_response $response
-//     * @param  $realResponse
-//     */
-//    function formatResponse(\swoole_http_response $response, SymfonyResponse $realResponse)
-//    {
-//        // Build header.
-//        foreach ($realResponse->headers->allPreserveCase() as $name => $values) {
-//            foreach ($values as $value) {
-//                $response->header($name, $value);
-//            }
-//        }
-//
-//        // Build cookies.
-//        foreach ($realResponse->headers->getCookies() as $cookie) {
-//            $response->cookie($cookie->getName(), $cookie->getValue(), $cookie->getExpiresTime(),
-//                $cookie->getPath(),
-//                $cookie->getDomain(), $cookie->isSecure(), $cookie->isHttpOnly());
-//        }
-//
-//        // Set HTTP status code into the swoole response.
-//        $response->status($realResponse->getStatusCode());
-//
-//        if ($realResponse instanceof BinaryFileResponse) {
-//            $response->sendfile($realResponse->getFile()->getPathname());
-//        } else {
-//            $response->end($realResponse->getContent());
-//        }
-//    }
-//}
-
 
 if (! function_exists('transformData')) {
     /**
      * @param \Illuminate\Database\Eloquent\Model|\Illuminate\support\Collection $data
      * @param \Foundation\Transformer\AbstractTransformer|null $transformer
+     * @param null $group
      * @return \Foundation\Transformer\TransformerEngine
+     * @throws Exception
      */
-    function transformData($data, $transformer = null)
+    function transformData($data, $transformer = null, $group = null)
     {
-        return new \Foundation\Transformer\TransformerEngine($data, $transformer);
+        return new \Foundation\Transformer\TransformerEngine($data, $transformer, $group);
     }
 }
 
@@ -325,12 +273,12 @@ if (! function_exists('bcrypt')) {
     /**
      * Hash the given value.
      *
-     * @param  string  $value
-     * @param  array   $options
-     * @return string
+     * @param $value
+     * @param array $options
+     * @return mixed
      */
     function bcrypt($value, $options = [])
     {
-        return app('hash')->make($value, $options);
+        return app('hash')->driver('bcrypt')->make($value, $options);
     }
 }

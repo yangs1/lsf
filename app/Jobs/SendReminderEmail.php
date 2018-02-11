@@ -2,56 +2,42 @@
 
 namespace App\Jobs;
 
-use Foundation\Bus\SwooleTaskable;
-use Foundation\Queue\SwooleQueue;
-use Illuminate\Bus\Queueable;
-use Foundation\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Queue\ShouldQueue;
+use Foundation\Swoole\SwooleQueue;
 use Foundation\Bus\Dispatchable;
 
 //若需要马上执行获取返回值 可把 shouldQueue 删除
-class SendReminderEmail implements ShouldQueue //implements SwooleQueue
+class SendReminderEmail implements SwooleQueue //implements ShouldQueue //
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SwooleTaskable;
+    use Dispatchable;// Queueable,
 
+    protected $value = '';
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct( $value )
     {
-        //
-
+        $this->value = $value;
     }
 
     /**
      * Execute the job.
      *
-     * @return void
+     * @return mixed
      */
-    public function handle()
-    {
-//var_dump('handle');
-//throw new Exception("test Exception");
-       // sleep(25);
-        //并发测试 -n 1000 -c 900
-        var_dump(microtime(true));
-        var_dump("execute over");
-        /*cache()->delete("count");
-        cache()->add("count",1,60);*/
-        $count = cache()->get("count",0);
-        cache()->increment('count',1);
+    public function handle(){
 
-        /*$count = app('redis')->get("count",0);
-        var_dump($count);
-        $count = app('redis')->increment("count", 1);*/
-        var_dump($count);
+        if ($this->value == 1){
+            sleep(2);
+        }
+        return $this->value;
     }
 
-    public function failed($e)
+    public function finish()
     {
-        var_dump('...');
+        return 666;
+
     }
 
 }

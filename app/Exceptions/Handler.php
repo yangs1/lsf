@@ -7,7 +7,6 @@ use Illuminate\Validation\ValidationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Contracts\Debug\ExceptionHandler;
 use Foundation\Component\ExceptionTransformHandler;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Illuminate\Http\Response;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -68,14 +67,14 @@ class Handler implements ExceptionHandler
             return $e;
         };
 
-        if ($request->expectsJson() || config('app.app_model') === 'api'){
+        if ($request->expectsJson()){
 
             return $this->genericResponse($e);
         }
 
         $fe = FlattenException::create($e);
 
-        $handler = new SymfonyExceptionHandler(config('app.app_debug',false));
+        $handler = new SymfonyExceptionHandler( $this->runningInDebugMode() );
 
         $decorated = $this->decorate($handler->getContent($fe), $handler->getStylesheet($fe));
 

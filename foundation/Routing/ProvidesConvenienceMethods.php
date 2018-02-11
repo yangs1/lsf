@@ -49,11 +49,11 @@ trait ProvidesConvenienceMethods
     /**
      * Validate the given request with the given rules.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  array  $rules
-     * @param  array  $messages
-     * @param  array  $customAttributes
-     * @return void
+     * @param Request $request
+     * @param array $rules
+     * @param array $messages
+     * @param array $customAttributes
+     * @throws ValidationException
      */
     public function validate(Request $request, array $rules, array $messages = [], array $customAttributes = [])
     {
@@ -66,10 +66,9 @@ trait ProvidesConvenienceMethods
 
     /**
      * Throw the failed validation exception.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Illuminate\Contracts\Validation\Validator  $validator
-     * @return void
+     * @param Request $request
+     * @param $validator
+     * @throws ValidationException
      */
     protected function throwValidationException(Request $request, $validator)
     {

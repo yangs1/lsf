@@ -15,9 +15,8 @@ use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Contracts\Support\Arrayable;
 use Psr\Log\LoggerInterface as PsrLoggerInterface;
-use Illuminate\Contracts\Logging\Log as LogContract;
 
-class Writer implements LogContract, PsrLoggerInterface
+class Writer implements PsrLoggerInterface
 {
     /**
      * The Monolog logger instance.
@@ -204,10 +203,9 @@ class Writer implements LogContract, PsrLoggerInterface
 
     /**
      * Register a file log handler.
-     *
-     * @param  string  $path
-     * @param  string  $level
-     * @return void
+     * @param string $path
+     * @param string $level
+     * @throws \Exception
      */
     public function useFiles($path, $level = 'debug')
     {

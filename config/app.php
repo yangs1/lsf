@@ -10,16 +10,16 @@ return [
     'key'           => 'base64:JdpjOMcZODAky9BnkUsWPI1JOweqHY3PhqMIrhjWutE=',
     'cipher'        => 'AES-256-CBC', // AES-128-CBC , AES-256-CBC
 
-    'app_debug'     =>  true,
-    'app_model'     =>  "http", //http, api
+    'app_debug'     => true,
+    'app_model'     => 'http', //http, api
     'locale'        => 'zh_cn', //zh_cn, en
     'fallback_locale'   => 'en',
 
-    'log'           =>  'daily',
+    'log'           => 'daily',
     'log_max_files' =>  3,
-    'log_level'     =>  "debug", //debug , info , notice , warning , error , critical , alert , emergency
-    'log_name'      =>  "yf",
-    'log_channel'   =>  "LOG",
+    'log_level'     => 'debug', //debug , info , notice , warning , error , critical , alert , emergency
+    'log_name'      => 'lsf',
+    'log_channel'   => 'LOG',
 
 
     /*
@@ -39,7 +39,7 @@ return [
     /*
      * 默认版本号
      */
-    'version' => 'v1',
+    'version' => 'V1',
 
     /*
      * 默认域名，与前缀二选一

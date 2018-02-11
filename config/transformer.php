@@ -14,10 +14,10 @@ return [
     // TransformerEngine::setGroup('v1');
     'groups' => [
         'default' => [
-            // App\User::class => App\Transformers\UserTransformer::class,
+             App\User::class => App\Transformers\UserTransformer::class,
         ],
         'v1' => [
-           // App\Models\User::class                  => App\Transformers\v1\UserTransformer::class,
+            App\User::class                  => App\Transformers\UserTransformerTwo::class,
         ],
         'v2' => [
             //App\Models\User::class                  => App\Transformers\v2\UserTransformer::class,

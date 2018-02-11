@@ -8,19 +8,18 @@
  */
 namespace Foundation;
 
-use Foundation\Component\RegisterTrait;
-use Foundation\Queue\SwooleWorker;
+use Foundation\Component\CommonHandler;
+use Foundation\Component\RegisterBindingsHandler;
+use Foundation\Component\RegistersExceptionHandler;
+use Foundation\Component\RequestsParseHandler;
+use Foundation\Routing\Router;
 use Illuminate\Container\Container;
 use Illuminate\Support\Facades\Facade;
-use Foundation\Component\RegistersConsole;
-use Foundation\Component\RoutesRequests;
 use Illuminate\Support\ServiceProvider;
-use Foundation\Component\RegistersExceptionHandlers;
-use Foundation\Routing\Router;
 
 class Application extends Container{
 
-    use RegistersExceptionHandlers, RoutesRequests, RegistersConsole, RegisterTrait;
+    use RegistersExceptionHandler, RegisterBindingsHandler, RequestsParseHandler, CommonHandler;
     /**
      * The base path of the application installation.
      *
@@ -30,20 +29,15 @@ class Application extends Container{
 
     /**
      * The Router instance.
-     *
      * @var \Foundation\Routing\Router
      */
     public $router;
+
     /**
      * The Swoole instance.
      */
-    public $swoole;
-    /**
-     * All of the loaded configuration files.
-     *
-     * @var array
-     */
-    protected $loadedConfigurations = [];
+    //public $swoole;
+
     /**
      * The loaded service providers.
      *
@@ -64,7 +58,7 @@ class Application extends Container{
      */
     protected static $aliasesRegistered = false;
 
-    public $availableBindings = [
+    /*public $availableBindings = [
         'db'        =>  'registerDatabaseBindings',
         'log'       =>  'registerLogBindings',
         'hash'      =>  'registerHashingBindings',
@@ -80,13 +74,14 @@ class Application extends Container{
         'validator' =>  'registerValidatorBindings',
         'translator'=>  'registerTranslationBindings',
         'bus'       =>  'registerBusBindings',
-        'filesystem' => 'registerFilesSystemBindings'
-    ];
-   /* public $availableBindings = [ 'db', 'log', 'hash', 'files','cache','redis','queue','events',
-        'cookie','config', 'session', 'encrypter', 'validator', 'translator', 'bus', 'filesystem' ];*/
+        'filesystem' => 'registerFilesystemBindings'
+    ];*/
+     public $availableBindings = [ 'db','bus','log', 'hash', 'files','cache','redis','queue','events',
+         'cookie','config', 'session', 'encrypter', 'validator', 'translator', 'bus', 'filesystem' ];
 
     protected $aliases = [
         'request'                           => 'Illuminate\Http\Request',
+        'Foundation\Http\Request'           => 'Illuminate\Http\Request',
         'Psr\Log\LoggerInterface'           => 'log',
         'Illuminate\Session\SessionManager' =>  'session',
         'Illuminate\Contracts\Queue\Factory'          => 'queue',
@@ -107,10 +102,13 @@ class Application extends Container{
        // date_default_timezone_set('Asia/Shanghai');
         $this->basePath = $basePath;
 
+        $this->availableBindings = array_flip( $this->availableBindings );
+
         $this->registerBaseBindings();
 
         $this->registerErrorHandling();
 
+        //var_dump($this->make('config')->get('app.cipher'));
         $this->bootstrapRouter();
     }
 
@@ -124,8 +122,6 @@ class Application extends Container{
     {
         static::setInstance($this);
 
-        $this->configure('app');
-
         $this->instance('app', $this);
     }
 
@@ -137,11 +133,7 @@ class Application extends Container{
      */
     public function bootstrapRouter()
     {
-        if ($this->runningInModel() === "api"){
-            $this->router = new Router($this, true);
-        }else{
-            $this->router = new Router($this);
-        }
+        $this->router = new Router($this, false);
     }
 
     /**
@@ -169,6 +161,15 @@ class Application extends Container{
         //   $this['events']->fire('locale.changed', [$locale]);
     }
 
+    /**
+     * Determine if the application is running in the console.
+     *
+     * @return bool
+     */
+    public function runningInConsole()
+    {
+        return php_sapi_name() == 'cli';
+    }
 
     public function runningInModel()
     {
@@ -184,11 +185,12 @@ class Application extends Container{
     public function make($abstract, array $parameters = [])
     {
         $abstract = $this->getAlias($abstract);
-        if (array_key_exists($abstract, $this->availableBindings) &&
-            ! array_key_exists($this->availableBindings[$abstract], $this->ranServiceBinders)) {
-            $this->{$method = $this->availableBindings[$abstract]}();
+        if ( isset($this->availableBindings[$abstract]) &&
+            ! isset($this->ranServiceBinders[$abstract]) ) {
 
-            $this->ranServiceBinders[$method] = true;
+            $this->{'register'.ucfirst($abstract).'Bindings'}();
+
+            $this->ranServiceBinders[$abstract] = true;
         }
 
         return parent::make($abstract, $parameters);
@@ -203,7 +205,7 @@ class Application extends Container{
     public function basePath($path = null)
     {
         if (isset($this->basePath)) {
-            return $this->basePath.($path ? '/'.$path : $path);
+            return rtrim( $this->basePath , '/').($path ? '/'.$path : $path);
         }
         $this->basePath = getcwd();
         return $this->basePath($path);
@@ -222,67 +224,17 @@ class Application extends Container{
     /**
      * Configure and load the given component and provider.
      *
-     * @param  string  $config
      * @param  array|string  $providers
      * @param  string|null  $return
      * @return mixed
      */
-    public function loadComponent($config, $providers, $return = null)
+    public function loadComponent( $providers, $return = null)
     {
-        $this->configure($config);
         foreach ((array) $providers as $provider) {
             $this->register($provider);
         }
         if ($return){
             return $this->make($return);
-        }
-        return null;
-    }
-    /**
-     * Load a configuration file into the application.
-     *
-     * @param  string  $name
-     * @return void
-     */
-    public function configure($name)
-    {
-        if (isset($this->loadedConfigurations[$name])) {
-            return;
-        }
-        $this->loadedConfigurations[$name] = true;
-
-        $path = $this->getConfigurationPath($name);
-
-        if ($path) {
-            $this->make('config')->set($name, require $path);
-        }
-    }
-
-    /**
-     * Get the path to the given configuration file.
-     *
-     * If no name is provided, then we'll return the path to the config folder.
-     *
-     * @param  string|null  $name
-     * @return string
-     */
-    public function getConfigurationPath($name = null)
-    {
-        if (!$name) {
-            $appConfigDir = $this->basePath('config').'/';
-            if (file_exists($appConfigDir)) {
-                return $appConfigDir;
-            } elseif (file_exists($path = __DIR__.'/../config/')) {
-                return $path;
-            }
-        } else {
-            $appConfigPath = $this->basePath('config').'/'.$name.'.php';
-
-            if (file_exists($appConfigPath)) {
-                return $appConfigPath;
-            } elseif (file_exists($path = __DIR__.'/../config/'.$name.'.php')) {
-                return $path;
-            }
         }
         return null;
     }

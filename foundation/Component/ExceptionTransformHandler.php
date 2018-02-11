@@ -131,6 +131,6 @@ trait ExceptionTransformHandler
     }
 
     protected function runningInDebugMode(){
-        return config("app.app_debug");
+        return config("app.app_debug", false);
     }
 }

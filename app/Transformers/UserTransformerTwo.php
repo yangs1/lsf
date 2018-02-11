@@ -11,15 +11,15 @@ namespace App\Transformers;
 use App\User;
 use \Foundation\Transformer\AbstractTransformer;
 
-class UserTransformer extends AbstractTransformer
+class UserTransformerTwo extends AbstractTransformer
 {
     public function transformer($model)
     {
         return [
 
             'author' =>[
-                'a' => 6666,
-                'b' =>23333,
+                'a' => 2333,
+                'b' =>666,
             ]
         ];
     }

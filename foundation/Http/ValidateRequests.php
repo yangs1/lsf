@@ -1,16 +1,13 @@
 <?php
 
-namespace Foundation\Component;
+namespace Foundation\Http;
 
-use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\Factory;
 use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Validation\ValidatesWhenResolvedTrait;
+use Illuminate\Validation\ValidationException;
 
-class FromRequests //extends Request
+class ValidateRequests
 {
-   // use ValidatesWhenResolvedTrait;
 
     protected $scene;
     /**
@@ -27,7 +24,8 @@ class FromRequests //extends Request
 
     /**
      * Get the validator instance for the request.
-     *
+     * @param array $data
+     * @param $rules
      * @return \Illuminate\Validation\Validator
      */
     protected function getValidatorInstance( array $data, $rules )
@@ -48,7 +46,8 @@ class FromRequests //extends Request
     /**
      * Validate the class instance.
      *
-     * @return void
+     * @param array $data
+     * @throws ValidationException
      */
     public function validate( array $data )
     {
@@ -59,11 +58,6 @@ class FromRequests //extends Request
 
         $instance = $this->getValidatorInstance( $data, $rules );
 
-        /*if (! $this->passesAuthorization()) {
-            $this->failedAuthorization();
-        } elseif (! $instance->passes()) {
-            $this->failedValidation($instance);
-        }*/
         if (! $instance->passes()) {
             $this->failedValidation($instance);
         }
@@ -71,13 +65,12 @@ class FromRequests //extends Request
 
     /**
      * Handle a failed validation attempt.
-     *
-     * @param  \Illuminate\Contracts\Validation\Validator  $validator
-     * @return mixed
+     * @param Validator $validator
+     * @throws ValidationException
      */
     protected function failedValidation(Validator $validator)
-    {
-        throw new HttpResponseException( new JsonResponse( $this->formatErrors($validator), 422));
+    {   throw new ValidationException($validator);
+        //throw new HttpResponseException( new JsonResponse( $this->formatErrors($validator), 422));
     }
     /**
      * Format the errors from the given Validator instance.

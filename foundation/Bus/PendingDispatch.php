@@ -3,8 +3,9 @@
 namespace Foundation\Bus;
 
 use Closure;
-use Foundation\Queue\SwooleQueue;
+use Foundation\Swoole\SwooleQueue;
 use Illuminate\Contracts\Bus\Dispatcher;
+
 
 class PendingDispatch
 {
@@ -15,8 +16,11 @@ class PendingDispatch
      */
     protected $job;
 
-    protected $hasExecute = false;
+    protected $pipe = [];
 
+    protected $isFinish = false;
+
+    protected $isReady = false;
     /**
      * Create a new pending job dispatch.
      *
@@ -34,12 +38,12 @@ class PendingDispatch
      * @param  string|null $connection
      * @return $this
      */
-    public function onConnection($connection)
-    {
-        $this->job->onConnection($connection);
-
-        return $this;
-    }
+//    public function onConnection($connection)
+//    {
+//        $this->job->onConnection($connection);
+//
+//        return $this;
+//    }
 
     /**
      * Set the desired queue for the job.
@@ -47,12 +51,12 @@ class PendingDispatch
      * @param  string|null $queue
      * @return $this
      */
-    public function onQueue($queue)
-    {
-        $this->job->onQueue($queue);
-
-        return $this;
-    }
+//    public function onQueue($queue)
+//    {
+//        $this->job->onQueue($queue);
+//
+//        return $this;
+//    }
 
     /**
      * Set the desired delay for the job.
@@ -60,12 +64,12 @@ class PendingDispatch
      * @param  \DateTime|int|null $delay
      * @return $this
      */
-    public function delay($delay)
-    {
-        $this->job->delay($delay);
-
-        return $this;
-    }
+//    public function delay($delay)
+//    {
+//        $this->job->delay($delay);
+//
+//        return $this;
+//    }
 
     /**
      * Set the jobs that should run if this job is successful.
@@ -73,82 +77,69 @@ class PendingDispatch
      * @param  array $chain
      * @return $this
      */
-    public function chain($chain)
-    {
-        $this->job->chain($chain);
+//    public function chain($chain)
+//    {
+//        $this->job->chain($chain);
+//
+//        return $this;
+//    }
 
+
+    /**
+     * @param Closure $pipe
+     * @return $this
+     */
+    public function addPipe( Closure $pipe ){
+        $this->pipe[] = $pipe;
         return $this;
     }
 
-    private function pushPipe()
+    /**
+     * @param int $worker_id
+     * @throws \Exception
+     */
+    public function asyn( $worker_id = -1 )
     {
+        $this->checkSwooleJob();
 
-        $pipe = [];
-        if ($this->job instanceof SwooleQueue) {
+        $this->pipe[] = function ($command, Closure $next) use ( $worker_id ) {
+            app('swoole_server')->task( $command, $worker_id );
+        };
+        $this->isReady = true;
+    }
 
-            if ($this->job->delay && !$this->job->is_task_wait) {
-
-                // array_unshift($pipe, );
-                $pipe[] = function ($request, Closure $next) {
-                    swoole_timer_after($this->job->delay * 1000, function () use ($next, $request) {
-                        $next($request);
-                    });
-                };
-            }
-
-            if ($this->job->in_task) {
-
-                if ($this->job->is_task_wait) {
-                    $pipe[] = function ($request, Closure $next) {
-                        return app('swoole_server')->taskwait($request, $this->job->timeout, $this->job->task_id);
-                    };
-                } else {
-                    $pipe[] = function ($request, Closure $next) {
-                        app('swoole_server')->task($request, $this->job->task_id);
-                    };
-                }
-
-            }
-
-
+    protected function checkSwooleJob(){
+        if ($this->job instanceof SwooleQueue){
+            return true;
         }
-
-        return $pipe;
+        throw new \Exception(" this job don`t implements the SwooleQueue");
     }
 
-    public function task($taskId = -1)
+    /**
+     * @param float $timeout
+     * @param int $worker_id
+     * @return mixed
+     * @throws \Exception
+     */
+    public function wait( $timeout = 0.5, $worker_id = -1 )
     {
-        $this->job->setInTask(true);
+        $this->checkSwooleJob();
+        $this->pipe[] = function ($command, Closure $next) use($timeout, $worker_id){
+            return app('swoole_server')->taskwait( $command, $timeout, $worker_id );
+        };
+        $this->isFinish = true;
 
-        $this->job->setTaskId($taskId);
-
-        return $this;
-    }
-
-    public function taskWait($timeout = 0.5, $taskId = -1)
-    {
-        $this->job->setIsTaskWait(true);
-
-        $this->job->setTaskId($taskId);
-
-        $this->job->setTimeout($timeout);
-        return $this;
-    }
-
-    public function execute()
-    {
-        $this->hasExecute = true;
-        return app(Dispatcher::class)->pipeThrough($this->pushPipe())->dispatch($this->job);
+        return app(Dispatcher::class )->pipeThrough( $this->pipe )->dispatch( $this->job );
     }
 
     /**
      * Handle the object's destruction.
-     *
-     * @return void
+     * @throws \Exception
      */
     public function __destruct()
     {
-        $this->hasExecute || $this->execute();
-        //app(Dispatcher::class)->pipeThrough($this->pushPipe())->dispatch($this->job);
+        $this->isReady || $this->asyn();
+
+        return $this->isFinish || app(Dispatcher::class )->pipeThrough( $this->pipe )->dispatch( $this->job );
     }
 }

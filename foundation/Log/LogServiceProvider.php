@@ -64,9 +64,8 @@ class LogServiceProvider extends ServiceProvider
 
     /**
      * Configure the Monolog handlers for the application.
-     *
-     * @param  Writer  $log
-     * @return void
+     * @param Writer $log
+     * @throws \Exception
      */
     protected function configureSingleHandler(Writer $log)
     {

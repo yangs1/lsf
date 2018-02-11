@@ -8,7 +8,7 @@ class AuthMiddleware
 {
     public function handle($request, Closure $next)
     {
-        //echo "test middleware";
+        echo "test middleware";
         return $next($request);
     }
 

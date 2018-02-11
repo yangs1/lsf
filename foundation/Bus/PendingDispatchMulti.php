@@ -2,9 +2,7 @@
 
 namespace Foundation\Bus;
 
-use Closure;
-use Foundation\Queue\SwooleQueue;
-use Illuminate\Contracts\Bus\Dispatcher;
+use Foundation\Swoole\SwooleQueue;
 
 class PendingDispatchMulti
 {
@@ -13,32 +11,30 @@ class PendingDispatchMulti
      *
      * @var mixed
      */
-    protected $job;
+    protected $jobs = [];
 
-    public $timeout = 0.5;
+    protected $timeout = 0.5;
+
     /**
+     * 必须 return 数据
      * Create a new pending job dispatch.
-     *
-     * @param  mixed $job
+     * @param SwooleQueue $job
+     * @return self
      */
-    public function __construct($job)
-    {
-        $this->job = $job;
+    public function addJob ( SwooleQueue $job ){
+        $this->jobs[] = $job;
+        return $this;
     }
 
-    /**
-     * @param float $timeout
-     */
-    public function setTimeout($timeout)
+    public function setTimeout( $timeout )
     {
         $this->timeout = $timeout;
+        return $this;
     }
-
-
 
     public function execute()
     {
-        return app('swoole_server')->taskWaitMulti($this->job, $this->timeout);
+        return app('swoole_server')->taskWaitMulti( $this->jobs, $this->timeout );
     }
 
 }

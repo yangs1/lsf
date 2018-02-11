@@ -11,7 +11,7 @@ namespace Foundation\Component;
 
 use App\Providers\SwooleServiceProvider;
 
-trait RegistersConsole
+trait CommonHandler
 {
 
     /**
@@ -30,7 +30,7 @@ trait RegistersConsole
         // 子命令, 目前只支持-d -force
         $operations = isset($argv[2]) ? $argv[2] : '';
         // 根据命令做相应处理
-        $this->configure('swoole');
+
         switch($command)
         {
             // 启动 phpspider
@@ -39,8 +39,8 @@ trait RegistersConsole
                     config( [ "swoole.settings.daemonize" => true ] );
                 }
                 echo "swoole development server started: <http://".config( "swoole.listen" ).":".config( "swoole.port" ).">\n";
-                $this->swoole = $this->register(SwooleServiceProvider::class);
-                $this->swoole->start();
+                $swoole = $this->register(SwooleServiceProvider::class);
+                $swoole->start();
                 break;
             case 'stop':
                 if ($operations === "-force"){

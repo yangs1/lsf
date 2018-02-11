@@ -8,11 +8,6 @@
 
 namespace App\Events;
 
-
-use Foundation\Application;
-use Foundation\Queue\SwooleWorker;
-use Foundation\Queue\WorkerOptions;
-
 class SwooleEvents
 {
     public function beforeStart(\swoole_http_server $server)
@@ -72,4 +67,5 @@ class SwooleEvents
     {
         // TODO: Implement onMessage() method.
     }
+
 }

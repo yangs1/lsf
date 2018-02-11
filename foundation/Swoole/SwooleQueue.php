@@ -6,9 +6,10 @@
  * Time: 下午2:16
  */
 
-namespace Foundation\Queue;
+namespace Foundation\Swoole;
 
 
 interface SwooleQueue
 {
+    public function handle();
 }

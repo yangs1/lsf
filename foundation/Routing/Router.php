@@ -2,6 +2,7 @@
 
 namespace Foundation\Routing;
 
+use Foundation\Config\Repository;
 use Illuminate\Support\Arr;
 
 class Router
@@ -23,7 +24,7 @@ class Router
     /**
      * All of the routes waiting to be registered.
      *
-     * @var array
+     * @var array|\Foundation\Config\Repository
      */
     protected $routes = [];
 
@@ -38,17 +39,21 @@ class Router
      *  if begin the version controller
      * @var bool
      */
-    protected $hasVersion = false;
+    protected $versionControl = false;
 
     /**
      * Router constructor.
      * @param \Foundation\Application  $app
-     * @param bool $hasVersion
+     * @param bool $versionControl
      */
-    public function __construct($app, $hasVersion = false)
+    public function __construct($app, $versionControl = false)
     {
         $this->app = $app;
-        $this->hasVersion = $hasVersion;
+
+        $this->versionControl = $versionControl;
+
+        $this->routes = new Repository();
+
     }
 
     /**
@@ -163,11 +168,10 @@ class Router
 
     /**
      * Add a route to the collection.
-     *
-     * @param  array|string  $method
-     * @param  string  $uri
-     * @param  mixed  $action
-     * @return void
+     * @param $method
+     * @param $uri
+     * @param $action
+     * @throws \Exception
      */
     public function addRoute($method, $uri, $action)
     {
@@ -178,9 +182,7 @@ class Router
         if ($this->hasGroupStack()) {
             $attributes = $this->mergeWithLastGroup([]);
         }
-       /* if ($this->app->bound('config')) {
-            return $this->app->make('config')->get('app.log', 'single');
-        }*/
+
         if (isset($attributes) && is_array($attributes)) {
             if (isset($attributes['prefix'])) {
                 $uri = trim($attributes['prefix'], '/').'/'.trim($uri, '/');
@@ -199,22 +201,23 @@ class Router
             $this->namedRoutes[$action['as']] = $uri;
         }
 
-        if ($this->hasVersion){
-            if (isset($attributes['version'])){
+        if ($this->versionControl){
 
-                $attributes['version'] = explode('|', $attributes['version']);
+            $attributes['version'] = isset($attributes['version']) ? explode('|', $attributes['version']) : [$this->getDefaultVersion()];
 
-                foreach ( (array)$attributes['version'] as $version ){
-                    foreach ( (array)$method as $verb ) {
-                        $this->routes[$verb.$uri] = ['method' => $verb, 'uri' => $uri, 'action' => $action, 'version'=>$version];
-                    }
+            //throw new \Exception('A version is required for the api-version model.');
+
+            foreach ( (array)$attributes['version'] as $version ){
+                foreach ( (array)$method as $verb ) {
+                    $this->routes->set( $verb.$uri.".".$version, ['method' => $verb, 'uri' => $uri, 'action' => $action, 'version'=>$version]);
+                    //$this->routes[$verb.$uri][$version] = ['method' => $verb, 'uri' => $uri, 'action' => $action, 'version'=>$version];
                 }
-            }else{
-                throw new \Exception('A version is required for the api-version model.');
             }
+
         }else{
             foreach ( (array)$method as $verb ) {
-                $this->routes[$verb.$uri] = ['method' => $verb, 'uri' => $uri, 'action' => $action];
+                $this->routes->set( $verb.$uri, ['method' => $verb, 'uri' => $uri, 'action' => $action]);
+                //$this->routes[$verb.$uri] = ['method' => $verb, 'uri' => $uri, 'action' => $action];
             }
         }
     }
@@ -329,10 +332,10 @@ class Router
 
     /**
      * Register a route with the application.
-     *
-     * @param  string  $uri
-     * @param  mixed  $action
+     * @param $uri
+     * @param $action
      * @return $this
+     * @throws \Exception
      */
     public function get($uri, $action)
     {
@@ -343,10 +346,10 @@ class Router
 
     /**
      * Register a route with the application.
-     *
-     * @param  string  $uri
-     * @param  mixed  $action
+     * @param $uri
+     * @param $action
      * @return $this
+     * @throws \Exception
      */
     public function post($uri, $action)
     {
@@ -357,10 +360,10 @@ class Router
 
     /**
      * Register a route with the application.
-     *
-     * @param  string  $uri
-     * @param  mixed  $action
+     * @param $uri
+     * @param $action
      * @return $this
+     * @throws \Exception
      */
     public function put($uri, $action)
     {
@@ -371,10 +374,10 @@ class Router
 
     /**
      * Register a route with the application.
-     *
-     * @param  string  $uri
-     * @param  mixed  $action
+     * @param $uri
+     * @param $action
      * @return $this
+     * @throws \Exception
      */
     public function patch($uri, $action)
     {
@@ -385,10 +388,10 @@ class Router
 
     /**
      * Register a route with the application.
-     *
-     * @param  string  $uri
-     * @param  mixed  $action
+     * @param $uri
+     * @param $action
      * @return $this
+     * @throws \Exception
      */
     public function delete($uri, $action)
     {
@@ -399,10 +402,10 @@ class Router
 
     /**
      * Register a route with the application.
-     *
-     * @param  string  $uri
-     * @param  mixed  $action
+     * @param $uri
+     * @param $action
      * @return $this
+     * @throws \Exception
      */
     public function options($uri, $action)
     {
@@ -414,10 +417,21 @@ class Router
     /**
      * Get the raw routes for the application.
      *
-     * @return array
+     * @return array|\Foundation\Config\Repository
      */
     public function getRoutes()
     {
         return $this->routes;
+    }
+
+    public function getDefaultVersion()
+    {
+        return $this->app->make('config')->get("app.version", 'default');
+    }
+
+
+    public function isVersionControl()
+    {
+        return $this->versionControl;
     }
 }
