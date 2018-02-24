@@ -19,7 +19,7 @@ use Illuminate\Support\ServiceProvider;
 
 class Application extends Container{
 
-    use RegistersExceptionHandler, RegisterBindingsHandler, RequestsParseHandler, CommonHandler;
+    use RegistersExceptionHandler, RegisterBindingsHandler, RequestsParseHandler;//, CommonHandler;
     /**
      * The base path of the application installation.
      *

@@ -23,8 +23,8 @@
     $app->register(Overtrue\LaravelFilesystem\Qiniu\QiniuStorageServiceProvider::class);
     $app->router->group([ 'namespace' => 'App\Http\Controllers'], function () use($app) {
 
-        //$app->router->get('/', 'ExampleControllers@index');
-        $app->router->get('/', 'ExampleControllers@validator');
+        $app->router->get('/', 'ExampleControllers@index');
+        /*$app->router->get('/', 'ExampleControllers@validator');
         $app->router->get('/', 'ExampleControllers@CookieDemo');
         $app->router->get('/', 'ExampleControllers@eventDemo');
 
@@ -33,7 +33,7 @@
         $app->router->post('/', 'ExampleControllers@FilesDemo');
         $app->router->get('/', 'ExampleControllers@encryptDemo');
         $app->router->get('/', 'ExampleControllers@dbDemo');
-        $app->router->get('/', 'ExampleControllers@taskDemo');
+        $app->router->get('/', 'ExampleControllers@taskDemo');*/
     });
 
 
@@ -45,4 +45,5 @@
     }
 
     //var_dump($app->router);
-    $app->parse_command();
+    //$app->parse_command();
+$app->register( \App\Providers\ConsoleServiceProvider::class );
