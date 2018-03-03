@@ -90,7 +90,7 @@ return [
     'redis' => [
 
         'client' => 'phpredis', // predis
-
+       // 'cluster' => true,
         'default' => [
             'host' => '127.0.0.1',
             'password' => null,

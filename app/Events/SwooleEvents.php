@@ -13,6 +13,14 @@ class SwooleEvents
     public function beforeStart(\swoole_http_server $server)
     {
 
+        app('process')->extend('default', function (){
+            while (true){
+                var_dump( " run success");
+                sleep(1);
+            }
+        });
+        app('process')->driver();
+
         // TODO: Implement beforeStart() method.
 
         //假想 ：   可以通过 swoole_event_add 对队列内的任务进行控制

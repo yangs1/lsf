@@ -4,6 +4,7 @@ namespace Foundation\Component;
 
 use Error;
 use ErrorException;
+use Foundation\Swoole\SwooleHttpServer;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Debug\Exception\FatalErrorException;
 use Symfony\Component\Debug\Exception\FatalThrowableError;
@@ -123,7 +124,7 @@ trait RegistersExceptionHandler
             $response = $handler->render($this->make('request'), $e);
 
             if ($response instanceof SymfonyResponse) {
-                app('swoole')->formatResponse(app('swoole_response'), $response);
+                SwooleHttpServer::formatResponse(app('swoole_response'), $response);
             } else {
                 app('swoole_response')->end( (string)$response );
             }

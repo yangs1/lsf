@@ -12,6 +12,7 @@ use App\Providers\EventServiceProvider;
 use Foundation\Config\ConfigRepository;
 use Foundation\Cookie\CookieServiceProvider;
 use Foundation\Session\SessionServiceProvider;
+use Foundation\Swoole\Process\ProcessServiceProvider;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Filesystem\FilesystemManager;
 use Foundation\Log\LogServiceProvider;
@@ -87,7 +88,7 @@ trait RegisterBindingsHandler
 
     protected function registerRedisBindings()
     {
-        return $this->loadComponent(['Illuminate\Redis\RedisServiceProvider'], 'redis');
+        return $this->register( 'Illuminate\Redis\RedisServiceProvider' );
         // $this->loadComponent('database', ['Illuminate\Redis\RedisServiceProvider'], 'redis');
     }
 
@@ -126,5 +127,10 @@ trait RegisterBindingsHandler
     public function registerCookieBindings()
     {
         $this->register( CookieServiceProvider::class );
+    }
+
+    public function registerProcessBindings()
+    {
+        $this->register( ProcessServiceProvider::class );
     }
 }

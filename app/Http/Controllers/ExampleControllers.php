@@ -150,4 +150,11 @@ class ExampleControllers extends Controller
         return new Response(["message"=>"success"]);
 
     }
+
+
+    public function  processDemo()
+    {
+
+        var_dump(" ok ok");
+    }
 }

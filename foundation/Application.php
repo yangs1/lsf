@@ -77,7 +77,7 @@ class Application extends Container{
         'filesystem' => 'registerFilesystemBindings'
     ];*/
      public $availableBindings = [ 'db','bus','log', 'hash', 'files','cache','redis','queue','events',
-         'cookie','config', 'session', 'encrypter', 'validator', 'translator', 'bus', 'filesystem' ];
+         'cookie','config', 'session', 'encrypter', 'validator', 'translator', 'bus', 'filesystem', 'process' ];
 
     protected $aliases = [
         'request'                           => 'Illuminate\Http\Request',

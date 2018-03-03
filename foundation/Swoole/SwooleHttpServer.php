@@ -116,7 +116,7 @@ class SwooleHttpServer
                }
 
                 if ($response instanceof SymfonyResponse) {
-                    $this->formatResponse($swooleResponse, $response);
+                    self::formatResponse($swooleResponse, $response);
                 } else {
                     $swooleResponse->end( $response );
                 }
