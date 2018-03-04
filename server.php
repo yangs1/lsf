@@ -23,7 +23,7 @@
     $app->register(Overtrue\LaravelFilesystem\Qiniu\QiniuStorageServiceProvider::class);
     $app->router->group([ 'namespace' => 'App\Http\Controllers'], function () use($app) {
 
-        $app->router->get('/', 'ExampleControllers@index');
+        //$app->router->get('/', 'ExampleControllers@index');
         /*$app->router->get('/', 'ExampleControllers@validator');
         $app->router->get('/', 'ExampleControllers@CookieDemo');
         $app->router->get('/', 'ExampleControllers@eventDemo');
@@ -34,6 +34,7 @@
         $app->router->get('/', 'ExampleControllers@encryptDemo');
         $app->router->get('/', 'ExampleControllers@dbDemo');
         $app->router->get('/', 'ExampleControllers@taskDemo');*/
+        $app->router->get('/', 'ExampleControllers@processDemo');
     });
 
 
@@ -44,6 +45,12 @@
         opcache_reset();
     }
 
+
+
     //var_dump($app->router);
     //$app->parse_command();
 $app->register( \App\Providers\ConsoleServiceProvider::class );
+/*\Illuminate\Support\Facades\Redis::subscribe(['test-channel'], function($message) {
+    echo $message;
+});*/
+//\Illuminate\Support\Facades\Redis::publish('test-channel', json_encode(['foo' => 'bar']));

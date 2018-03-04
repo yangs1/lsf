@@ -8,18 +8,18 @@
 
 namespace App\Events;
 
+use App\Process\DemoProcess;
+use Swoole\Process;
+
 class SwooleEvents
 {
     public function beforeStart(\swoole_http_server $server)
     {
+        /*//process 测试
+        app('process')->extend('default', DemoProcess::class);
+        app('process')->driver()->start();*/
 
-        app('process')->extend('default', function (){
-            while (true){
-                var_dump( " run success");
-                sleep(1);
-            }
-        });
-        app('process')->driver();
+
 
         // TODO: Implement beforeStart() method.
 
@@ -34,6 +34,12 @@ class SwooleEvents
     public function onStart(\swoole_http_server $server)
     {
         // TODO: Implement onStart() method.
+       /* \swoole_process::signal(SIGCHLD, function($sig) {
+            //必须为false，非阻塞模式
+            while($ret =  \swoole_process::wait(false)) {
+                echo "PID={$ret['pid']}\n";
+            }
+        });*/
     }
 
     public function onShutdown(\swoole_http_server $server)

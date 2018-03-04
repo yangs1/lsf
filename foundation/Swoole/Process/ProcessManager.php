@@ -50,7 +50,7 @@ class ProcessManager
      * Get a Process store instance by name.
      *
      * @param null $name
-     * @return mixed|\swoole_process
+     * @return ProcessInterface
      */
     public function store($name = null)
     {
@@ -63,9 +63,9 @@ class ProcessManager
      * Get a Process driver instance.
      *
      * @param  string  $driver
-     * @return mixed
+     * @return ProcessInterface
      */
-    public function execute($driver = null)
+    public function driver($driver = null)
     {
         return $this->store($driver);
     }
@@ -74,29 +74,21 @@ class ProcessManager
      * Attempt to get the store from the local cache.
      *
      * @param  string  $name
-     * @return \swoole_process
+     * @return ProcessInterface
      */
     protected function get($name)
     {
         if ( isset( $this->stores[$name] )){
             return $this->stores[$name];
         }
-
-        $swooleProcess = $this->resolve($name);
-
-        if ( $this->app->bound('swoole_server') && $swooleProcess instanceof \swoole_process){
-            $this->app->make('swoole_server')->addProcess( $swooleProcess );
-        }else{
-            throw new \InvalidArgumentException("this driver can`t run in server.");
-        }
-        return  $this->resolve($name);
+        return $this->resolve($name);
     }
 
     /**
      * Resolve the given store.
      *
      * @param  string  $name
-     * @return \swoole_process
+     * @return ProcessInterface
      *
      * @throws \InvalidArgumentException
      */
@@ -109,20 +101,27 @@ class ProcessManager
         }*/
 
         if (isset($this->customCreators[$name])) {
-            if ( $this->customCreators[$name] instanceof Closure ){
-                return new \swoole_process( $this->customCreators[$name], false, 0);
-            }else{
-                if (class_exists( $this->customCreators[$name] )){
-                    $processClass = new $this->customCreators[$name];
 
-                    if ($processClass instanceof ProcessInterface){
-                        return new \swoole_process( [$processClass,'register'], false, $processClass->isAsync() ? 2: 0);
-                    }
-                    throw new \InvalidArgumentException("this process class is not implements ProcessInterface.");
-                }
-                throw new \InvalidArgumentException("{$this->customCreators[$name]} is no find .");
+            if ( $this->customCreators[$name] instanceof Closure ){
+
+                $processClass = new ClosureProcess();
+                $processClass->setClosure(  $this->customCreators[$name] );
+
+            }else if ( class_exists( $this->customCreators[$name]  )){
+
+                $processClass = new $this->customCreators[$name];
             }
+
+            if (isset($processClass) && $processClass instanceof ProcessInterface){
+
+                 $processClass->setProcess( new \swoole_process( [$processClass,'register'], false, $processClass->createPipe() ? 2 : 0 ) );
+                 return $processClass;
+            }
+
+            throw new \InvalidArgumentException("Current Callback Driver{$this->customCreators[$name]} is not supported.");
+
         } else {
+
             $driverMethod = 'create'.ucfirst($name).'Driver';
 
             if (method_exists($this, $driverMethod)) {

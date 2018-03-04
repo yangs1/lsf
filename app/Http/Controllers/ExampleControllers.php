@@ -152,9 +152,11 @@ class ExampleControllers extends Controller
     }
 
 
-    public function  processDemo()
+    public function  processDemo( Request $request)
     {
+        app('process')->driver()->write(" ok ok");
+        app('process')->driver()->getProcess()->exit(0);
+        //var_dump();
 
-        var_dump(" ok ok");
     }
 }

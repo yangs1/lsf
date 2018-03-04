@@ -40,6 +40,7 @@ class SwooleServiceProvider extends ServiceProvider
      * @return void
      */
     public function register(){
+
         if (!$this->app->bound('events')){
             $this->app->register('Illuminate\Events\EventServiceProvider');
         }
