@@ -98,7 +98,7 @@ class PendingDispatch
      * @param int $worker_id
      * @throws \Exception
      */
-    public function asyn( $worker_id = -1 )
+    protected function asyn( $worker_id = -1 )
     {
         $this->checkSwooleJob();
 

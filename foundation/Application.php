@@ -76,7 +76,7 @@ class Application extends Container{
         'bus'       =>  'registerBusBindings',
         'filesystem' => 'registerFilesystemBindings'
     ];*/
-     public $availableBindings = [ 'db','bus','log', 'hash', 'files','cache','redis','queue','events',
+     public $availableBindings = [ 'db','bus','log', 'hash', 'files','cache','redis','events',
          'cookie','config', 'session', 'encrypter', 'validator', 'translator', 'bus', 'filesystem', 'process' ];
 
     protected $aliases = [

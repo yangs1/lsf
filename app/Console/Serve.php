@@ -50,7 +50,7 @@ class Serve
                 echo "PHP [$this->startFile] not run\n";
             } else {
                 echo "swoole server [$this->startFile] stop success";
-                exec("ps aux | grep $this->startFile | grep -v grep | awk '{print $2}' |xargs kill -SIGINT", $info);
+                exec("ps aux | grep $this->startFile | grep -v grep | awk '{print $2}' |xargs kill -SIGINT", $info);// -SIGTERM
             }
         }else{
 

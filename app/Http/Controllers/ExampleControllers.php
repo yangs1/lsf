@@ -128,9 +128,6 @@ class ExampleControllers extends Controller
     public function taskDemo(){
 
         // 同步任务，可能有返回值
-        /*$res = syncTask(function (){
-            return  "666";
-        });*/
 
         //task(TestTask::class , ["params"=>"a"]); // 异步
 
@@ -155,7 +152,7 @@ class ExampleControllers extends Controller
     public function  processDemo( Request $request)
     {
         app('process')->driver()->write(" ok ok");
-        app('process')->driver()->getProcess()->exit(0);
+        app('process')->driver()->write(" ook ook");
         //var_dump();
 
     }
