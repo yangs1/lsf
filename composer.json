@@ -25,6 +25,9 @@
         },
         "files": [
             "foundation/helpers.php"
+        ],
+        "classmap": [
+            "foundation/Container/BoundMethod.php"
         ]
     },
     "require-dev": {

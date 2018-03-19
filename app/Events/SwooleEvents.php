@@ -49,6 +49,12 @@ class SwooleEvents
 
     public function onWorkerStart(\swoole_server $server, $workerId)
     {
+        if ($workerId >= config('swoole.settings.worker_num')){
+            //var_dump("task: ".$workerId);
+            app()->withEloquent();
+        }else{
+            //var_dump( "worker: ". $workerId);
+        }
         // TODO: Implement onWorkerStart() method.
     }
 

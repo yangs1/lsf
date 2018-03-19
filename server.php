@@ -12,7 +12,7 @@
     $app->withFacades();
     $app->withEloquent();
     //$app->middleware()
-    $app->routeMiddleware([
+    /*$app->routeMiddleware([
         "auth"      =>\App\Http\Middleware\AuthMiddleware::class
     ]);
     $app->middleware([
@@ -20,10 +20,10 @@
         \App\Http\Middleware\AuthMiddleware::class,
         \Foundation\Cookie\Middleware\AddQueuedCookiesToResponse::class
     ]);
-    $app->register(Overtrue\LaravelFilesystem\Qiniu\QiniuStorageServiceProvider::class);
+    $app->register(Overtrue\LaravelFilesystem\Qiniu\QiniuStorageServiceProvider::class);*/
     $app->router->group([ 'namespace' => 'App\Http\Controllers'], function () use($app) {
 
-        //$app->router->get('/', 'ExampleControllers@index');
+        $app->router->get('/', 'ExampleControllers@index');
         /*$app->router->get('/', 'ExampleControllers@validator');
         $app->router->get('/', 'ExampleControllers@CookieDemo');
         $app->router->get('/', 'ExampleControllers@eventDemo');
@@ -33,8 +33,9 @@
         $app->router->post('/', 'ExampleControllers@FilesDemo');
         $app->router->get('/', 'ExampleControllers@encryptDemo');
         $app->router->get('/', 'ExampleControllers@dbDemo');
-        $app->router->get('/', 'ExampleControllers@taskDemo');*/
-        $app->router->get('/', 'ExampleControllers@processDemo');
+        $app->router->get('/', 'ExampleControllers@taskDemo');
+        $app->router->get('/', 'ExampleControllers@processDemo');*/
+        $app->router->get('/c', 'ExampleControllers@coroutineDemo');
     });
 
 
@@ -50,7 +51,7 @@
     //var_dump($app->router);
     //$app->parse_command();
 $app->register( \App\Providers\ConsoleServiceProvider::class );
-/*\Illuminate\Support\Facades\Redis::subscribe(['test-channel'], function($message) {
+    /*\Illuminate\Support\Facades\Redis::subscribe(['test-channel'], function($message) {
     echo $message;
 });*/
 //\Illuminate\Support\Facades\Redis::publish('test-channel', json_encode(['foo' => 'bar']));

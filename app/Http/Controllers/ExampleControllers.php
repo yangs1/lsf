@@ -30,7 +30,7 @@ class ExampleControllers extends Controller
      */
     public function index()
     {
-        return 'hello world';
+        return 'hello world1111';
     }
 
     public function validator( Request $request)
@@ -154,6 +154,18 @@ class ExampleControllers extends Controller
         app('process')->driver()->write(" ok ok");
         app('process')->driver()->write(" ook ook");
         //var_dump();
+
+    }
+
+    public function coroutineDemo()
+    {
+        $client = new \Swoole\Coroutine\Http\Client('127.0.0.1', 9501);
+        $client->setDefer();
+        $client->get("/");
+        $client->recv();
+        $client->close();
+       // var_dump($client->body);
+        return 11;
 
     }
 }
